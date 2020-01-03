@@ -39,7 +39,7 @@ mkdir -p $pingertmp
 #		-O <High Ping port>
 ####################
 Subnet=$(hostname -I | sed -e 's/\.[^\.]*$//')
-netdevice=$(ip r | grep default | awk -F " " '{print $5}')
+netdevice=$(ip r | awk  '/default/ {print $5}')
 netmask=$(ifconfig "$netdevice" | awk '/netmask/{ print $4;}')
 Gateway=$(ip r | grep default | awk -F " " '{print $3}')
 USAGE="${0##*/} [-hv] [-p <IP Prefix] [-n IP netmask] [-g <gateway>]\r\n
