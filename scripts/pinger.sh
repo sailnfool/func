@@ -178,6 +178,14 @@ fi
 ####################
 # Wait for the background processes to finish.
 ####################
+if [ $# -lt 1 ]
+then
+  sleeptime=10
+else
+  sleeptime=$1
+fi
+echo "${0##*/} ${LINENO} sleeping for $sleeptime seconds"
+sleep $sleeptime
 wait
 
 ####################
@@ -193,7 +201,7 @@ ls ${pinglog}-* > ${grepallfile}
 responders=0
 ####################
 # take the difference between the two sets and generate a list of ports
-# ports that answered, then echo the full IP address of those machines.
+# that answered, then echo the full IP address of those machines.
 ####################
 for i in `diff ${grepallfile} ${greplogfile} | sed -n -e "s/^<.*-\(.*\)$/\1/p"`
 do
