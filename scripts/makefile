@@ -1,4 +1,5 @@
 SHELL=/bin/bash
+PREFIX?=$(HOME)
 .sh:
 	@rm -f $@
 	cp $< $@
@@ -10,14 +11,13 @@ INSTALL = func.config func.cwave func.doshells \
 			proj_setup mypr pinger find_sim \
 			getb2sum pathmunge nowinUCT sourcedate getgitroot
 
-PROJECT := func
-EXECDIR := $(HOME)/bin
+EXECDIR := $(PREFIX)/bin
 
 .PHONY: clean uninstall all
 all: $(INSTALL)
 install: $(INSTALL)
 	mkdir -p $(EXECDIR)
-	install -g $(PROJECT) -o $(USER) -C $? $(EXECDIR)
+	install -o $(USER) -C $? $(EXECDIR)
 clean: 
 	@for execfile in $(INSTALL); do \
 		echo rm -f $$execfile; \
@@ -28,8 +28,6 @@ uninstall:
 		echo rm -f $(EXECDIR)/$$execfile; \
 		rm -f $(EXECDIR)/$$execfile; \
 	done
-project:
-	proj_setup $(PROJECT)
 $(EXECDIR):
 	mkdir -p $(EXECDIR)
 
