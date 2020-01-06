@@ -7,16 +7,17 @@ INSTALL = func.config func.cwave func.doshells \
 		  func.getprojdir func.insufficient \
 		  func.onefilehash func.onefilereformat \
 		  func.pathmunge \
-			proj_setup mypr pinger
+			proj_setup mypr pinger find_sim \
+			getb2sum pathmunge nowinUCT sourcedate getgitroot
 
 PROJECT := func
-EXECDIR := /usr/var/$(PROJECT)/bin
+EXECDIR := $(HOME)/bin
 
 .PHONY: clean uninstall all
 all: $(INSTALL)
 install: $(INSTALL)
 	mkdir -p $(EXECDIR)
-	sudo install -g $(PROJECT) -o $(USER) -C $? $(EXECDIR)
+	install -g $(PROJECT) -o $(USER) -C $? $(EXECDIR)
 clean: 
 	@for execfile in $(INSTALL); do \
 		echo rm -f $$execfile; \
@@ -24,8 +25,8 @@ clean:
 	done
 uninstall: 
 	@for execfile in $(INSTALL); do \
-		echo sudo rm -f $(EXECDIR)/$$execfile; \
-		sudo rm -f $(EXECDIR)/$$execfile; \
+		echo rm -f $(EXECDIR)/$$execfile; \
+		rm -f $(EXECDIR)/$$execfile; \
 	done
 project:
 	proj_setup $(PROJECT)
