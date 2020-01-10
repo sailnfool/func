@@ -75,6 +75,7 @@ scriptname=${0##*/}
 #
 
 source func.errecho
+source func.insufficient
 
 USAGE="\r\n${scriptname} [-[hotn]] [ -v <#> ] [ [-i <ignoredir> ] ... ] <dirname>\r\n
 \t\treturn the date of the newest file in the tree\r\n
@@ -142,15 +143,15 @@ do
 	\?)
 		errecho "-e" ${LINENO} "invalid option: -$OPTARG"
 		errecho "-e" ${LINENO} ${USAGE}
-		exit 0
+		exit 1
 		;;
 	esac
 done
 
 if [ $# -lt ${NUMARGS} ]
 then
-	errecho ${LINENO} "Insufficient Parameters: ${NUMARGS} required, $# supplied"
 	errecho "-e" ${LINENO} ${USAGE}
+	insufficient ${LINENO} ${FUNCNAME} ${NUMARGS} $@
 	exit -2
 fi
 dirname=${@:$OPTIND:1}
