@@ -7,7 +7,7 @@ INSTALL = func.config func.cwave func.doshells \
 		  func.env func.errecho func.genrange \
 		  func.getprojdir func.insufficient \
 		  func.onefilehash func.onefilereformat \
-		  func.pathmunge \
+		  func.pathmunge func.hmsout \
 			proj_setup mypr pinger find_sim \
 			getb2sum pathmunge nowinUCT sourcedate getgitroot
 
