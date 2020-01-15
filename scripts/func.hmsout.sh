@@ -23,7 +23,7 @@ then
       seconds)
         ((hour=${number}/3600))
         ((mins=(${number}-hour*3600)/60))
-        ((sec=${number}=((hour*3600) + (mins*60))))
+        ((sec=${number}-((hour*3600) + (mins*60))))
         ;;
       minutes)
         ((hour=${number}/60))
@@ -40,7 +40,7 @@ then
         exit 1
          ;;
     esac
-    print "%02d:%02d:%02d" "${hour}" "${$mins}" "${sec}"
+    printf "%02d:%02d:%02d" "${hour}" "${mins}" "${sec}"
   }
 fi # if [ -z "${__func_hmsout}" ]
 # vim: set syntax=bash, ts=2, sw=2, lines=55, columns=120,colorcolumn=78
