@@ -29,16 +29,18 @@ then
 	# https://unix.stackexchange.com/questions/340440/bash-test-what-does-do
 	##########
 	gen_range () {
-	re='^[0-9]+$'
+	re="^[0-9]+$"
+	errecho ${LINENO} ${FUNCNAME} "re=${re}"
 	if [ $# -ge 2 ]
 		then
 			lower=$1
 			upper=$2
-			if [ ! "${lower}" =~ $re ]
+			errecho ${LINENO} ${FUNCNAME} ${lower} ${upper}
+			if [[ ! "${lower}" =~ ^[0-9]+$ ]]
 			then
 				lower=0
 			fi
-			if [ ! "${upper}" =~ $re ]
+			if [[ ! "${upper}" =~ ^[0-9]+$ ]]
 			then
 				upper=0
 			fi
@@ -46,7 +48,7 @@ then
 			while [ $i -le ${upper} ]
 			do
 				echo "$i"
-				i=$[$i+1]
+				((++i))
 			done
 		fi
 	##########
