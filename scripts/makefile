@@ -3,13 +3,14 @@ PREFIX?=$(HOME)
 .sh:
 	@rm -f $@
 	cp $< $@
-INSTALL = func.config func.cwave func.doshells \
+INSTALL = func.arithmetic func.config func.cwave func.doshells \
 		  func.env func.errecho func.genrange \
-		  func.getprojdir func.insufficient \
+		  func.getprojdir func.hmsout func.insufficient \
 		  func.onefilehash func.onefilereformat \
-		  func.pathmunge func.hmsout \
+		  func.pathmunge func.random \
 			proj_setup mypr pinger find_sim \
-			getb2sum pathmunge nowinUCT sourcedate getgitroot
+			getb2sum pathmunge nowinUCT sourcedate getgitroot \
+			func.testfunc
 
 EXECDIR := $(PREFIX)/bin
 
