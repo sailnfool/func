@@ -17,12 +17,75 @@
 # 
 # the awk command had integer overflow in computing 2^30, 2^31, 2^32, etc.
 # Had to use bc command to get proper computations done
+#_____________________________________________________________________
+# Rev.|Auth.| Date     | Notes
+#_____________________________________________________________________
+# 1.0 | REN |03/26/2020| Initial Release
+#_____________________________________________________________________
+#
+source func.debug
+source func.errecho
+source func.insufficient
 
-if [ $# -eq 0 ]
+USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> ...\r\n
+\t\tSummarize the count of the number of files in this tree sorted by\r\n
+\t\tthe size of the files.  This application is single threaded and\r\n
+\t\tused the 'find' command.  The output is saved in the /tmp\r\n
+\t\tdirectory.\r\n
+\t-h\t\tPrint this message\r\n
+\t-v\t\tProvide verbose help\r\n
+\t-d\t#\tEnable diagnostics\r\n
+"
+VERBOSE="Outputs the file bin sizes in human readable form:\r\n
+b = bytes\r\n
+k = kilobytes\t(kiB = 1024)\r\n
+M = Megabytes\t(MiB)\r\n
+G = Gigabytes\t(GiB)\r\n
+T = Terabytes\t(TiB)\r\n
+E = Exabytes\t(EiB)\r\n
+P = Petabytes\t(PiB)\r\n
+Y = Yettabytes\t(YiB)\r\n
+Z = Zettabytes\t(ZiB)\r\n
+"
+optionargs="hvd:"
+NUMARGS=1
+if [ $# -lt "${NUMARGS}" ]
 then
   echo ${0##*/} ${LINENO} "No directory specified"
   exit -1
 fi
+
+while getopts ${optionargs} name
+do
+  case ${name} in
+  h)
+    echo -e ${USAGE}
+    exit 0
+    ;;
+  v)
+    echo -e ${USAGE}
+    echo -e ${VERBOSE}
+    exit 0
+    ;;
+  d)
+    FUNC_DEBUG=${OPTARG}
+    export FUNC_DEBUG
+    ;;
+  \?)
+    errecho "-e" ${0##*/} ${LINENO} "invalid option: -${OPTARG}"
+    errecho "-e" ${0##*/} ${LINENO} ${USAGE}
+    exit 1
+    ;;
+esac
+done
+if [ $# -lt ${NUMARGS} ]
+then
+	errecho "-e" ${0##*/} ${LINENO} ${USAGE}
+  insufficient ${0##*/} ${LINENO} ${FUNCNAME} ${NUMARGS} $@
+	exit -2
+fi
+
+
 suffixes="bkMGTEPYZ"
 for rootdir in $*
 do
@@ -41,6 +104,13 @@ do
   cd ${rootdir}
   OLDIFS=$IFS
   IFS=" "
+
+  ####################
+  # Potential bug here.  Awk on many machines only supports 32-bit
+  # integers.  If the size[n] for any bucket overflows that count
+  # then this will silently provide erroneous results.  It should
+  # probably be redone with bc
+  ####################
   find . -type f -print0                                                 \
  | xargs -0 ls -l                                                        \
  | awk '{ n=int(log($5)/log(2));                                         \
