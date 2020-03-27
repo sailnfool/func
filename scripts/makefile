@@ -10,7 +10,7 @@ INSTALL = func.arithmetic func.config func.cwave func.doshells \
 		  func.pathmunge func.random \
 			proj_setup mypr pinger find_sim \
 			getb2sum pathmunge nowinUCT sourcedate getgitroot \
-			func.testfunc
+			func.testfunc histogram
 
 EXECDIR := $(PREFIX)/bin
 
