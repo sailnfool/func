@@ -100,7 +100,7 @@ do
   echo "*** Start ***" > ${countname}
   echo "*** Path = $(realpath ${rootdir})" >> ${countname}
   echo "**** Dir = ${basedirname}" >> ${countname}
-  echo "***** Size $(du -s -h ${rootdir})" >> ${countname}
+  echo "***** Size $(du -s -h ${rootdir} 2> /dev/null )" >> ${countname}
   cd ${rootdir}
   OLDIFS=$IFS
   IFS=" "
@@ -111,8 +111,8 @@ do
   # then this will silently provide erroneous results.  It should
   # probably be redone with bc
   ####################
-  find . -type f -print0                                                 \
- | xargs -0 ls -l                                                        \
+  find . -type f -print0 2> /dev/null                                    \
+ | xargs -0 ls -l 2> /dev/null                                           \
  | awk '{ n=int(log($5)/log(2));                                         \
           if (n<0) n=0;                                                  \
           size[n]++ }                                                    \
