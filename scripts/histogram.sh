@@ -76,7 +76,7 @@ do
     errecho "-e" ${0##*/} ${LINENO} ${USAGE}
     exit 1
     ;;
-esac
+  esac
 done
 if [ $# -lt ${NUMARGS} ]
 then
