@@ -14,6 +14,7 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 2.1 | REN |04/27/2020| swapped order of parameters to make func first
 # 2.0 | REN |11/14/2019| added vim directive and header file
 # 1.0 | REN |09/06/2018| original version
 #_____________________________________________________________________
@@ -29,11 +30,11 @@ then
 	# tell the user that they have insufficient parameters to this function
 	##########
 	function insufficient() {
-		lineno="$1"
-		funcname="$2"
+		funcname="$1"
+		lineno="$2"
 		numparms="$3"
 		shift; shift; shift;
-		errecho "${lineno} ${funcname}: Insufficient parameters $@, need ${numparms}"
+		errecho "${funcname} ${lineno}: Insufficient parameters $@, need ${numparms}"
 		exit -1
 		##########
 		# end of function insufficient
@@ -47,10 +48,10 @@ then
 	# tell the user that they have a null parameter
 	##########
 	function nullparm() {
-		lineno="$1"
-		funcname="$2"
+		funcname="$1"
+		lineno="$2"
 		parmnum="$3"
-		errecho "${lineno}: ${funcname}: Parameter #${parmnum} is null"
+		errecho "${funcname} ${lineno}: Parameter #${parmnum} is null"
 		exit -1
 		##########
 		# end of function insufficient
