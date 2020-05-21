@@ -369,4 +369,4 @@ projectetcdir=${projectetcdir:-"${etcprefix}${project}${etcpostfix}"}
 /bin/echo $(projectdirectory ${projectetcdir} ${project}) > /dev/null
 /bin/echo "$0 $*" >> ${projectetcdir}/conf.txt
 exit 0
-# vim: set syntax=bash, ts=2, sw=2, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78

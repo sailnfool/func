@@ -57,4 +57,4 @@ then
 	}
 	export -f gen_range
 fi # if [ -z "${__funcgenrange}" ]
-# vim: set syntax=bash, ts=2, sw=2, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78

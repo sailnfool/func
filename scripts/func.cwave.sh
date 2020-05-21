@@ -55,4 +55,4 @@ then
 	export -f errindentdir
 	export -f indentdir
 fi # if [ -z "${__funccwave}" ]
-# vim: set syntax=bash, ts=2, sw=2, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
