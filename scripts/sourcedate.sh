@@ -5,7 +5,7 @@ scriptname=${0##*/}
 # Modesto, CA 95356
 #
 # sourcedate - find date/time/name of newest file in tree
-#							 ignore directories and contents of ".ignore" 
+#              ignore directories and contents of ".ignore"
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
@@ -18,25 +18,25 @@ scriptname=${0##*/}
 # Share — copy and redistribute the material in any medium or format
 # Adapt — remix, transform, and build upon the material
 # for any purpose, even commercially.
-# 
+#
 # The licensor cannot revoke these freedoms as long as you follow
 # the license terms.
-# 
+#
 # Under the following terms:
 # Attribution — You must give appropriate credit, provide a link to
 # the license, and indicate if changes were made. You may do so in
 # any reasonable manner, but not in any way that suggests the licensor
 # endorses you or your use.
-# 
+#
 # No additional restrictions — You may not apply legal terms or
 # technological measures that legally restrict others from doing
 # anything the license permits.
-# 
+#
 # Notices:
 # You do not have to comply with the license for elements of the
 # material in the public domain or where your use is permitted by
 # an applicable exception or limitation.
-# 
+#
 # No warranties are given. The license may not give you all of
 # the permissions necessary for your intended use. For
 # example, other rights such as publicity, privacy, or moral
@@ -62,7 +62,7 @@ scriptname=${0##*/}
 # as a numeric string in the format: "+%Y%m%d" (see the date
 # command documentation for an explanation.
 #
-# the optional parameter -t adds a period followed by the Time in 
+# the optional parameter -t adds a period followed by the Time in
 # "+%H%M%S" format.
 # the optional parameter -o outputs only the time without the date.
 # the optional parameter -n Don't suppress directories in the date
@@ -114,20 +114,20 @@ ignorelist=".archive"
 while getopts ${optionargs} name
 do
 	case ${name} in
-	h) 
-#		errecho "-e" ${LINENO} ${USAGE}
+	h)
+#		errecho "-e" ${USAGE}
 		echo -e ${USAGE}
 		exit 0
 		;;
-	o) 
+	o)
 		onlytime=1
 		datetell=0
 		;;
-	t) 
+	t)
 		addtime=1
 		datetell=0
 		;;
-	n) 
+	n)
 		nodirs=""
 		;;
 	f)
@@ -136,13 +136,13 @@ do
 	i)
 		ignorelist="${ignorelist} ${OPTARG}"
 		;;
-	d) 
+	d)
 		FUNC_DEBUG=${OPTARG}
 		export FUNC_DEBUG
 		;;
 	\?)
-		errecho "-e" ${LINENO} "invalid option: -$OPTARG"
-		errecho "-e" ${LINENO} ${USAGE}
+		errecho "-e" "invalid option: -$OPTARG"
+		errecho "-e" ${USAGE}
 		exit 1
 		;;
 	esac
@@ -150,8 +150,8 @@ done
 
 if [ $# -lt ${NUMARGS} ]
 then
-	errecho "-e" ${LINENO} ${USAGE}
-	insufficient ${LINENO} ${FUNCNAME} ${NUMARGS} $@
+	errecho "-e" ${USAGE}
+	insufficient ${NUMARGS} $@
 	exit -2
 fi
 dirname=${@:$OPTIND:1}
@@ -170,7 +170,7 @@ do
 done
 if [ "$FUNC_DEBUG" -gt 0 ]
 then
-	errecho ${LINENO} "${ignoredir}"
+	errecho "${ignoredir}"
 fi
 
 # 2018-10-14 10:33:55.990652503 -0700 --./sourcedate.bash
@@ -185,11 +185,11 @@ if [ "$FUNC_DEBUG" -gt 0 ]
 then
 	ls -l /tmp/sourcedate*$$.txt
 	more /tmp/sourcedate*$$.txt
-	errecho ${LINENO} "Newest file is ${newestfile}"
-	errecho ${LINENO} "Date only is ${dateonly}"
-	errecho ${LINENO} "Date time is ${datetime}"
-	errecho ${LINENO} "Date2 time is ${datetime2}"
-	errecho ${LINENO} "Time only is ${timeonly}"
+	errecho "Newest file is ${newestfile}"
+	errecho "Date only is ${dateonly}"
+	errecho "Date time is ${datetime}"
+	errecho "Date2 time is ${datetime2}"
+	errecho "Time only is ${timeonly}"
 fi
 if [ "${onlytime}" = "1" ]
 then

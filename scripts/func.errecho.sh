@@ -25,6 +25,11 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 2.1 | REN |05/20/2020| removed vim directive.  Added additional
+#                      | bash builtins to report the name of the
+#                      | source file, the command that is executing
+#                      | the name of the function that is throwing
+#                      | the error number and the line number
 # 2.0 | REN |11/14/2019| added vim directive and header file
 # 1.0 | REN |09/06/2018| original version
 #_____________________________________________________________________
@@ -34,22 +39,39 @@ if [ -z "${__funcerrecho}" ]
 then
 	export __funcerrecho=1
 	function errecho() {>&2
-		processbackslash=""
+		PL=1
+		pbs=""
 		if [ "$1" = "-e" ]
 		then
-			processbackslash="-e"
+			pbs="-e"
 			shift
 		fi
-		line=$1
-		shift
-		FUNC_VERBOSE=${FUNC_VERBOSE:-1}
+		if [ "$1" = "-i" ]
+		then
+			PL=2
+		fi
+		FUNC_VERBOSE=${FUNC_VERBOSE:-0}
 		if [ ${FUNC_VERBOSE} -gt 0 ]
 		then
-			if [ "$1" = "-e" ]
+			local FN=${FUNCNAME[${PL}]}
+			local LN=${BASH_LINENO[${PL}]}
+			local SF=${BASH_SOURCE[${PL}]}
+			local CM=${0##*/}
+			if [ "${pbs}" = "-e" ]
 			then
-				/bin/echo "${processbackslash} ${0##*/}:${line}: \r\n"$@
+				if [ -t 1 ]
+				then
+					/bin/echo "${pbs}" $@
+				else
+					/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: \r\n"$@
+				fi
 			else
-				/bin/echo "${processbackslash}" ${0##*/}:${line}: $@
+				if [ -t 1 ]
+				then
+					/bin/echo "${pbs}" $@
+				else
+					/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: "$@
+				fi
 			fi
 		fi
 	##########
@@ -60,12 +82,24 @@ then
 	##########
 	# Send diagnostic output to stderr with a newline
 	##########
-	function stderrecho() {>&2 echo ${0##*/}:${FUNCNAME}:$@;}
+	function stderrecho() {>&2 
+		local FN=${FUNCNAME[1]}
+		local LN=${BASH_LINENO[1]}
+		local SF=${BASH_SOURCE[1]}
+		local CM=${0##*/}
+		echo ${SF}->${CM}::${FN}:${LN}:$@
+	}
 	export -f stderrecho
 	##########
 	# Send diagnostic output to stderr without a newline
 	##########
-	function stderrnecho() {>&2 echo -n ${0##*/}:${FUNCNAME}:$@;}
+	function stderrnecho() {>&2
+		local FN=${FUNCNAME[1]}
+		local LN=${BASH_LINENO[1]}
+		local SF=${BASH_SOURCE[1]}
+		local CM=${0##*/}
+		echo -n ${SF}->${CM}::${FN}:${LN}:$@
+	}
 	export -f stderrnecho
 fi # if [ -z "${__funcerrecho}" ]
 # vim: set syntax=bash, lines=55, columns=120,colorcolumn=78

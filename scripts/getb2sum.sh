@@ -9,7 +9,7 @@ scriptname=${0##*/}
 #
 ####################
 # Author Robert E. Novak
-# 
+#
 # This script invokes the b2sum application to create a cryptographic
 # hash of a string parameter or of a named file.
 #
@@ -35,8 +35,8 @@ export FUNC_DEBUG
 while getopts ${optionargs} name
 do
 	case ${name} in
-	h) 
-#		errecho "-e" ${LINENO} ${USAGE}
+	h)
+#		errecho "-e" ${USAGE}
 		echo -e ${USAGE}
 		exit 0
 		;;
@@ -47,13 +47,13 @@ do
 	b)
 		BRIEF=TRUE
 		;;
-	d) 
+	d)
 		FUNC_DEBUG=${OPTARG}
 		export FUNC_DEBUG
 		;;
 	\?)
-		errecho "-e" ${LINENO} "invalid option: -$OPTARG"
-		errecho "-e" ${LINENO} ${USAGE}
+		errecho "-e" "invalid option: -$OPTARG"
+		errecho "-e" ${USAGE}
 		exit 0
 		;;
 	esac
@@ -61,8 +61,8 @@ done
 
 if [ $# -lt ${NUMARGS} ]
 then
-	errecho ${LINENO} "Insufficient Parameters: ${NUMARGS} required, $# supplied"
-	errecho "-e" ${LINENO} ${USAGE}
+	errecho "Insufficient Parameters: ${NUMARGS} required, $# supplied"
+	errecho "-e" ${USAGE}
 	exit -2
 fi
 shift "$(($OPTIND -1))"
@@ -71,9 +71,9 @@ if [ "${FUNC_DEBUG}" -gt 0 ]
 then
 	if [ $# -gt 0 ]
 	then
-		errecho ${LINENO} "${filename}"
+		errecho "${filename}"
 	else
-		errecho ${LINENO} "${string}"
+		errecho "${string}"
 	fi
 fi
 if [ $# -gt 0 ]

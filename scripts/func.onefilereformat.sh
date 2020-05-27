@@ -31,44 +31,44 @@ then
 		destdir="$3"
 		if [ $# -lt ${numparms} ]
 		then
-			insufficient ${LINENO} ${FUNCNAME} ${numparms} $@
+			insufficient ${numparms} $@
 		fi
 		if [ -z "${sourcefile}" ]
 		then
-			nullparm ${LINENO} ${FUNCNAME} "1"
+			nullparm "1"
 		fi
 		if [ -z "${sourcedir}" ]
 		then
-			nullparm ${LINENO} ${FUNCNAME} "2"
+			nullparm "2"
 		fi
 		if [ -z "${destdir}" ]
 		then
-			nullparm ${LINENO} ${FUNCNAME} "3"
+			nullparm "3"
 		fi
-	
+
 		if [ ! -d ${destdir} ]
 		then
 			mkdir -p ${destdir}
 		fi
 		if [ ! -d ${sourcedir} ]
 		then
-			errecho ${LINENO} "${FUNCNAME}: Source ${sourcedir} directory not present"
+			errecho "Source ${sourcedir} directory not present"
 			exit -1
 		fi
 		if [  ! -f ${sourcedir}/${sourcefile} ]
 		then
-			errecho ${LINENO} "${FUNCNAME}: Source file ${sourecedir}/${souecefile} file not present"
+			errecho "Source file ${sourecedir}/${souecefile} file not present"
 			exit -1
 		fi
 		cp ${sourcedir}/${sourcefile} /tmp/${sourcefile}$$
-	
+
 		##########
-		# in case the source file did not include a \n at the end of the 
+		# in case the source file did not include a \n at the end of the
 		# file we do this to avoid having "fmt" or asciidoctor-pdf throw
 		# an error message.
 		##########
 		echo "" >> /tmp/${sourcefile}$$
-	
+
 		##########
 		# We tell "fmt" to generate "standard output which includes
 		# two spaces after a sentence.  When we find a "." or "?" followed
@@ -78,7 +78,7 @@ then
 		# so we detect those instances and fix them.  We also delete
 		# spaces that may occur at the end of a line.
 		##########
-	
+
 		fmt -s -u /tmp/${sourcefile}$$ | \
 			sed -e 's/\([\.\?]\)[ ]{2,2}/\1\r\n/g' \
 				-e 's/\r[^\n]/\r\n/' \

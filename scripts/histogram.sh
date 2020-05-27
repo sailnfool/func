@@ -5,7 +5,7 @@
 ###########################################################################
 #
 # Histogram
-# 
+#
 # From the root directory passed as a parameter,
 # generate a histogram of the files and subdirectories of that tree.
 #
@@ -14,7 +14,7 @@
 #
 # Based on the script below, BUT!!!!
 # https://superuser.com/questions/565443/generate-distribution-of-file-sizes-from-the-command-prompt
-# 
+#
 # the awk command had integer overflow in computing 2^30, 2^31, 2^32, etc.
 # Had to use bc command to get proper computations done
 #_____________________________________________________________________
@@ -51,7 +51,7 @@ optionargs="hvd:"
 NUMARGS=1
 if [ $# -lt "${NUMARGS}" ]
 then
-  echo ${0##*/} ${LINENO} "No directory specified"
+	errecho "No directory specified"
   exit -1
 fi
 
@@ -59,12 +59,12 @@ while getopts ${optionargs} name
 do
   case ${name} in
   h)
-    echo -e ${USAGE}
+    errecho -e ${USAGE}
     exit 0
     ;;
   v)
-    echo -e ${USAGE}
-    echo -e ${VERBOSE}
+    errecho -e ${USAGE}
+    errecho -e ${VERBOSE}
     exit 0
     ;;
   d)
@@ -72,16 +72,16 @@ do
     export FUNC_DEBUG
     ;;
   \?)
-    errecho "-e" ${0##*/} ${LINENO} "invalid option: -${OPTARG}"
-    errecho "-e" ${0##*/} ${LINENO} ${USAGE}
+    errecho "-e" "invalid option: -${OPTARG}"
+    errecho "-e" ${USAGE}
     exit 1
     ;;
   esac
 done
 if [ $# -lt ${NUMARGS} ]
 then
-	errecho "-e" ${0##*/} ${LINENO} ${USAGE}
-  insufficient ${0##*/} ${LINENO} ${FUNCNAME} ${NUMARGS} $@
+	errecho "-e" ${USAGE}
+	insufficient ${NUMARGS} $@
 	exit -2
 fi
 
@@ -91,7 +91,7 @@ for rootdir in $*
 do
   if [ ! -d ${rootdir} ]
   then
-    echo ${0##*/} ${LINENO} "Not a directory: ${rootdir}"
+    errecho "Not a directory: ${rootdir}"
     exit -1
   fi
   basedirname=${rootdir##*/}
@@ -128,7 +128,7 @@ do
      filesize=$(echo "scale=0;2^${power}"|bc -l)
      human=$(printf "%d%s" ${prefix} ${suffix})
      $(echo printf "%*s:\t%*s\t%d\n" 6 ${human} 15 ${filesize} ${count}) >> ${countname}
-   done 
+   done
 }
 done
 more ${countprefix}.*.$$.txt

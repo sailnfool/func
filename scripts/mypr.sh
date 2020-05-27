@@ -35,23 +35,23 @@ COMMAND="lpr"
 while getopts ${optionargs} name
 do
 	case ${name} in
-	h) 
-#		errecho "-e" ${LINENO} ${USAGE}
+	h)
+#		errecho "-e" ${USAGE}
 		echo -e ${USAGE}
 		exit 0
 		;;
-	d) 
+	d)
 		debug=1
 		;;
-  p)
-    PRINTER=${OPTARG}
-    ;;
-  c)
-    COMMAND=${OPTARG}
-    ;;
+	p)
+		PRINTER=${OPTARG}
+		;;
+	c)
+		COMMAND=${OPTARG}
+		;;
 	\?)
-		errecho "-e" ${LINENO} "invalid option: -$OPTARG"
-		errecho "-e" ${LINENO} ${USAGE}
+		errecho "-e" "invalid option: -$OPTARG"
+		errecho "-e" ${USAGE}
 		exit 0
 		;;
 	esac
@@ -60,8 +60,8 @@ LPROPTIONS="-o outputorder=reverse -o sides=two-sided-long-edge -P ${PRINTER}"
 
 if [ $# -lt ${NUMARGS} ]
 then
-	errecho ${LINENO} "Insufficient Parameters: ${NUMARGS} required, $# supplied"
-	errecho "-e" ${LINENO} ${USAGE}
+	errecho "Insufficient Parameters: ${NUMARGS} required, $# supplied"
+	errecho "-e" ${USAGE}
 	exit -2
 fi
 

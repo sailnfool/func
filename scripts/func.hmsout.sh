@@ -36,7 +36,7 @@ then
         ((sec=0))
         ;;
       \?)
-        errecho ${LINENO} ${FUNCNAME} "Invalid units=${units}"
+        errecho "Invalid units=${units}"
         exit 1
          ;;
     esac

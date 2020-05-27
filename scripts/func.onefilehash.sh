@@ -28,17 +28,17 @@ then
 		hashdir="$2"
 		if [ $# -lt 2 ]
 		then
-			errecho ${LINENO} "${FUNCNAME}: Insufficient parameters $#, need 2"
+			errecho "Insufficient parameters $#, need 2"
 		fi
 		if [ -z ${digestfile} ]
 		then
-			errecho ${LINENO} "${FUNCNAME}: First parameter is null"
+			errecho "First parameter is null"
 		fi
 		if [ -z ${hashdir} ]
 		then
-			errecho ${LINENO} "${FUNCNAME}: Second parameter is null"
+			errecho "Second parameter is null"
 		fi
-	#	stderrecho ${LINENO} "How did we get here"
+	#	stderrecho "How did we get here"
 	#	####################
 	#	For each file, we check to see if there is already a HASH
 	#	directory that stores the hashes for each of the files.
@@ -48,7 +48,7 @@ then
 	#	####################
 		SAVEIFS=$IFS
 		IFS=$(echo -en "\n\b")
-	
+
 		if [ ! -d ${hashdir} ]
 		then
 			mkdir ${hashdir}
@@ -67,9 +67,9 @@ then
 # They are part of the Sea2Cloud package
 EOF_EOF
 		fi
-	
+
 		#	####################
-		#	Now we see if there is a directory entry for this digest 
+		#	Now we see if there is a directory entry for this digest
 		#	file in the hash directory.  If there is and it is newer
 		#	than the file, we use the pre-computed value of the hash
 		#	for this file.  If there is not, we compute the hash and
@@ -77,8 +77,8 @@ EOF_EOF
 		#	filename.  As a result, we can never process the hash
 		#	directories in this way.
 		#	####################
-		#	stderrecho ${LINENO} "How did we get here"
-	
+		#	stderrecho "How did we get here"
+
 		if [ -r "${hashdir}/${digestfile}" ]
 		then
 			if [ "${digestfile}" -ot "${hashdir}/${digestfile}" ]
