@@ -22,6 +22,7 @@
 #___________________________________________________________________
 # 1.0 | REN | 06/08/2019 | Initial Version
 #___________________________________________________________________
+source func.errecho
 if [ -z "${__verifychange}" ]
 then
 	export __verifychange=1
@@ -30,38 +31,33 @@ then
 	##########
 	function verifychange {
 		set -x
-		echo "${0##*/}:${LINENO}:STAFF_VERBOSE=${STAFF_VERBOSE}"
+		errecho -i "STAFF_VERBOSE=${STAFF_VERBOSE}"
 		if [ ${STAFF_VERBOSE} -gt 0 ]
 		then
 			if [ ${STAFF_VERBOSE} -gt 1 ]
 			then
 				set -x
-				echo "${0##*/}:${LINENO}"
+				errecho -i ""
 			fi
 			numparms=4
 			if [ $# -lt ${numparms} ]
 			then
-				insufficient ${FUNCNAME} $LINENO ${FUNCNAME} ${numparms}
+				insufficient ${numparms}
 			fi
 			changename=$1
 			if [ "${changename}" = "" ]
 			then
-				nullparm ${FUNCNAME} ${LINENO} 1
+				nullparm 1
 			fi
 			origfile=$2
 			if [ "${origfile}" = "" ]
 			then
-				nullparm ${FUNCNAME} ${LINENO} 1
-			fi
-			destfile=$3
-			if [ "${destfile}" = "" ]
-			then
-				nullparm ${FUNCNAME} ${LINENO} 1
+				nullparm 1
 			fi
 			sequence=$4
 			if [ "${sequence}" = "" ]
 			then
-				nullparm ${FUNCNAME} ${LINENO} 1
+				nullparm 1
 			fi
 		
 			echo "Verify ${changename}" | tee /tmp/${sequence}.${changename}.$$.debug.txt
@@ -69,7 +65,7 @@ then
 			diff -s ${origfile} ${destfile} | tee -a /tmp/${sequence}.${changename}.$$.debug.txt
 			if [ ${STAFF_VERBOSE} -gt 1 ]
 			then
-				echo "${0##*/}:${LINENO}"
+				errecho ""
 				set +x
 			fi
 		fi

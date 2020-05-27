@@ -30,11 +30,9 @@ then
 	# tell the user that they have insufficient parameters to this function
 	##########
 	function insufficient() {
-		funcname="$1"
-		lineno="$2"
-		numparms="$3"
-		shift; shift; shift;
-		errecho "${funcname} ${lineno}: Insufficient parameters $@, need ${numparms}"
+		numparms="$1"
+		shift;
+		errecho -i "Insufficient parameters $@, need ${numparms}"
 		exit -1
 		##########
 		# end of function insufficient
@@ -48,10 +46,8 @@ then
 	# tell the user that they have a null parameter
 	##########
 	function nullparm() {
-		funcname="$1"
-		lineno="$2"
-		parmnum="$3"
-		errecho "${funcname} ${lineno}: Parameter #${parmnum} is null"
+		parmnum="$1"
+		errecho -i "Parameter #${parmnum} is null"
 		exit -1
 		##########
 		# end of function insufficient

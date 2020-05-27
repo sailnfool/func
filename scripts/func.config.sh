@@ -27,6 +27,7 @@
 STC_fullname=$0
 STC_command=${0##*/}
 source func.getprojdir
+source func.errecho
 ####################
 # make sure that the project has been setup
 ####################

@@ -26,36 +26,36 @@ then
 	source func.insufficient
 	function getprojdir() {
 		ignorelist=""
-#		stderrecho $LINENO "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
+#		stderrecho "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
 		while [ "${1}" = "-i" ]
 		do
-#				stderrecho $LINENO "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
+#				stderrecho "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
 				ignorelist="-e /${2}/d ${ignorelist}"
 				shift
 				shift
-#				stderrecho $LINENO "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
+#				stderrecho "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
 		done
-#		stderrecho $LINENO "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
+#		stderrecho "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
 		numparms=2
 		project="$1"
 		projectbase="$2"
 		if [ $# -lt ${numparms} ]
 		then
-			insufficient ${LINENO} ${__FUNC__} ${numparms} $@
+			insufficient ${numparms} $@
 		fi
 		if [ -z ${project} ]
 		then
-			$(nullparm ${LINENO} ${__FUNC__} "1")
+			$(nullparm "1")
 		fi
 		if [ -z ${projectbase} ]
 		then
-			$(nullparm ${LINENO} ${__FUNC__} "2")
+			$(nullparm "2")
 		fi
 		if [ ! -d ${projectbase} ]
 		then
-			$(nullparm ${LINENO} ${__FUNC__} "3")
+			$(nullparm "3")
 		fi
-#		stderrecho ${LINENO} "ignorelist = ${ignorelist}"
+#		stderrecho "ignorelist = ${ignorelist}"
     ####################
     # The ignore list needs to be changed to pruning the find tree
     # this version will fail in mysterious ways due to partial matches
@@ -68,7 +68,7 @@ then
 #		  echo "projdir=\$(find ${projectbase} -name ${project} -a -type d -a -print | sed \"${ignorelist}\" )"
 		  projdir=$(find ${projectbase} -name ${project} -a -type d -a -print | sed "${ignorelist}" )
 		fi
-#		stderrecho ${LINENO} "projdir = ${projdir}"
+#		stderrecho "projdir = ${projdir}"
 		echo $projdir
 	##########
 	# End of function getprojdir
@@ -76,4 +76,4 @@ then
 	}
 	export -f getprojdir
 fi # if [ -z "${__funcgetprojdir}" ]
-# vim: set syntax=bash, ts=2, sw=2, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78

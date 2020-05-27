@@ -5,13 +5,13 @@
 ####################
 # doshells
 # copies shell scripts from their source directory to the bin
-# directory 
+# directory
 #
 # invoked as:
 #
 # doshells .sh; doshells .bash
 #
-# copies files with .sh or .bash suffix (or other) into 
+# copies files with .sh or .bash suffix (or other) into
 # $HOME/bin without the suffix.
 #
 # This script is obsoleted by proper use of make and install
@@ -34,29 +34,29 @@ then
 		numparms=2
 		scriptsuffix="${1}"
 		bin_path="${2}"
-	
+
 		if [ $# -lt ${numparms} ]
 		then
-			insufficient ${LINENO} ${FUNCNAME} ${numparms} $@
+			insufficient ${numparms} $@
 		fi
-		
+
 	  ##########
 		# What is the suffix of the script type we are copying?
 		# Typically it is ".bash" or ".sh"
 	  ##########
 		if [ -z "${scriptsuffix}" ]
 		then
-			nullparm ${LINENO} ${FUNCNAME} "1"
+			nullparm "1"
 		fi
-	
+
 	  ##########
 		# What is the path where the executable will be copied?
 	  ##########
 		if [ -z "${bin_path}" ]
 		then
-			nullparm ${LINENO} ${FUNCNAME} "2"
+			nullparm "2"
 		fi
-	
+
 		##########
 		# find out how many files there are in the source directory
 		# We use this step to avoid an error in the "for" loop below
@@ -80,11 +80,11 @@ then
 					j=$(basename ${i} ${scriptsuffix})
 					if [ ${i} -nt ${bin_path}/${j} ]
 					then
-#						stderrecho "${0##*/}:${FUNCNAME}:${LINENO} ${i} is newer"
+#						stderrecho "${i} is newer"
 						stderrecho "${i} is newer"
-						if [[ -r ${bin_path}/${j} ]] 
+						if [[ -r ${bin_path}/${j} ]]
 						then
-							diff -q ${bin_path}/${j} ${i} >&2 
+							diff -q ${bin_path}/${j} ${i} >&2
 						fi
 					fi
 					install --backup=numbered --preserve-timestamps ${i} ${bin_path}/${j} >&2
@@ -103,7 +103,7 @@ then
 	# directory and to the local source directory where the
 	# scripts are normally edited.  Basically insuring that
 	# the working directory is not the same one as the cloud
-	# archive. 
+	# archive.
 	##########
 	function dorshells() {
 		scriptsuffix="$1"

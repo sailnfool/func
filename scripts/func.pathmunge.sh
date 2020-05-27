@@ -7,12 +7,12 @@
 # pathmunge - add a directory to $PATH
 # This script came from stackoverflow
 # https://stackoverflow.com/questions/5012958/what-is-the-advantage-of-pathmunge-over-grep
-# 
+#
 # pathmunge <dir> [ after ]
 #
-# The directory <dir> is added before the rest of the directories in 
+# The directory <dir> is added before the rest of the directories in
 # PATH.  The optional argument "after" places the directory after all
-# other directories in PATH.  This script guarantees that links or 
+# other directories in PATH.  This script guarantees that links or
 # symbolic links are decoded via "realpath(1)" and that the specified
 # directory is only placed in PATH one time.  The output of the pathmunge
 # replaces the contents of $HOME/.bashrc.addpath which is sourced
@@ -42,7 +42,7 @@ then
 		    [ "$2" == "after" ] && export PATH="$PATH:$path" || export PATH="$path:$PATH"
 		  }
 		else
-			errecho ${LINENO} "$1 is not a directory" "${USAGE}"
+			errecho "$1 is not a directory" "${USAGE}"
 		fi
 		echo "export PATH=$PATH" > $BASHRC_ADDPATH
 	}

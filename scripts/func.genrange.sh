@@ -30,12 +30,12 @@ then
 	##########
 	gen_range () {
 	re="^[0-9]+$"
-	errecho ${LINENO} ${FUNCNAME} "re=${re}"
+	# errecho "re=${re}"
 	if [ $# -ge 2 ]
 		then
 			lower=$1
 			upper=$2
-			errecho ${LINENO} ${FUNCNAME} ${lower} ${upper}
+			# errecho ${lower} ${upper}
 			if [[ ! "${lower}" =~ ^[0-9]+$ ]]
 			then
 				lower=0
@@ -45,7 +45,7 @@ then
 				upper=0
 			fi
 			i=${lower}
-			while [ $i -le ${upper} ]
+			while [ $i -lt ${upper} ]
 			do
 				echo "$i"
 				((++i))

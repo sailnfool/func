@@ -4,14 +4,14 @@ PREFIX?=$(HOME)
 	@rm -f $@
 	cp $< $@
 INSTALL = func.arithmetic func.config func.cwave func.doshells \
-		  func.env func.errecho func.genrange \
-		  func.getprojdir func.hmsout func.insufficient \
-		  func.onefilehash func.onefilereformat \
-		  func.pathmunge func.random \
-			func.debug \
-			proj_setup mypr pinger find_sim \
-			getb2sum pathmunge nowinUCT sourcedate getgitroot \
-			func.testfunc histogram
+		func.env func.errecho func.genrange \
+		func.getprojdir func.hmsout func.insufficient \
+		func.onefilehash func.onefilereformat \
+		func.pathmunge func.random func.debug \
+		proj_setup mypr pinger find_sim \
+		getb2sum pathmunge nowinUCT sourcedate getgitroot \
+		func.testfunc histogram func.nice2num \
+		func.kbytes
 
 EXECDIR := $(PREFIX)/bin
 
