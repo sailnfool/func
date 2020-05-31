@@ -3,6 +3,6 @@
 all: scripts
 scripts:
 	cd scripts
-	make install clean
+	make uninstall install clean
 	cd ..
 
