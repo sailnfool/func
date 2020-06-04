@@ -23,9 +23,15 @@ then
 		errecho "Missing Parameter"
 		echo ""
 	else
-		number=$(echo $1 | sed 's/^.*\([0-9][0-9]*\).*$/\1/')
-		multiplier=$(echo $1 | \
+		###################
+		# Insure the multiplier is upper case
+		###################
+		nicenum=$(echo $1 | tr '[a-z]' '[A-Z]')
+
+		number=$(echo $nicenum | sed 's/^[^0-9]*\([0-9][0-9]*\).*$/\1/')
+		multiplier=$(echo $nicenum | \
 			sed "s/^.*[0-9]*\([$__kbibytesuffix]\)/\1/")
+	    
 		if [ -z ${multiplier} ]
 		then
 			echo ${number}

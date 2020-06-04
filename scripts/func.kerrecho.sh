@@ -51,28 +51,24 @@ then
 		then
 			PL=2
 		fi
-		FUNC_VERBOSE=${FUNC_VERBOSE:-0}
-		if [ ${FUNC_VERBOSE} -gt 0 ]
+		FN=${FUNCNAME[${PL}]}
+		LN=${BASH_LINENO[${PL}]}
+		SF=${BASH_SOURCE[${PL}]}
+		CM=${0##*/}
+		if [ "${pbs}" = "-e" ]
 		then
-			FN=${FUNCNAME[${PL}]}
-			LN=${BASH_LINENO[${PL}]}
-			SF=${BASH_SOURCE[${PL}]}
-			CM=${0##*/}
-			if [ "${pbs}" = "-e" ]
+			if [ -t 1 ]
 			then
-				if [ -t 1 ]
-				then
-					/bin/echo "${pbs}" $@
-				else
-					/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: \r\n"$@
-				fi
+				/bin/echo "${pbs}" $@
 			else
-				if [ -t 1 ]
-				then
-					/bin/echo "${pbs}" $@
-				else
-					/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: "$@
-				fi
+				/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: \r\n"$@
+			fi
+		else
+			if [ -t 1 ]
+			then
+				/bin/echo "${pbs}" $@
+			else
+				/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: "$@
 			fi
 		fi
 	##########

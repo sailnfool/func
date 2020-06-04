@@ -12,21 +12,29 @@
 ####################
 source func.kerrecho
 source func.kkbytes
-if [ -z "__kfuncnice2num" ]
+set -xv
+if [ -z "${__kfuncnice2num}" ]
 then
 	export __funcnice2num=1
 	####################
 	####################
-	nice2num
+	function nice2num
 	{
 	if [ $# -ne 1 ]
 	then
 		errecho "Missing Parameter"
 		echo ""
 	else
-		number=$(echo $1 | sed 's/^.*\([0-9][0-9]*\).*$/\1/')
-		multiplier=$(echo $1 | \
+		####################
+		# Insure that the argument modifier is upper case
+		####################
+		nicenum=$(echo $1 | tr '[a-z]' '[A-Z]')
+
+		number=$(echo $nicenum | sed 's/^[^0-9]*\([0-9][0-9]*\).*$/\1/')
+		multiplier=$(echo $nicenum | \
 			sed "s/^.*[0-9]*\([${__kbibytesuffix}]\)/\1/")
+
+
 		if [ -z ${multiplier} ]
 		then
 			echo ${number}
