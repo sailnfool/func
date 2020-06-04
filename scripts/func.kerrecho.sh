@@ -38,7 +38,8 @@
 if [ -z "${__funcerrecho}" ]
 then
 	export __funcerrecho=1
-	function errecho() {>&2
+	function errecho
+	{>&2
 		PL=1
 		pbs=""
 		if [ "$1" = "-e" ]
@@ -53,10 +54,10 @@ then
 		FUNC_VERBOSE=${FUNC_VERBOSE:-0}
 		if [ ${FUNC_VERBOSE} -gt 0 ]
 		then
-			local FN=${FUNCNAME[${PL}]}
-			local LN=${BASH_LINENO[${PL}]}
-			local SF=${BASH_SOURCE[${PL}]}
-			local CM=${0##*/}
+			FN=${FUNCNAME[${PL}]}
+			LN=${BASH_LINENO[${PL}]}
+			SF=${BASH_SOURCE[${PL}]}
+			CM=${0##*/}
 			if [ "${pbs}" = "-e" ]
 			then
 				if [ -t 1 ]
@@ -78,28 +79,30 @@ then
 	# End of function errecho
 	##########
 	}
-	export -f errecho
+	export errecho
 	##########
 	# Send diagnostic output to stderr with a newline
 	##########
-	function stderrecho() {>&2 
-		local FN=${FUNCNAME[1]}
-		local LN=${BASH_LINENO[1]}
-		local SF=${BASH_SOURCE[1]}
-		local CM=${0##*/}
+	function stderrecho
+	{>&2 
+		FN=${FUNCNAME[1]}
+		LN=${BASH_LINENO[1]}
+		SF=${BASH_SOURCE[1]}
+		CM=${0##*/}
 		echo ${SF}->${CM}::${FN}:${LN}:$@
 	}
-	export -f stderrecho
+	export stderrecho
 	##########
 	# Send diagnostic output to stderr without a newline
 	##########
-	function stderrnecho() {>&2
-		local FN=${FUNCNAME[1]}
-		local LN=${BASH_LINENO[1]}
-		local SF=${BASH_SOURCE[1]}
-		local CM=${0##*/}
+	function stderrnecho
+	{>&2
+		FN=${FUNCNAME[1]}
+		LN=${BASH_LINENO[1]}
+		SF=${BASH_SOURCE[1]}
+		CM=${0##*/}
 		echo -n ${SF}->${CM}::${FN}:${LN}:$@
 	}
-	export -f stderrnecho
+	export stderrnecho
 fi # if [ -z "${__funcerrecho}" ]
 # vim: set syntax=bash, lines=55, columns=120,colorcolumn=78

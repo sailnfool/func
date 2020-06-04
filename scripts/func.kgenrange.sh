@@ -28,7 +28,8 @@ then
 	# See:
 	# https://unix.stackexchange.com/questions/340440/bash-test-what-does-do
 	##########
-	gen_range () {
+	function gen_range
+	{
 	re="^[0-9]+$"
 	# errecho "re=${re}"
 	if [ $# -ge 2 ]
@@ -55,6 +56,6 @@ then
 	# End function gen_range
 	##########
 	}
-	export -f gen_range
+	export gen_range
 fi # if [ -z "${__funcgenrange}" ]
 # vim: set syntax=bash, lines=55, columns=120,colorcolumn=78

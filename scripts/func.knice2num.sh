@@ -10,14 +10,15 @@
 #${__}___________________________________________________________________
 #
 ####################
-source func.errecho
-source func.kbytes
+source func.kerrecho
+source func.kkbytes
 if [ -z "__kfuncnice2num" ]
 then
 	export __funcnice2num=1
 	####################
 	####################
-	nice2num () {
+	nice2num
+	{
 	if [ $# -ne 1 ]
 	then
 		errecho "Missing Parameter"
@@ -32,28 +33,28 @@ then
 		else
 			case $multiplier in
 			B)
-				number = number * ${__byte}
+				((number*=__byte))
 				;;
 			K)
-				number = number * ${__kibibyte}
+				((number*=__kibibyte))
 				;;
 			M)
-				number = number * ${__mibibyte}
+				((number*=__mibibyte))
 				;;
 			G)
-				number = number * ${__gibibyte}
+				(( number*=__gibibyte))
 				;;
 			T)
-				number = number * ${__tibibyte}
+				(( number*=__tibibyte))
 				;;
 			P)
-				number = number * ${__pibibyte}
+				(( number*=__pibibyte))
 				;;
 			E)
-				number = number * ${__etibyte}
+				(( number*=__etibyte))
 				;;
 			Z)
-				number = number * ${__zibibyte}
+				(( number*=__zibibyte))
 				;;
 			\?)
 				errecho "Bad Suffix $multiplier"
@@ -66,6 +67,6 @@ then
 	# End function nice2num
 	##########
 	}
-	export -f nice2num
+	export nice2num
 fi # if [ -z "__funcnice2num" ]
 # vim: set syntax=bash, lines=55, columns=120,colorcolumn=78

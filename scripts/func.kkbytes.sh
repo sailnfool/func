@@ -16,21 +16,21 @@ then
 	####################
 	####################
 	__kbibytesuffix="BKMGTPEZ"
-	__byte=1
-	__kilobyte=${__byte} * 1000
-	__megabyte=${__kilobyte} * 1000
-	__gigabyte=${__megabyte} * 1000
-	__terabyte=${__gigabyte} * 1000
-	__petabyte=${__terabyte} * 1000
-	__etabyte=${__petabyte} * 1000
-	__zetabyte=${__etabyte} * 1000
-	__kibibyte=${__byte} * 1024
-	__mibibyte=${__kibibyte} * 1024
-	__gibibyte=${__mibibyte} * 1024
-	__tibibyte=${__gibibyte} * 1024
-	__pibibyte=${__tibibyte} * 1024
-	__etibyte=${__pibibyte} * 1024
-	__zibibyte=${__etibyte} * 1024
+	((__byte=1))
+	((__kilobyte=__byte * 1000))
+	((__megabyte=__kilobyte * 1000))
+	((__gigabyte=__megabyte * 1000))
+	((__terabyte=__gigabyte * 1000))
+	((__petabyte=__terabyte * 1000))
+	((__etabyte=__petabyte * 1000))
+	((__zetabyte=__etabyte * 1000))
+	((__kibibyte=__byte * 1024))
+	((__mibibyte=__kibibyte * 1024))
+	((__gibibyte=__mibibyte * 1024))
+	((__tibibyte=__gibibyte * 1024))
+	((__pibibyte=__tibibyte * 1024))
+	((__etibyte=__pibibyte * 1024))
+	((__zibibyte=__etibyte * 1024))
 	export __kbibytesuffix
 	export __byte
 	export __kilobyte
