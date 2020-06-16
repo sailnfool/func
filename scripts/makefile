@@ -5,7 +5,7 @@ PREFIX2?=/tftpboot/global/novak5
 	@rm -f $@
 	cp $< $@
 INSTALL = func.arithmetic func.config func.cwave func.doshells \
-		func.env func.errecho func.genrange \
+		func.env func.errecho \
 		func.getprojdir func.hmsout func.insufficient \
 		func.onefilehash func.onefilereformat \
 		func.pathmunge func.random func.debug \
@@ -13,8 +13,8 @@ INSTALL = func.arithmetic func.config func.cwave func.doshells \
 		getb2sum pathmunge nowinUCT sourcedate getgitroot \
 		func.testfunc histogram func.nice2num \
 		func.kbytes \
-		func.kkbytes func.kerrecho func.kgenrange \
-		func.knice2num
+		func.kkbytes func.kerrecho \
+		func.knice2num func.kinsufficient
 
 EXECDIR := $(PREFIX)/bin
 EXECDIR2 := $(PREFIX2)/bin

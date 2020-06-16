@@ -50,7 +50,7 @@ then
 		errecho -i "Parameter #${parmnum} is null"
 		exit -1
 		##########
-		# end of function insufficient
+		# end of function nullparm
 		##########
 	}
 	export -f nullparm

@@ -12,7 +12,6 @@
 ####################
 source func.kerrecho
 source func.kkbytes
-set -xv
 if [ -z "${__kfuncnice2num}" ]
 then
 	export __funcnice2num=1
@@ -75,6 +74,5 @@ then
 	# End function nice2num
 	##########
 	}
-	export nice2num
 fi # if [ -z "__funcnice2num" ]
 # vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
