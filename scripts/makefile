@@ -14,8 +14,8 @@ INSTALL = func.arithmetic func.config func.cwave func.doshells \
 		func.testfunc histogram func.nice2num \
 		func.kbytes \
 		func.kkbytes func.kerrecho \
-		func.knice2num func.kinsufficient
-		zfunc.zfsparent
+		func.knice2num func.kinsufficient \
+		zfunc.zfsparent zfunc.results
 
 EXECDIR := $(PREFIX)/bin
 EXECDIR2 := $(PREFIX2)/bin
