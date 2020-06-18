@@ -11,7 +11,7 @@ INSTALL = func.arithmetic func.config func.cwave func.doshells \
 		func.pathmunge func.random func.debug \
 		proj_setup mypr pinger find_sim \
 		getb2sum pathmunge nowinUCT sourcedate getgitroot \
-		func.testfunc histogram func.nice2num \
+		histogram func.nice2num \
 		func.kbytes \
 		func.kkbytes func.kerrecho \
 		func.knice2num func.kinsufficient \
