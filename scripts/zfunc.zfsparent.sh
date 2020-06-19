@@ -10,7 +10,7 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
-# 1.0 | REN |06/17/2020| Find the parent directory of zfs in-tree
+# 1.0 | REN |06/17/2020| Set the parent directory of zfs in-tree
 
 ####################
 if [ -z "${__zfunczfsparent}" ]

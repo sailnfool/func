@@ -10,14 +10,12 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
-# 1.0 | REN |06/17/2020| Find the parent directory of zfs in-tree
-
+# 1.0 | REN |06/17/2020| Set the directory for storing benchmark results
 ####################
 if [ -z "${__zfuncresults}" ]
 then
 	export __zfuncresults=1
-	function benchresults()
-	{
+	function benchresults {
 		if [ $# -gt 0 ]
 		then
 			luser=$1
@@ -37,4 +35,5 @@ then
 		esac
 		echo "${benchresults}"
 	}
+	export -f benchresults
 fi # if [ -z "${__zfuncresults}" ]
