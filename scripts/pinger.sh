@@ -12,11 +12,12 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 2.1 | REN |06/27/2020| brought up to date with getopts
 # 2.0 | REN |12/03/2019| Modified to use more source'd functions
-# 1.1	| REN	|07/29/2010| Installed new prolog, cleaned up the
+# 1.1 | REN |07/29/2010| Installed new prolog, cleaned up the
 #                      | temporary files on exit and added a 
 #                      | correct exit code
-# 1.0	| REN	|07/22/2010| Initial Release
+# 1.0 | REN |07/22/2010| Initial Release
 #_____________________________________________________________________
 #
 # source func.config
@@ -39,19 +40,20 @@ mkdir -p $pingertmp
 #		-O <High Ping port>
 ####################
 Subnet=$(hostname -I | sed -e 's/\.[^\.]*$//')
-netdevice=$(ip r | awk  '/default/ {print $5}')
+netdevice=$(ip route list default | cut -f 5 -d ' ')
 netmask=$(ifconfig "$netdevice" | awk '/netmask/{ print $4;}')
 Gateway=$(ip r | grep default | awk -F " " '{print $3}')
-USAGE="${0##*/} [-hv] [-p <IP Prefix] [-n IP netmask] [-g <gateway>]\r\n
-\t\t[-I <low ping>] [-O <high ping>]\r\n\r\n
-\t-h\t\t\tDisplay this message\r\n
-\t-v\t\t\tVerbose Mode\r\n
-\t-p\t<IP Prefix>\tDefault on this machine is $Subnet\r\n
-\t-n\t<netmask>\tDefault on network on this device is $netdevice\r\n
-\t\t\t\tDefault netmask on this machine is $netmask\r\n
-\t-g\t<gateway>\tDefault on this machine is $Gateway\r\n
-\t-I\t<low ping port>\tDefault is ${Subnet}.1\r\n
-\t-O\t<high ping port\tDefault is ${Subnet}.255\r\n"
+USAGE="${0##*/} [-hv] [-p <IP Prefix] [-n IP netmask] [-g <gateway>]\n
+\t\t[-I <low ping>] [-O <high ping>]\n\n
+\t-h\t\t\tDisplay this message\n
+\t-v\t\t\tVerbose Mode\n
+\t-p\t<IP Prefix>\tDefault on this machine is $Subnet\n
+\t-n\t<netmask>\tDefault on network on this device is $netdevice\n
+\t\t\t\tDefault netmask on this machine is $netmask\n
+\t-g\t<gateway>\tDefault on this machine is $Gateway\n
+\t-I\t<low ping port>\tDefault is ${Subnet}.1\n
+\t-O\t<high ping port\tDefault is ${Subnet}.255\n
+"
 
 configure_verbose=0
 configure_IPrefix=0
@@ -71,7 +73,7 @@ configure_IPnetmask=1
 ####################
 # Gateway Addresses
 ####################
-Gateway=$(ip r | grep default | awk -F " " '{print $3}')
+Gateway=$(ip route list default | cut -d ' ' -f 3)
 
 ####################
 # Set the subnet port numbers for devices
@@ -93,29 +95,33 @@ High_PING_Port=255
 #		-I <Low PING Address>
 #		-O <High Ping Address>
 ####################
-set -- `getopt hdvp:n:g:I:O: $*`
-if [ $? != 0 ]
-then
-	echo -ne ${USAGE}
-	exit 2
-fi
+optionargs="hdI:g:n:O:p:v"
+NUMARGS=0
 if [ ${configure_debug} = 1 ]
 then
 	echo "Parameters are $*"
 fi
-for i in $*
+while getopts ${optionargs} name
 do
-	case ${i} in
-		-h)	echo -ne ${USAGE}; shift; exit 0;;
-    -d) configure_debug=1; shift;;
-		-v)	configure_verbose=1; set -x; shift;;
-		-p)	Subnet=$2; configure_IPrefix=1; shift 2;;
-		-n)	netmask=$2; configure_IPnetmaks=1; shift 2;;
-		-g)	Gateway=$2; configure_gateway=1; shift 2;;
-		-I)	Low_PING_Port=$2; configure_LowPING=1; shift 2;;
-		-O)	High_PING_Port=$2; configure_HighPING=1; shift 2;;
+	case ${name} in
+	-h)	echo -ne ${USAGE}; exit 0;;
+	-d)	configure_debug=1; ;;
+	-v)	configure_verbose=1; set -x; ;;
+	-p)	Subnet=${OPTARG}; configure_IPrefix=1; ;;
+	-n)	netmask=${OPTARG}; configure_IPnetmaks=1; ;;
+	-g)	Gateway=${OPTARG}; configure_gateway=1; ;;
+	-I)	Low_PING_Port=${OPTARG}; configure_LowPING=1; ;;
+	-O)	High_PING_Port=${OPTARG}; configure_HighPING=1; ;;
+	\?)	errecho "invalid option -${OPTARG}"; \
+		errecho "-e" ${USAGE}; exit 1; ;;
 	esac
 done
+shift "$((${OPTIND} - 1 ))"
+if [ $# != ${NUMARGS} ]
+then
+	echo -ne ${USAGE}
+	exit 2
+fi
 
 if [ $(which arp | wc -l) -ne 1 ]
 then
