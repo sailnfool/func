@@ -39,20 +39,20 @@ mkdir -p $pingertmp
 #		-I <Low PING port>
 #		-O <High Ping port>
 ####################
-Subnet=$(hostname -I | sed -e 's/\.[^\.]*$//')
+subnet=$(hostname -I | sed -e 's/\.[^\.]*$//')
 netdevice=$(ip route list default | cut -f 5 -d ' ')
 netmask=$(ifconfig "$netdevice" | awk '/netmask/{ print $4;}')
-Gateway=$(ip r | grep default | awk -F " " '{print $3}')
+gateway=$(ip r | grep default | awk -F " " '{print $3}')
 USAGE="${0##*/} [-hv] [-p <IP Prefix] [-n IP netmask] [-g <gateway>]\n
 \t\t[-I <low ping>] [-O <high ping>]\n\n
 \t-h\t\t\tDisplay this message\n
 \t-v\t\t\tVerbose Mode\n
-\t-p\t<IP Prefix>\tDefault on this machine is $Subnet\n
+\t-p\t<IP Prefix>\tDefault on this machine is $subnet\n
 \t-n\t<netmask>\tDefault on network on this device is $netdevice\n
 \t\t\t\tDefault netmask on this machine is $netmask\n
-\t-g\t<gateway>\tDefault on this machine is $Gateway\n
-\t-I\t<low ping port>\tDefault is ${Subnet}.1\n
-\t-O\t<high ping port\tDefault is ${Subnet}.255\n
+\t-g\t<gateway>\tDefault on this machine is $gateway\n
+\t-I\t<low ping port>\tDefault is ${subnet}.1\n
+\t-O\t<high ping port\tDefault is ${subnet}.255\n
 "
 
 configure_verbose=0
@@ -61,19 +61,18 @@ configure_IPnetmask=0
 configure_gateway=0
 
 ####################
-# Set the Subnet and Mask Parameters
+# Set the subnet and Mask Parameters
 #
 # This is the subnet 
 ####################
 configure_IPrefix=1
-Subnet=$(hostname -I | sed -e 's/\.[^\.]*$//')
-#Subnet="10.0.11"
+subnet=$(hostname -I | sed -e 's/\.[^\.]*$//')
 configure_IPnetmask=1
 
 ####################
-# Gateway Addresses
+# gateway Addresses
 ####################
-Gateway=$(ip route list default | cut -d ' ' -f 3)
+gateway=$(ip route list default | cut -d ' ' -f 3)
 
 ####################
 # Set the subnet port numbers for devices
@@ -104,14 +103,14 @@ fi
 while getopts ${optionargs} name
 do
 	case ${name} in
-	-h)	echo -ne ${USAGE}; exit 0;;
-	-d)	configure_debug=1; ;;
-	-v)	configure_verbose=1; set -x; ;;
-	-p)	Subnet=${OPTARG}; configure_IPrefix=1; ;;
-	-n)	netmask=${OPTARG}; configure_IPnetmaks=1; ;;
-	-g)	Gateway=${OPTARG}; configure_gateway=1; ;;
-	-I)	Low_PING_Port=${OPTARG}; configure_LowPING=1; ;;
-	-O)	High_PING_Port=${OPTARG}; configure_HighPING=1; ;;
+	h)	echo -ne ${USAGE}; exit 0; ;;
+	d)	configure_debug=1; ;;
+	v)	configure_verbose=1; set -x; ;;
+	p)	subnet=${OPTARG}; configure_IPrefix=1; ;;
+	n)	netmask=${OPTARG}; configure_IPnetmaks=1; ;;
+	g)	gateway=${OPTARG}; configure_gateway=1; ;;
+	I)	Low_PING_Port=${OPTARG}; configure_LowPING=1; ;;
+	O)	High_PING_Port=${OPTARG}; configure_HighPING=1; ;;
 	\?)	errecho "invalid option -${OPTARG}"; \
 		errecho "-e" ${USAGE}; exit 1; ;;
 	esac
@@ -127,12 +126,20 @@ if [ $(which arp | wc -l) -ne 1 ]
 then
 	sudo sudo apt-get update && sudo apt-get install net-tools
 fi
+if [ $(which arp-scan | wc -l) -ne 1 ]
+then
+	sudo sudo apt-get update && sudo apt-get install arp-scan
+fi
+if [ $(which nmap | wc -l) -ne 1 ]
+then
+	sudo sudo apt-get update && sudo apt-get install nmap
+fi
 if [ ${configure_debug} = 1 ]
 then
 	echo configure_verbose=${configure_verbose}
-	echo Subnet=${Subnet}
+	echo subnet=${subnet}
 	echo netmask=${netmask}
-	echo Gateway=${Gateway}
+	echo gateway=${gateway}
 	echo Low_PING_Port=${Low_PING_Port}
 	echo High_PING_Port=${High_PING_Port}
 fi
@@ -145,6 +152,7 @@ fi
 filepinglog="pingit"
 grepall="grepall"
 greplog="greplog"
+arpscanlog="arpscanlog"
 
 ####################
 # Set the full pathnames for the various files.
@@ -154,6 +162,7 @@ greplog="greplog"
 pinglog=${pingertmp}/${filepinglog}
 grepallfile=${pingertmp}/${grepall}
 greplogfile=${pingertmp}/${greplog}
+arpscanlogfile=${pingertmp}/${arpscanlog}
 
 ####################
 # Set various sleep timers
@@ -165,15 +174,16 @@ pingsleep=1
 # provision BMCs
 ####################
 rm -f ${pinglog}
-for i in `seq ${Low_PING_Port}     ${High_PING_Port}`
+for i in $(seq ${Low_PING_Port}     ${High_PING_Port})
 do
+	ipaddr="${subnet}.${i}"
 	####################
         # 1 Ping to each node
 	#  This can be sped up a great deal by making the ping process
 	#  a background process that sends the output to a unique file
 	#  in /tmp and then dumping all of the processes that worked.
 	####################
-        ping -w 1 -c 1 ${Subnet}.${i} >> ${pinglog}-${i} 2>&1 &
+        ping -w 1 -c 1 ${ipaddr} >> ${pinglog}-${i} 2>&1 &
 done
 
 if [ ${configure_debug} = 1 ]
@@ -190,8 +200,8 @@ then
 else
   sleeptime=$1
 fi
-echo "${0##*/} ${LINENO} sleeping for $sleeptime seconds"
-sleep $sleeptime
+# echo "${0##*/} ${LINENO} sleeping for $sleeptime seconds"
+# sleep $sleeptime
 wait
 
 ####################
@@ -204,20 +214,68 @@ grep -l "100% packet loss" ${pinglog}-* | sort -u > ${greplogfile}
 ####################
 ls ${pinglog}-* > ${grepallfile}
 
-responders=0
 ####################
 # take the difference between the two sets and generate a list of ports
 # that answered, then echo the full IP address of those machines.
 ####################
-for i in `diff ${grepallfile} ${greplogfile} | sed -n -e "s/^<.*-\(.*\)$/\1/p"`
+declare -A ip_response ip_ping
+sudo arp-scan --localnet --retry 5 |grep -v DUP > ${arpscanlogfile}
+echo -e "IP Address\tping?\tarp\tnslookup\tarpscan"
+for i in $(diff ${grepallfile} ${greplogfile} | sed -n -e "s/^<.*-\(.*\)$/\1/p")
 do
-  address_name=$(arp ${Subnet}.${i} | tail -1 | awk '{print $1}')
-  if [ "${address_name}" = "${Subnet}.${i}" ]
-  then
-    address_name="HWtype=$(arp ${Subnet}.${i} | tail -1 | awk '{print $2}')"
-  fi
-  echo -e "${Subnet}.${i}\t${address_name}"
-	responders=`expr ${responders} + 1`
+	ipaddr="${subnet}.${i}"
+	ip_response[${i}]=1
+	ip_ping[${i}]=1
+done
+responders=0
+for i in $(seq ${Low_PING_Port} ${High_PING_Port})
+do
+	ipaddr="${subnet}.${i}"
+	arp_name=$(arp ${ipaddr} | tail -1 | cut -d ' ' -f 1)
+	if [ "${arp_name}" = "${ipaddr}" ]
+	then
+		arp_response=$(arp ${ipaddr} | tail -1)
+		no_entry="$(echo ${arp_response} | awk '{print $4}')"
+		if [ "${no_entry}" = "no" ]
+		then
+			arp_name="no entry"
+		else
+			incomplete="$(echo ${arp_response} | awk '{print $2}')"
+			if [ "${incomplete}" = "(incomplete)" ]
+			then
+				arp_name="incomplete"
+			else
+				arp_name="HWtype=$(arp ${ipaddr} | tail -1 | awk '{print $2}')"
+				ip_response[${i}]=1
+			fi
+		fi
+	fi
+	nslookup_name=$(nslookup ${ipaddr} | head -1 | cut -d ' ' -f 3)
+	if [ "${nslookup_name}" = "can't" ]
+	then
+		nslookup_name="not found"
+	else
+		nslookup_name=$(echo ${nslookup_name}|sed -e 's/\.$//')
+		ip_response[${i}]=1
+	fi
+	arpscan_name=$(awk -F '\t' "/^${ipaddr}\\t/{print \$3}" < ${arpscanlogfile})
+	if [ -z "${arpscan_name}" ]
+	then
+		arpscan_name="not found"
+	else
+		ip_response[${i}]=1
+	fi
+	if [ ! -z "${ip_response[${i}]}" ]
+	then
+		if [ ! -z "${ip_ping[${i}]}" ]
+		then
+			pinged="yes"
+		else
+			pinged="no"
+		fi
+		echo -e "${ipaddr}\t${pinged}\t${arp_name}\t${nslookup_name}\t${arpscan_name}"
+		((responders++))
+	fi
 done
 
 ####################
@@ -242,6 +300,7 @@ rm -rf $pingertmp
 if [ ${responders} -gt 0 ]
 then
 	exit 0
+	rm -rf ${pingertmp}
 else
 	exit 257	# Since it is impossible for 257 nodes on a subnet
 fi
