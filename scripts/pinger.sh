@@ -130,6 +130,10 @@ if [ $(which arp-scan | wc -l) -ne 1 ]
 then
 	sudo sudo apt-get update && sudo apt-get install arp-scan
 fi
+if [ $(which nslookup | wc -l) -ne 1 ]
+then
+	sudo sudo apt-get update && sudo apt-get install dnsutils
+fi
 if [ $(which nmap | wc -l) -ne 1 ]
 then
 	sudo sudo apt-get update && sudo apt-get install nmap
