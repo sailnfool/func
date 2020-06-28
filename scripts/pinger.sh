@@ -153,6 +153,7 @@ filepinglog="pingit"
 grepall="grepall"
 greplog="greplog"
 arpscanlog="arpscanlog"
+columnslog="col_log"
 
 ####################
 # Set the full pathnames for the various files.
@@ -163,6 +164,7 @@ pinglog=${pingertmp}/${filepinglog}
 grepallfile=${pingertmp}/${grepall}
 greplogfile=${pingertmp}/${greplog}
 arpscanlogfile=${pingertmp}/${arpscanlog}
+colfile=${pingertmp}/${columnslog}
 
 ####################
 # Set various sleep timers
@@ -220,7 +222,7 @@ ls ${pinglog}-* > ${grepallfile}
 ####################
 declare -A ip_response ip_ping
 sudo arp-scan --localnet --retry 5 |grep -v DUP > ${arpscanlogfile}
-echo -e "IP Address\tping?\tarp\tnslookup\tarpscan"
+echo -e "IP Address\tping?\tarp\tnslookup\tarpscan" | tee ${colfile}
 for i in $(diff ${grepallfile} ${greplogfile} | sed -n -e "s/^<.*-\(.*\)$/\1/p")
 do
 	ipaddr="${subnet}.${i}"
@@ -273,11 +275,12 @@ do
 		else
 			pinged="no"
 		fi
-		echo -e "${ipaddr}\t${pinged}\t${arp_name}\t${nslookup_name}\t${arpscan_name}"
+		echo -e "${ipaddr}\t${pinged}\t${arp_name}\t${nslookup_name}\t${arpscan_name}" | tee -a ${colfile}
 		((responders++))
 	fi
 done
-
+clear
+cat ${colfile} | column -t -n -s $'\t' | more
 ####################
 # Unless we are debugging, clean up all of the temporary files
 ####################
@@ -287,13 +290,9 @@ then
 fi
 
 ####################
-# If we are verbose, then tell how many systems answered the pings
+# tell how many systems answered the queries (including pings)
 ####################
-if [ ${configure_verbose} = 1 ]
-then
-	echo "${0##*/}: ${responders} answered"
-fi
-rm -rf $pingertmp
+echo "${0##*/}: ${responders} answered"
 ####################
 # if there were no responses then exit with an error
 ####################
