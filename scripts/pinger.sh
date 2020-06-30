@@ -222,7 +222,7 @@ ls ${pinglog}-* > ${grepallfile}
 ####################
 declare -A ip_response ip_ping
 sudo arp-scan --localnet --retry 5 |grep -v DUP > ${arpscanlogfile}
-echo -e "IP Address\tping?\tarp\tnslookup\tarpscan" | tee ${colfile}
+echo -e "IP Address\tping?\tarp\tnslookup\tarpscan\t/etc/hosts" | tee ${colfile}
 for i in $(diff ${grepallfile} ${greplogfile} | sed -n -e "s/^<.*-\(.*\)$/\1/p")
 do
 	ipaddr="${subnet}.${i}"
@@ -275,7 +275,14 @@ do
 		else
 			pinged="no"
 		fi
-		echo -e "${ipaddr}\t${pinged}\t${arp_name}\t${nslookup_name}\t${arpscan_name}" | tee -a ${colfile}
+		echo -en "${ipaddr}\t${pinged}\t${arp_name}\t${nslookup_name}\t${arpscan_name}" | tee -a ${colfile}
+		hostdata=$(egrep '^'${ipaddr} /etc/hosts | sed "s/^${ipaddr}\t//" )
+		if [ ! -z "${hostdata}" ]
+		then
+			echo -e "\t${hostdata}" | tee -a ${colfile}
+		else
+			echo "" | tee -a ${colfile}
+		fi
 		((responders++))
 	fi
 done
