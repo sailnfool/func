@@ -124,15 +124,19 @@ fi
 
 if [ $(which arp | wc -l) -ne 1 ]
 then
-	sudo sudo apt-get update && sudo apt-get install net-tools
+	sudo sudo apt-get update && sudo apt-get install -y net-tools
 fi
 if [ $(which arp-scan | wc -l) -ne 1 ]
 then
-	sudo sudo apt-get update && sudo apt-get install arp-scan
+	sudo sudo apt-get update && sudo apt-get install -y arp-scan
+fi
+if [ $(which nslookup | wc -l) -ne 1 ]
+then
+	sudo sudo apt-get update && sudo apt-get install -y dnsutils
 fi
 if [ $(which nmap | wc -l) -ne 1 ]
 then
-	sudo sudo apt-get update && sudo apt-get install nmap
+	sudo sudo apt-get update && sudo apt-get install -y nmap
 fi
 if [ ${configure_debug} = 1 ]
 then
