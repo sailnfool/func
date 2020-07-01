@@ -339,7 +339,8 @@ do
 			thisline="${thisline}\t${arpscan_name}"
 			;;
 		etchosts) 
-			hostdata=$(egrep '^'${ipaddr}'\w' /etc/hosts | sed "s/^${ipaddr}\t//" )
+			hostdata=$(egrep '^'${ipaddr}'[^0-9]' /etc/hosts|sed  's/^.*\t//')
+
 			if [ ! -z "${hostdata}" ]
 			then
 				thisline="${thisline}\t${hostdata}"
