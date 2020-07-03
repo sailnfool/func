@@ -73,7 +73,7 @@ do
 		if [ $(expr ${HASHCNT} % 7000) -eq 0 ]
 		then
 			echo ""
-			echo "$(date '%T') ${HASHCNT}"
+			echo "$(date '+%T') ${HASHCNT}"
 		fi
 	done < ${TMPDIR}/thislist
 done  < ${DIRLIST}
