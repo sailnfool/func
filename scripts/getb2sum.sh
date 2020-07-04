@@ -79,11 +79,11 @@ fi
 if [ $# -gt 0 ]
 then
 	filename=$1
-#	b2sum ${filename} | awk '{print $1}'
-  hashstring=$(b2sum ${filename})
+	# b2sum ${filename} | awk '{print $1}'
+	hashstring=$(b2sum ${filename})
 else
-#	echo ${string} | b2sum | awk '{print $1}'
-  hashstring=$(echo ${string} | b2sum)
+	#echo ${string} | b2sum | awk '{print $1}'
+	hashstring=$(echo ${string} | b2sum)
 fi
 if [ "$BRIEF" = "TRUE" ]
 then

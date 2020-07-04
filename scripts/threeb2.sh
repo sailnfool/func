@@ -1,7 +1,7 @@
 #!/bin/bash
-HASHES=/hashes
+HASHES=/hashes2
 HASHCNT=0
-TMPDIR=/tmp/hashes.$$.dir
+TMPDIR=/tmp/${HASHES}.$$.dir
 re_hexnumber='^[0-9a-f][0-9a-f]*$'
 mkdir -p ${TMPDIR}
 if [ ! -d ${HASHES} ]
@@ -20,22 +20,37 @@ then
 	echo "Not a directory $1"
 	exit 0
 fi
-find "$1" -type d -name hashes -prune \
+find "$1" -type d -a \( -name hashes -o -name tmp \) -prune \
 	-o -type d -print  > ${DIRLIST}
-# ls -l ${DIRLIST}
-# wc -l ${DIRLIST}
+cat ${DIRLIST}
+ls -l ${DIRLIST}
+wc -l ${DIRLIST}
 # split -C 2048 ${DIRLIST} ${TMPDIR}/dirfile
 # ls -l ${TMPDIR}/dirfile*
 # wc -l ${TMPDIR}/dirfile*
-
-while read dirname
+declare -A allhashes
+echo $(date '+%T')
+while read -r dirname
 do
-	find "$dirname" -maxdepth 1 -type f  > ${TMPDIR}/thislist
+	#find "$dirname" -maxdepth 1 -type f  > ${TMPDIR}/thislist
 	# ls -l ${TMPDIR}/thislist
 	# echo "Number of Files in ${dirname} is $(wc -l ${TMPDIR}/thislist)"
-	b2sum $(cat ${TMPDIR}/thislist) > ${TMPDIR}/thishash
-	while read hashonly filename
+	if [ ! -d "$dirname" ]
+	then
+		echo "${0##*/} $LINENO dirname=${dirname} is not a directory"
+		exit -1
+	fi
+	b2sum "$dirname"/* 2> /dev/null >/${TMPDIR}/thislist
+	# cat ${TMPDIR}/thislist
+	while read -r hashline
 	do
+		if [ "${hashline:0:5}" == "Failed" ]
+		then
+			continue
+		fi
+		hashonly=${hashline:0:127}
+		filename=${hashline:130}
+		allhashes[$hashonly]="$filename"
 		if [ ! -f "${filename}" ]
 		then
 			echo "filename=${filename} is not a file"
@@ -45,48 +60,14 @@ do
 		# b2hash=$(b2sum "${filename}" 2>/dev/null)
 		# echo "b2hash of ${filename}=${b2hash}"
 		# hashonly=$(echo ${b2hash} | cut -d ' ' -f 1)
-		directoryname=$(echo ${hashonly}|sed 's/^\(..\).*/\1/')
-		subdirectoryname=$(echo ${hashonly}|sed 's/^..\(..\).*/\1/')
-		if [[ ! ${directoryname} =~ ${re_hexnumber} ]]
-		then
-			echo $LINENO working on "${filename}"
-			# echo b2hash=${b2hash}
-			echo directoryname is not a hex number
-			echo hashonly=${hashonly}
-			echo directoryname=${directoryname}
-			echo "HASHCNT=${HASHCNT}"
-			exit 0
-		fi
-		if [[ ! ${subdirectoryname} =~ ${re_hexnumber} ]]
-		then
-			echo $LINENO working on "${filename}"
-			# echo b2hash=${b2hash}
-			echo directoryname is not a hex number
-			echo hashonly=${hashonly}
-			echo directoryname=${directoryname}
-			echo subdirectoryname=${subdirectoryname}
-			echo "HASHCNT=${HASHCNT}"
-			exit 0
-		fi
+		directoryname=${hasonly:0:2}
+		subdirectoryname=${hashonly:2:2}
 		hashdir=${HASHES}/${directoryname}/${subdirectoryname}
-		if [ ! -d ${hashdir} ]
-		then
-			echo $LINENO "Creating ${hashdir}"
-			# echo hashonly=${hashonly}
-			# echo directoryname=${directoryname}
-			echo "HASHCNT=${HASHCNT}"
-			mkdir -p ${hashdir}
-			chmod 777 ${hashdir}
-		fi
-		echo ${filename} >> ${hashdir}/${hashonly}
-		if [ $(expr ${HASHCNT} % 100) -eq 0 ]
-		then
-			echo -n '.'
-		fi
-		if [ $(expr ${HASHCNT} % 7000) -eq 0 ]
-		then
-			echo ""
-			echo "$(date '+%T') ${HASHCNT}"
-		fi
-	done < ${TMPDIR}/thishash
+		mkdir -p ${hashdir}
+		echo "${filename}" >> ${hashdir}/${hashonly}
+		[ $(expr ${HASHCNT} % 100) -eq 0 ] && echo -n "."
+		[ $(expr ${HASHCNT} % 7000) -eq 0 ] && { \
+			echo ""; echo "$(date '+%T') ${HASHCNT}"
+		}
+	done < ${TMPDIR}/thislist
 done  < ${DIRLIST}
