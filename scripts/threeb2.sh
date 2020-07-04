@@ -1,5 +1,5 @@
 #!/bin/bash
-HASHES=/hashes2
+HASHES=/hashes
 HASHCNT=0
 TMPDIR=/tmp/${HASHES}.$$.dir
 re_hexnumber='^[0-9a-f][0-9a-f]*$'
@@ -60,7 +60,7 @@ do
 		# b2hash=$(b2sum "${filename}" 2>/dev/null)
 		# echo "b2hash of ${filename}=${b2hash}"
 		# hashonly=$(echo ${b2hash} | cut -d ' ' -f 1)
-		directoryname=${hasonly:0:2}
+		directoryname=${hashonly:0:2}
 		subdirectoryname=${hashonly:2:2}
 		hashdir=${HASHES}/${directoryname}/${subdirectoryname}
 		mkdir -p ${hashdir}
@@ -70,4 +70,25 @@ do
 			echo ""; echo "$(date '+%T') ${HASHCNT}"
 		}
 	done < ${TMPDIR}/thislist
+	wait
 done  < ${DIRLIST}
+for hashindex in "${!allhashes[@]}"
+do
+	directory=${hashindex:0:2}
+	subdirectory=${hashindex:2:2}
+	hashdir=/hashes/${directory}/${subdirectory}
+	tmphashdir=/tmp/hashes/${directory}/${subdirectory}
+	if [ ! -d ${hashdir} ]
+	then
+		echo Creating ${hashdir}
+		sudo mkdir -p ${hashdir}
+	fi
+	echo ${allhashes[$hashindex]} >> ${tmphashdir}/$hashindex
+	if [ ! cmp ${hashdir}/${hashindex} ${tmphashdir}/${hashindex} ]
+	then
+		echo "*!*!*!*!* FAILURE *!*!*!*!*"
+		diff ${hashdir}/${hashindex} ${tmphashdir}/${hashindex}
+		echo ${hashindex}
+		exit -1
+	fi
+done
