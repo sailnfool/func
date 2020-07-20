@@ -19,16 +19,19 @@
 source func.errecho
 
 
-USAGE="\r\n${0##*/} [-[hd]] <file> ...\r\n
-\t\tprint file(s) with proper options set\r\n
-\t-h\tPrint this message\r\n
-\t-d\tturn on diagnostics for this script\r\n
-\t-p\t<printer>\tName of the printer (default MX920LAN)\r\n
-\t-c\t<command>\tCommand for printer (lp|lpr) (lpr is default)\r\n"
+USAGE="\n${0##*/} [-[hd]] <file> ...\n
+\t\tprint file(s) with proper options set\n
+\t-h\tPrint this message\n
+\t-c\tturn on color syntax highlighting\n
+\t-d\tturn on diagnostics for this script\n
+\t-p\t<printer>\tName of the printer (default MX920LAN)\n
+\t-l\t<command>\tCommand for printer (lp|lpr) (lpr is default)\n
+"
 
-optionargs="hdp:c:"
+optionargs="hc:dlp:"
 NUMARGS=1
 debug=0
+colorize=0
 PRINTER="MX920LAN"
 COMMAND="lpr"
 
@@ -46,8 +49,11 @@ do
 	p)
 		PRINTER=${OPTARG}
 		;;
-	c)
+	l)
 		COMMAND=${OPTARG}
+		;;
+	c)
+		colorize=1
 		;;
 	\?)
 		errecho "-e" "invalid option: -$OPTARG"
@@ -74,9 +80,20 @@ then
   COMMAND="${COMMAND} ${LPROPTIONS}"
 fi
 while [ $# -gt 0 ]
-	do
-    filename=${@:$OPTIND:1}
+do
+	filename=${@:$OPTIND:1}
+	if [ "${colorize}" = "1" ]
+	then
+		set -x
+		TERM=xterm-256color vim -me -c ":syntax=on" \
+			-c "set t_Co=256" \
+			-c "set printoptions=numer:y,left:5pc" \
+			-c "set printfont=:h9" \
+			-c ":hardcopy" -c ":q" ${filename}
+		set +x
+	else
 		/usr/bin/pr ${formfeed} ${numberlines} ${twotabs} ${filename} | ${COMMAND}
-		shift
-	done
+	fi
+	shift
+done
 exit 0
