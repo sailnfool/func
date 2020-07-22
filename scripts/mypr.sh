@@ -24,11 +24,12 @@ USAGE="\n${0##*/} [-[hd]] <file> ...\n
 \t-h\tPrint this message\n
 \t-c\tturn on color syntax highlighting\n
 \t-d\tturn on diagnostics for this script\n
+\t-e\tuse enscript\n
 \t-p\t<printer>\tName of the printer (default MX920LAN)\n
 \t-l\t<command>\tCommand for printer (lp|lpr) (lpr is default)\n
 "
 
-optionargs="hc:dlp:"
+optionargs="hcdel:p:"
 NUMARGS=1
 debug=0
 colorize=0
@@ -46,6 +47,9 @@ do
 	d)
 		debug=1
 		;;
+	e)
+		use_enscript=1
+		;;
 	p)
 		PRINTER=${OPTARG}
 		;;
@@ -61,12 +65,24 @@ do
 		exit 0
 		;;
 	esac
+
+	errecho "OPTIND=${OPTIND}"
+	errecho "OPTIND=${@:$OPTIND:1}"
+	errecho "shift=$((${OPTIND} - 1 ))"
 done
+
+errecho "\$#=$#"
+errecho "OPTIND=${@:$OPTIND:1}"
+errecho "OPTIND=${OPTIND}"
+# shift "$((${OPTIND} - 1 ))"
 LPROPTIONS="-o outputorder=reverse -o sides=two-sided-long-edge -P ${PRINTER}"
 
 if [ $# -lt ${NUMARGS} ]
 then
 	errecho "Insufficient Parameters: ${NUMARGS} required, $# supplied"
+	errecho "\$@=$@"
+	errecho "\$#=$#"
+	errecho "OPTIND=${OPTIND}"
 	errecho "-e" ${USAGE}
 	exit -2
 fi
@@ -82,17 +98,26 @@ fi
 while [ $# -gt 0 ]
 do
 	filename=${@:$OPTIND:1}
+	errecho "filename=${filename}, pwd=$(pwd)"
+
+	if [ -z "${filename}" ]
+	then
+		shift
+		continue
+	fi
 	if [ "${colorize}" = "1" ]
 	then
 		set -x
 		TERM=xterm-256color vim -me -c ":syntax=on" \
 			-c "set t_Co=256" \
-			-c "set printoptions=numer:y,left:5pc" \
+			-c "set printoptions=number:y,left:5pc,paper:letter" \
 			-c "set printfont=:h9" \
+			-c "set pdef=MX920LAN" \
 			-c ":hardcopy" -c ":q" ${filename}
 		set +x
 	else
-		/usr/bin/pr ${formfeed} ${numberlines} ${twotabs} ${filename} | ${COMMAND}
+		/usr/bin/pr ${formfeed} ${numberlines} ${twotabs} \
+		    ${filename} | ${COMMAND}
 	fi
 	shift
 done
