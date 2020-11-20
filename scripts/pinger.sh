@@ -376,7 +376,7 @@ fi
 ####################
 # tell how many systems answered the queries (including pings)
 ####################
-echo "${0##*/}: ${responders} answered"
+echo "${0##*/}: ${responders} out of $(wc -l ${colfile}) answered"
 ####################
 # if there were no responses then exit with an error
 ####################
