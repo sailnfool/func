@@ -45,6 +45,7 @@ scriptname=${0##*/}
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 2.2 | REN |02/21/2021| added -s for touch time stamp.
 # 2.1 | REN |03/21/2019| fixed the ignoredir to handle a list
 #                      | of directories to ignore.
 # 2.0 | REN |10/14/2018| Combined sourcedatetime into one script
@@ -74,20 +75,22 @@ scriptname=${0##*/}
 # see 'man stat'
 #
 
+source func.debug
 source func.errecho
 source func.insufficient
 
-USAGE="\r\n${scriptname} [-[hotn]] [ -v <#> ] [ [-i <ignoredir> ] ... ] <dirname>\r\n
+USAGE="\r\n${scriptname} [-[hostn]] [ -v <#> ] [ [-i <ignoredir> ] ... ] <dirname>\r\n
 \t\treturn the date of the newest file in the tree\r\n
 \t\tin the format \"+%Y%m%d\"\r\n
 \t\tsee 'man date' for syntax\r\n
+\t-f\treport the name of the newest file\r\n
 \t-h\tPrint this message\r\n
-\t-t\tadd a period followd by the time in \"+%H%M%S\" format\r\n
-\t-o\treturn only the time stamp of the newest file\r\n
 \t-n\tinclude the time stamps of directories\r\n
 \t\tdirectory timestamps are ignored because you may be\r\n
 \t\tlooking at a clone tree\r\n
-\t-f\treport the name of the newest file\r\n
+\t-o\treturn only the time stamp of the newest file\r\n
+\t-s\treturn the time stamp in STAMP format (see man touch)\r\n
+\t-t\tadd a period followd by the time in \"+%H%M%S\" format\r\n
 \t-i\t<ignoredir>\tignore everything under <ignoredir>\r\n
 \t\tE.G.:\r\n
 \t\t${scriptname} -i .ignore .\r\n
@@ -99,13 +102,14 @@ USAGE="\r\n${scriptname} [-[hotn]] [ -v <#> ] [ [-i <ignoredir> ] ... ] <dirname
 \t-v\tturn on verbose mode for this script\r\n
 \t\tdefault=0 - none, higher integers more verbose\r\n"
 
-optionargs="hotnfd:i:"
+optionargs="hfnostd:i:"
 NUMARGS=1
 FUNC_DEBUG="0"
 export FUNC_DEBUG
 nodirs="-not -type d -a"
-onlytime="0"
-addtime="0"
+onlytell="0"
+addtell="0"
+stamptell="0"
 filetell="0"
 datetell="1"
 ignoredir=""
@@ -114,31 +118,44 @@ ignorelist=".archive"
 while getopts ${optionargs} name
 do
 	case ${name} in
+	d)
+		FUNC_DEBUG=${OPTARG}
+		export FUNC_DEBUG
+		;;
+	f)
+		filetell="1"
+		;;
 	h)
 #		errecho "-e" ${USAGE}
 		echo -e ${USAGE}
 		exit 0
 		;;
-	o)
-		onlytime=1
-		datetell=0
-		;;
-	t)
-		addtime=1
-		datetell=0
+	i)
+		ignorelist="${ignorelist} ${OPTARG}"
 		;;
 	n)
 		nodirs=""
 		;;
-	f)
-		filetell="1"
+	o)
+		onlytell=1
+		addtell="0"
+		stamptell="0"
+		filetell="0"
+		datetell="0"
 		;;
-	i)
-		ignorelist="${ignorelist} ${OPTARG}"
+	t)
+		addtell=1
+		onlytell="0"
+		stamptell="0"
+		filetell="0"
+		datetell="0"
 		;;
-	d)
-		FUNC_DEBUG=${OPTARG}
-		export FUNC_DEBUG
+	s)
+		stamptell=1
+		onlytell="0"
+		addtell="0"
+		filetell="0"
+		datetell="0"
 		;;
 	\?)
 		errecho "-e" "invalid option: -$OPTARG"
@@ -179,6 +196,7 @@ find ${dirname} ${ignoredir} ${nodirs} -exec stat \{\} --printf="%y --%n\n" \; |
 newestfile=$(sed -e s/.*--// < /tmp/sourcedate.newest.$$.txt)
 dateonly=$(sed -e 's/ .*//' -e 's/-//g' < /tmp/sourcedate.newest.$$.txt)
 datetime=$(sed -e 's/\..*//' -e 's/ /./' -e 's/-//g' -e 's/://g' < /tmp/sourcedate.newest.$$.txt)
+stamptime=$(sed -e 's/\..*//' -e 's/ //' -e 's/-//g' -e 's/://' -e 's/:/./' < /tmp/sourcedate.newest.$$.txt)
 # datetime2=$(sed -e 's/\..*--.*//' -e 's/ /./' -e 's/-//g' -e 's/://g' </tmp/sourcedate.newest.$$.txt)
 timeonly=$(sed -e 's/\..*//' -e 's/.* //' -e 's/://g' < /tmp/sourcedate.newest.$$.txt)
 if [ "$FUNC_DEBUG" -gt 0 ]
@@ -190,18 +208,23 @@ then
 	errecho "Date time is ${datetime}"
 	errecho "Date2 time is ${datetime2}"
 	errecho "Time only is ${timeonly}"
+	errecho "STAMP time is ${stamptime}"
 fi
-if [ "${onlytime}" = "1" ]
+if [ "${onlytell}" = "1" ]
 then
 	echo -n ${timeonly} " "
 fi
-if [ "${addtime}" = "1" ]
+if [ "${addtell}" = "1" ]
 then
 	echo -n ${datetime}
 fi
 if [ "${datetell}" = "1" ]
 then
 	echo -n ${dateonly} " "
+fi
+if [ "${stamptell}" = "1" ]
+then
+	echo -n ${stamptime} " "
 fi
 if [ "${filetell}" = "1" ]
 then
