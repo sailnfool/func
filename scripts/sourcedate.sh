@@ -45,6 +45,8 @@ scriptname=${0##*/}
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 2.3 | REN |02/21/2021| added test for file vs. directory to allow
+#                      | the formats output for a file, not the tree
 # 2.2 | REN |02/21/2021| added -s for touch time stamp.
 # 2.1 | REN |03/21/2019| fixed the ignoredir to handle a list
 #                      | of directories to ignore.
@@ -83,6 +85,8 @@ USAGE="\r\n${scriptname} [-[hostn]] [ -v <#> ] [ [-i <ignoredir> ] ... ] <dirnam
 \t\treturn the date of the newest file in the tree\r\n
 \t\tin the format \"+%Y%m%d\"\r\n
 \t\tsee 'man date' for syntax\r\n
+\t\tIf <dirname> is a file it returns the timestamp for a file not\r\n
+\t\tnot a tree under <dirname>\r\n
 \t-f\treport the name of the newest file\r\n
 \t-h\tPrint this message\r\n
 \t-n\tinclude the time stamps of directories\r\n
@@ -192,7 +196,14 @@ fi
 
 # 2018-10-14 10:33:55.990652503 -0700 --./sourcedate.bash
 rm -f /tmp/sourcedate.newest.$$*
-find ${dirname} ${ignoredir} ${nodirs} -exec stat \{\} --printf="%y --%n\n" \; | sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
+if [ -d "${dirname}" ]
+then
+	find ${dirname} ${ignoredir} ${nodirs} \
+		-exec stat \{\} --printf="%y --%n\n" \; | \
+		sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
+else
+	ls -l "${dirname}" > /tmp/sourcedate.newest.$$.txt
+fi
 newestfile=$(sed -e s/.*--// < /tmp/sourcedate.newest.$$.txt)
 dateonly=$(sed -e 's/ .*//' -e 's/-//g' < /tmp/sourcedate.newest.$$.txt)
 datetime=$(sed -e 's/\..*//' -e 's/ /./' -e 's/-//g' -e 's/://g' < /tmp/sourcedate.newest.$$.txt)
