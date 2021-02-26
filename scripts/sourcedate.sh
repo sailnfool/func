@@ -175,7 +175,7 @@ then
 	insufficient ${NUMARGS} $@
 	exit -2
 fi
-dirname=${@:$OPTIND:1}
+dirname="${@:$OPTIND:1}"
 
 ##########
 # This is where we prune any specified directories from the list
@@ -198,7 +198,7 @@ fi
 rm -f /tmp/sourcedate.newest.$$*
 if [ -d "${dirname}" ]
 then
-	find ${dirname} ${ignoredir} ${nodirs} \
+	find "${dirname}" ${ignoredir} ${nodirs} \
 		-exec stat \{\} --printf="%y --%n\n" \; | \
 		sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
 else
