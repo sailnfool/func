@@ -208,12 +208,14 @@ then
 	if [ "${FUNC_DEBUG}" -ge 6 ]
 	then
 		find "${dirname}" ${ignoredir} ${nodirs} \
-		    -exec stat \{\} --printf="%y --%n\n" \; | \
+		    -printf '%T+ %p\n' | \
+#		    -exec stat \{\} --printf="%y --%n\n" \; | \
 		    tee /dev/tty  | \
 		    sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
 	else
 		find "${dirname}" ${ignoredir} ${nodirs} \
-		    -exec stat \{\} --printf="%y --%n\n" \; | \
+		    -printf '%T+ %p\n' | \
+#		    -exec stat \{\} --printf="%y --%n\n" \; | \
 		    sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
 	fi
 else
