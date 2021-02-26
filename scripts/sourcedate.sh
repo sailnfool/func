@@ -161,6 +161,9 @@ do
 		filetell="0"
 		datetell="0"
 		;;
+	v)
+		FUNC_DEBUG="${OPTARG}"
+		;;
 	\?)
 		errecho "-e" "invalid option: -$OPTARG"
 		errecho "-e" ${USAGE}
@@ -191,16 +194,23 @@ do
 done
 if [ "$FUNC_DEBUG" -gt 0 ]
 then
-	errecho "${ignoredir}"
+	errecho ${FUNCNAME} ${LINENO} "Ignore list is:" "${ignoredir}"
 fi
 
 # 2018-10-14 10:33:55.990652503 -0700 --./sourcedate.bash
 rm -f /tmp/sourcedate.newest.$$*
 if [ -d "${dirname}" ]
 then
-	find "${dirname}" ${ignoredir} ${nodirs} \
-		-exec stat \{\} --printf="%y --%n\n" \; | \
-		sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
+	if [ "${FUNC_DEBUG}" -ge 6 ]
+	then
+		find "${dirname}" ${ignoredir} ${nodirs} \
+		    -exec stat \{\} --printf="%y --%n\n" \; | \
+		    tee | \
+		    sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
+	else
+		find "${dirname}" ${ignoredir} ${nodirs} \
+		    -exec stat \{\} --printf="%y --%n\n" \; | \
+		    sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
 else
 	ls -l "${dirname}" > /tmp/sourcedate.newest.$$.txt
 fi
@@ -214,12 +224,12 @@ if [ "$FUNC_DEBUG" -gt 0 ]
 then
 	ls -l /tmp/sourcedate*$$.txt
 	more /tmp/sourcedate*$$.txt
-	errecho "Newest file is ${newestfile}"
-	errecho "Date only is ${dateonly}"
-	errecho "Date time is ${datetime}"
-	errecho "Date2 time is ${datetime2}"
-	errecho "Time only is ${timeonly}"
-	errecho "STAMP time is ${stamptime}"
+	errecho "${FUNCNAME} "${LINENO}" "Newest file is ${newestfile}"
+	errecho "${FUNCNAME} "${LINENO}" "Date only is ${dateonly}"
+	errecho "${FUNCNAME} "${LINENO}" "Date time is ${datetime}"
+	errecho "${FUNCNAME} "${LINENO}" "Date2 time is ${datetime2}"
+	errecho "${FUNCNAME} "${LINENO}" "Time only is ${timeonly}"
+	errecho "${FUNCNAME} "${LINENO}" "STAMP time is ${stamptime}"
 fi
 if [ "${onlytell}" = "1" ]
 then
