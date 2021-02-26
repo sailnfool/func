@@ -106,7 +106,7 @@ USAGE="\r\n${scriptname} [-[hostn]] [ -v <#> ] [ [-i <ignoredir> ] ... ] <dirnam
 \t-v\tturn on verbose mode for this script\r\n
 \t\tdefault=0 - none, higher integers more verbose\r\n"
 
-optionargs="hfnostd:i:"
+optionargs="hfnostv:d:i:"
 NUMARGS=1
 FUNC_DEBUG="0"
 export FUNC_DEBUG
@@ -125,6 +125,10 @@ do
 	d)
 		FUNC_DEBUG=${OPTARG}
 		export FUNC_DEBUG
+		if [ $FUNC_DEBUG -ge 9 ]
+		then
+			set -x
+		fi
 		;;
 	f)
 		filetell="1"
@@ -205,12 +209,13 @@ then
 	then
 		find "${dirname}" ${ignoredir} ${nodirs} \
 		    -exec stat \{\} --printf="%y --%n\n" \; | \
-		    tee | \
+		    tee /dev/tty  | \
 		    sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
 	else
 		find "${dirname}" ${ignoredir} ${nodirs} \
 		    -exec stat \{\} --printf="%y --%n\n" \; | \
 		    sort -n -r | head -1 > /tmp/sourcedate.newest.$$.txt
+	fi
 else
 	ls -l "${dirname}" > /tmp/sourcedate.newest.$$.txt
 fi
