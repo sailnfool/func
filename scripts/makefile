@@ -20,11 +20,6 @@ INSTALL =       func.arithmetic \
 		func.pathmunge \
 		func.random \
 		func.uuid \
-		func.kbytes \
-		func.kkbytes \
-		func.kerrecho \
-		func.knice2num \
-		func.kinsufficient \
 		zfunc.zfsparent \
 		zfunc.results \
 		find_sim \
@@ -38,6 +33,11 @@ INSTALL =       func.arithmetic \
 		pathmunge \
 		sourcedate \
 		uuid
+#		func.kbytes \
+#		func.kkbytes \
+#		func.kerrecho \
+#		func.knice2num \
+#		func.kinsufficient \
 
 EXECDIR := $(PREFIX)/bin
 EXECDIR2 := $(PREFIX2)/bin
