@@ -33,7 +33,7 @@ optionargs="hcdel:p:"
 NUMARGS=1
 debug=0
 colorize=0
-PRINTER="MX920LAN"
+PRINTER="Canon_MX920_series"
 COMMAND="lpr"
 
 while getopts ${optionargs} name
@@ -66,16 +66,17 @@ do
 		;;
 	esac
 
-	errecho "OPTIND=${OPTIND}"
-	errecho "OPTIND=${@:$OPTIND:1}"
-	errecho "shift=$((${OPTIND} - 1 ))"
+	errecho ${FUNCNAME} ${LINENO} "OPTIND=${OPTIND}"
+	errecho ${FUNCNAME} ${LINENO} "OPTIND=${@:$OPTIND:1}"
+	errecho ${FUNCNAME} ${LINENO} "shift=$((${OPTIND} - 1 ))"
 done
 
-errecho "\$#=$#"
+errecho ${FUNCNAME} ${LINENO} "\$#=$#"
 errecho "OPTIND=${@:$OPTIND:1}"
 errecho "OPTIND=${OPTIND}"
 # shift "$((${OPTIND} - 1 ))"
-LPROPTIONS="-o outputorder=reverse -o sides=two-sided-long-edge -P ${PRINTER}"
+LPROPTIONS="-o outputorder=reverse -o sides=two-sided-long-edge"
+LPROPTIONS="${LPROPTIONS} -o media=letter -P ${PRINTER}"
 
 if [ $# -lt ${NUMARGS} ]
 then
@@ -112,10 +113,12 @@ do
 			-c "set t_Co=256" \
 			-c "set printoptions=number:y,left:5pc,paper:letter" \
 			-c "set printfont=:h9" \
-			-c "set pdef=MX920LAN" \
+			-c "set pdef=${PRINTER}" \
 			-c ":hardcopy" -c ":q" ${filename}
 		set +x
 	else
+		errecho ${FUNCNAME} {LINENO} "/usr/bin/pr ${formfeed} ${numberlines} ${twotabs} \
+		    ${filename} | ${COMMAND}"
 		/usr/bin/pr ${formfeed} ${numberlines} ${twotabs} \
 		    ${filename} | ${COMMAND}
 	fi
