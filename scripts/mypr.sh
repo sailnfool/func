@@ -60,8 +60,8 @@ do
 		colorize=1
 		;;
 	\?)
-		errecho "-e" "invalid option: -$OPTARG"
-		errecho "-e" ${USAGE}
+		errecho ${FUNCNAME} ${LINENO} "-e" "invalid option: -$OPTARG"
+		errecho ${FUNCNAME} ${LINENO} "-e" ${USAGE}
 		exit 0
 		;;
 	esac
@@ -72,19 +72,19 @@ do
 done
 
 errecho ${FUNCNAME} ${LINENO} "\$#=$#"
-errecho "OPTIND=${@:$OPTIND:1}"
-errecho "OPTIND=${OPTIND}"
+errecho ${FUNCNAME} ${LINENO} "OPTIND=${@:$OPTIND:1}"
+errecho ${FUNCNAME} ${LINENO} "OPTIND=${OPTIND}"
 # shift "$((${OPTIND} - 1 ))"
 LPROPTIONS="-o outputorder=reverse -o sides=two-sided-long-edge"
 LPROPTIONS="${LPROPTIONS} -o media=letter -P ${PRINTER}"
 
 if [ $# -lt ${NUMARGS} ]
 then
-	errecho "Insufficient Parameters: ${NUMARGS} required, $# supplied"
-	errecho "\$@=$@"
-	errecho "\$#=$#"
-	errecho "OPTIND=${OPTIND}"
-	errecho "-e" ${USAGE}
+	errecho ${FUNCNAME} ${LINENO} "Insufficient Parameters: ${NUMARGS} required, $# supplied"
+	errecho ${FUNCNAME} ${LINENO} "\$@=$@"
+	errecho ${FUNCNAME} ${LINENO} "\$#=$#"
+	errecho ${FUNCNAME} ${LINENO} "OPTIND=${OPTIND}"
+	errecho ${FUNCNAME} ${LINENO} "-e" ${USAGE}
 	exit -2
 fi
 
@@ -99,7 +99,7 @@ fi
 while [ $# -gt 0 ]
 do
 	filename=${@:$OPTIND:1}
-	errecho "filename=${filename}, pwd=$(pwd)"
+	errecho ${FUNCNAME} ${LINENO} "filename=${filename}, pwd=$(pwd)"
 
 	if [ -z "${filename}" ]
 	then
@@ -117,7 +117,7 @@ do
 			-c ":hardcopy" -c ":q" ${filename}
 		set +x
 	else
-		errecho ${FUNCNAME} {LINENO} "/usr/bin/pr ${formfeed} ${numberlines} ${twotabs} \
+		errecho ${FUNCNAME} ${LINENO} "/usr/bin/pr ${formfeed} ${numberlines} ${twotabs} \
 		    ${filename} | ${COMMAND}"
 		/usr/bin/pr ${formfeed} ${numberlines} ${twotabs} \
 		    ${filename} | ${COMMAND}
