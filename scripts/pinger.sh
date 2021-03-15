@@ -369,16 +369,10 @@ if [ $configure_debug = 0 ]
 then
 	clear
 fi
-<<<<<<< HEAD
-#cat ${colfile} | column -t -n -s $'\t' | more
-cat ${colfile} | column -t -s $'\t' | more
 ####################
 # Unless we are debugging, clean up all of the temporary files
 ####################
-if [ $configure_debug = 0 ]
-=======
 if [ -r "${colfile}" ]
->>>>>>> 5822e197cd00a0c3b8f75f117c2cdc4da43460b5
 then
   cat ${colfile} | tr '\t' ';' | column -s ';' -t | more
 else
