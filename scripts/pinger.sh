@@ -20,7 +20,7 @@
 # 1.0 | REN |07/22/2010| Initial Release
 #_____________________________________________________________________
 #
-# source func.config
+source func.errecho
 ####################
 # set up local variables for debugging
 ####################
@@ -46,7 +46,7 @@ gateway=$(ip r | grep default | awk -F " " '{print $3}')
 USAGE="${0##*/} [-hv] [-p <IP Prefix] [-n IP netmask] [-g <gateway>]\n
 \t\t[-I <low ping>] [-O <high ping>]\n\n
 \t-h\t\t\tDisplay this message\n
-\t-d\t\tenable debug\n
+\t-d\t<#>\tenable debug >=9 does set-x\n
 \t-v\t\t\tVerbose Mode\n
 \t-p\t<IP Prefix>\tDefault on this machine is $subnet\n
 \t-n\t<netmask>\tDefault on network on this device is $netdevice\n
@@ -99,7 +99,7 @@ High_PING_Port=255
 #		-I <Low PING Address>
 #		-O <High Ping Address>
 ####################
-optionargs="hdI:g:n:O:p:vX:"
+optionargs="hd:I:g:n:O:p:vX:"
 NUMARGS=0
 do_arp=1
 do_nslookup=1
@@ -115,8 +115,13 @@ while getopts ${optionargs} name
 do
 	case ${name} in
 	h)	echo -ne ${USAGE}; exit 0; ;;
-	d)	configure_debug=1; ;;
-	v)	configure_verbose=1; set -x; ;;
+	d)	configure_debug="${OPTARG}"
+      if [ "${configure_debug}" -ge 9 ]
+      then
+        set -x
+      fi
+      ;;
+	v)	configure_verbose=1; ;;
 	p)	subnet=${OPTARG}; configure_IPrefix=1; ;;
 	n)	netmask=${OPTARG}; configure_IPnetmaks=1; ;;
 	g)	gateway=${OPTARG}; configure_gateway=1; ;;
@@ -179,7 +184,7 @@ do
 		;;
 	esac
 done
-if [ ${configure_debug} = 1 ]
+if [ ${configure_debug} -gt 1 ]
 then
 	echo configure_verbose=${configure_verbose}
 	echo subnet=${subnet}
@@ -364,20 +369,36 @@ if [ $configure_debug = 0 ]
 then
 	clear
 fi
+<<<<<<< HEAD
 #cat ${colfile} | column -t -n -s $'\t' | more
 cat ${colfile} | column -t -s $'\t' | more
 ####################
 # Unless we are debugging, clean up all of the temporary files
 ####################
 if [ $configure_debug = 0 ]
+=======
+if [ -r "${colfile}" ]
+>>>>>>> 5822e197cd00a0c3b8f75f117c2cdc4da43460b5
 then
-	rm -f ${grepallfile} ${greplogfile} ${pinglog}-*
+  cat ${colfile} | tr '\t' ';' | column -s ';' -t | more
+else
+  errecho ${FUNCNAME} ${LINENO} "colfile not found = ${colfile}"
+  exit -1
 fi
 
 ####################
 # tell how many systems answered the queries (including pings)
 ####################
 echo "${0##*/}: ${responders} out of $(wc -l ${colfile}) answered"
+####################
+# Unless we are debugging, clean up all of the temporary files
+####################
+if [ "${configure_debug}" -eq 0 ]
+then
+	rm -rf "${grepallfile}" "${greplogfile}" "${pinglog}-*" \
+    "${colfile}" "${pingertmp}"
+fi
+
 ####################
 # if there were no responses then exit with an error
 ####################
