@@ -364,7 +364,8 @@ if [ $configure_debug = 0 ]
 then
 	clear
 fi
-cat ${colfile} | column -t -n -s $'\t' | more
+#cat ${colfile} | column -t -n -s $'\t' | more
+cat ${colfile} | column -t -s $'\t' | more
 ####################
 # Unless we are debugging, clean up all of the temporary files
 ####################

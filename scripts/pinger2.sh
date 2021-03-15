@@ -107,9 +107,9 @@ if [ "${configure_debug}" = 1 ]
 then
 	echo "Parameters are $*"
 fi
-while getopts "${optionargs}" name
+while getopts ${optionargs} name
 do
-	case "${name}" in
+	case ${name} in
 	h)	echo -ne "${USAGE}"; exit 0; ;;
 	d)	
 		configure_debug="${OPTARG}"
@@ -136,7 +136,7 @@ shift "$((${OPTIND} - 1 ))"
 newincluded=""
 for query in ${included}
 do
-	isexcluded=$(echo "${excluded}" | grep '\w*'$query'\w*')
+	isexcluded=$(echo ${excluded} | grep '\w*'$query'\w*')
 
 	if [ -z "${isexcluded}" ]
 	then
@@ -267,7 +267,7 @@ sudo ls "${pinglog}"-* > "${grepallfile}"
 ####################
 declare -A ip_response ip_ping
 echo -en "IP Address\tping?" | tee "${colfile}"
-for query in "${newincluded}"
+for query in ${newincluded}
 do
 	case "${query}" in
 	arp) echo -en "\tarp" | tee -a "${colfile}"; ;;
@@ -294,9 +294,9 @@ for i in $(seq "${Low_PING_Port}" "${High_PING_Port}")
 do
 	thisline=""
 	ipaddr="${subnet}.${i}"
-	for query in "${newincluded}"
+	for query in ${newincluded}
 	do
-		case "${query}" in
+		case ${query} in
 		arp)
 			arp_response=$(arp "${ipaddr}" | tail -1)
 			arp_name=$(echo "${arp_response}" | cut -d ' ' -f 1)
