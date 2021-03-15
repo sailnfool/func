@@ -12,6 +12,7 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 2.2 | REN |03/15/2021| Fixed the column command invocation.
 # 2.1 | REN |06/27/2020| brought up to date with getopts
 # 2.0 | REN |12/03/2019| Modified to use more source'd functions
 # 1.1 | REN |07/29/2010| Installed new prolog, cleaned up the
