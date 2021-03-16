@@ -28,6 +28,8 @@
 # Define the debug levels:
 #
 # DEBUGOFF	0
+# DEBUGWAVE 2 - print indented entry/exit to functions
+# DEBUGWAVAR 3 - print variable data from functions if enabled
 # DEBUGSTRACE	5 - prefix the executable with strace (if implemented)
 # DEBUGNOEXECUTE	or
 # DEBUGNOEX	6 - generate and display the command lines but don't
@@ -37,6 +39,8 @@
 if [ -z "${__funcdebug}" ]
 then
   export DEBUGOFF=0
+  export DEBUGWAVE=2
+  export DEBUGWAVAR=3
   export DEBUGSTRACE=5
   export DEBUGNOEXECUTE=6
   export DEBUGNOEX=6
