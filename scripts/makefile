@@ -31,7 +31,6 @@ INSTALL =       func.arithmetic \
 		pinger \
 		proj_setup \
 		pathmunge \
-		sourcedate \
 		uuid
 #		func.kbytes \
 #		func.kkbytes \
