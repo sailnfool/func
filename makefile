@@ -9,7 +9,10 @@ install:
 	cd scripts
 	make uninstall install clean
 	cd ..
-jetinstall:
+sinstall:
 	cd scripts
-	make jetinstall clean
+	make suninstall sinstall clean
 	cd ..
+suninstall:
+	cd scripts
+	make suninstall clean

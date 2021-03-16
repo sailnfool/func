@@ -1,6 +1,7 @@
 SHELL=/bin/bash
 PREFIX?=$(HOME)
-PREFIX2?=/tftpboot/global/novak5
+SPREFIX?=/usr/local
+PREFIX2?=/tftpboot/global/rnovak
 .sh:
 	@rm -f $@
 	cp $< $@
@@ -29,6 +30,7 @@ INSTALL =       func.arithmetic \
 		mypr \
 		nowinUCT \
 		pinger \
+		pinger2 \
 		proj_setup \
 		pathmunge \
 		uuid
@@ -40,12 +42,17 @@ INSTALL =       func.arithmetic \
 
 EXECDIR := $(PREFIX)/bin
 EXECDIR2 := $(PREFIX2)/bin
+SEXECDIR := $(SPREFIX)/sbin
+
 
 .PHONY: clean uninstall all
 all: $(INSTALL)
 install: $(INSTALL)
 	mkdir -p $(EXECDIR)
 	install -o $(USER) -C $? $(EXECDIR)
+sinstall: $(INSTALL)
+	mkdir -p $(SEXECDIR)
+	install -o root -C $? $(SEXECDIR)
 clean: 
 	@for execfile in $(INSTALL); do \
 		echo rm -f $$execfile; \
@@ -56,10 +63,17 @@ uninstall:
 		echo rm -f $(EXECDIR)/$$execfile; \
 		rm -f $(EXECDIR)/$$execfile; \
 	done
+suninstall: 
+	@for execfile in $(INSTALL); do \
+		echo rm -f $(SEXECDIR)/$$execfile; \
+		rm -f $(SEXECDIR)/$$execfile; \
+	done
 jetinstall: $(INSTALL)
 	mkdir -p $(EXECDIR2)
 	install -o $(USER) -c $? $(EXECDIR2)
 $(EXECDIR):
 	mkdir -p $(EXECDIR)
+$(SEXECDIR):
+	mkdir -p $(SEXECDIR)
 $(EXECDIR2):
 	mkdir -p $(EXECDIR2)
