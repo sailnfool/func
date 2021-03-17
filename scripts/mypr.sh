@@ -25,7 +25,7 @@ USAGE="\n${0##*/} [-[hd]] <file> ...\n
 \t-c\tturn on color syntax highlighting\n
 \t-d\tturn on diagnostics for this script\n
 \t-e\tuse enscript\n
-\t-p\t<printer>\tName of the printer (default MX920LAN)\n
+\t-p\t<printer>\tName of the printer (default Canon_MX920_series)\n
 \t-l\t<command>\tCommand for printer (lp|lpr) (lpr is default)\n
 "
 
