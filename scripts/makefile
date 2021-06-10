@@ -20,6 +20,7 @@ INSTALL =       func.arithmetic \
 		func.onefilereformat \
 		func.pathmunge \
 		func.random \
+		func.regex \
 		func.uuid \
 		zfunc.zfsparent \
 		zfunc.results \

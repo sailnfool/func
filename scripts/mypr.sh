@@ -10,23 +10,24 @@
 # skype:sailnfool.ren
 #
 #_____________________________________________________________________
-# Rev.|Auth.| Date       | Notes
+# Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
-# 1.0 | REN | 06/18/2019 | Initial Release
+# 1.1 | REN |03/17/2021| Changed default printer name
+# 1.0 | REN |06/18/2019| Initial Release
 #_____________________________________________________________________
 #
 ##########
 source func.errecho
 
 
-USAGE="\n${0##*/} [-[hd]] <file> ...\n
-\t\tprint file(s) with proper options set\n
-\t-h\tPrint this message\n
-\t-c\tturn on color syntax highlighting\n
-\t-d\tturn on diagnostics for this script\n
-\t-e\tuse enscript\n
-\t-p\t<printer>\tName of the printer (default MX920LAN)\n
-\t-l\t<command>\tCommand for printer (lp|lpr) (lpr is default)\n
+USAGE="\r\n${0##*/} [-[hd]] <file> ...\r\n
+\t\tprint file(s) with proper options set\r\n
+\t-h\tPrint this message\r\n
+\t-c\tturn on color syntax highlighting\r\n
+\t-d\tturn on diagnostics for this script\r\n
+\t-e\tuse enscript\r\n
+\t-p\t<printer>\tName of the printer (default Canon_MX920_series)\r\n
+\t-l\t<command>\tCommand for printer (lp|lpr) (lpr is default)\r\n
 "
 
 optionargs="hcdel:p:"
