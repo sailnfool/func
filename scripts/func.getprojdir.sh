@@ -20,7 +20,7 @@
 ####################
 if [ -z "${__funcgetprojdir}" ]
 then
-  USAGE="$__FUNC__ [ -i <dir> ... ] <projectname> <base_directory>"
+  GETPROJDIR_USAGE="$__FUNC__ [ -i <dir> ... ] <projectname> <base_directory>"
 	export __funcgetprojdir=1
 	source func.errecho
 	source func.insufficient
