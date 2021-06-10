@@ -66,7 +66,11 @@ then
 			projdir=$(find ${projectbase} -name ${project} -a -type d -a -print )
   	else
 #		  echo "projdir=\$(find ${projectbase} -name ${project} -a -type d -a -print | sed \"${ignorelist}\" )"
-		  projdir=$(find ${projectbase} -name ${project} -a -type d -a -print | sed "${ignorelist}" )
+      projdir=""
+      for ignoredir in ${ignorelist}
+      do
+		    projdir=$(find ${projectbase} -name ${project} -a -type d -a -print | grep -v "${ignorelist}" )
+      done
 		fi
 #		stderrecho "projdir = ${projdir}"
 		echo $projdir
