@@ -51,6 +51,7 @@ all: $(INSTALL)
 install: $(INSTALL)
 	mkdir -p $(EXECDIR)
 	install -o $(USER) -C $? $(EXECDIR)
+	rm -f $?
 sinstall: $(INSTALL)
 	mkdir -p $(SEXECDIR)
 	install -o root -C $? $(SEXECDIR)
