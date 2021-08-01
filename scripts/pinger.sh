@@ -324,8 +324,8 @@ do
 			thisline="${thisline}\t${arp_name}"
 			;;
 		nslookup)
-			# nslookup_name=$(nslookup ${ipaddr} | head -1 | cut -d ' ' -f 3)
-      nslookup=$(dig +noall +answer -x ${ipaddr} | head -1 | cut -d ' ' -f 2 | awd '{prin $4}')
+			nslookup_name=$(nslookup ${ipaddr} | head -1 | cut -d ' ' -f 3)
+      # nslookup=$(dig +noall +answer -x ${ipaddr} | head -1 | cut -d ' ' -f 2 | awk '{print $4}')
 			if [ "${nslookup_name}" = "can't" ]
 			then
 				nslookup_name="not found"
