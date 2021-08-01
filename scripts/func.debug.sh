@@ -38,6 +38,7 @@
 ####################
 if [ -z "${__funcdebug}" ]
 then
+  export __funcdebug=1
   export DEBUGOFF=0
   export DEBUGWAVE=2
   export DEBUGWAVAR=3
