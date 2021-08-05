@@ -63,6 +63,12 @@ then
 				/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: \r\n"$@
 			fi
 		else
+
+      ##################################################
+      # If File descriptor "1" is open, then we are sending
+      # output to a terminal.  If the output is to a file,
+      # then give more verbose output
+      ##################################################
 			if [ -t 1 ]
 			then
 				/bin/echo "${pbs}" $@
@@ -70,11 +76,9 @@ then
 				/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: "$@
 			fi
 		fi
-	##########
-	# End of function errecho
-	##########
-	}
+	} # End of function errecho
 	export -f errecho
+
 	##########
 	# Send diagnostic output to stderr with a newline
 	##########
