@@ -15,6 +15,8 @@ INSTALL =       func.arithmetic \
 		func.getprojdir \
 		func.hmsout \
 		func.insufficient \
+		func.locker \
+		func.logger \
 		func.nice2num \
 		func.onefilehash \
 		func.onefilereformat \
@@ -34,6 +36,7 @@ INSTALL =       func.arithmetic \
 		pinger2 \
 		proj_setup \
 		pathmunge \
+		sourcedate \
 		uuid
 #		func.kbytes \
 #		func.kkbytes \
