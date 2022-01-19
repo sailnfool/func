@@ -57,7 +57,7 @@ then
 		fi
 		if [  ! -f ${sourcedir}/${sourcefile} ]
 		then
-			errecho "Source file ${sourecedir}/${souecefile} file not present"
+			errecho "Source file ${sourcedir}/${sourcefile} file not present"
 			exit -1
 		fi
 		cp ${sourcedir}/${sourcefile} /tmp/${sourcefile}$$
