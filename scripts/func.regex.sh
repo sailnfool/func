@@ -2,16 +2,18 @@
 ########################################################################
 # Author: Robert E. Novak
 # email: sailnfool@gmail.com
-# Copyright (C) 2021 Sea2Cloud Storage, Inc. All Rights Reserved
+# Copyright (C) 2022 Sea2Cloud Storage, Inc. All Rights Reserved
 # Modesto, CA 95356
 #
-# Set up Global variables for testing scripts
-# Define func_getlock and func_release to avoid conflicts
+# Define a set of regular expressions for various tests of inputs
+# When you want to test a variable, do NOT place the expansion of
+# the re_xxxx value in quotes.  It will not work.
 #
 ########################################################################
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.1 | REN |02/01/2022| Tweaked documentation
 # 1.0 | REN |03/25/2021| original version
 #_____________________________________________________________________
 #
@@ -33,5 +35,3 @@ then
 	re_integer='^[0-9][0-9]*$'
 	re_decimal='^[+\-][0-9]*\.[0-9]*$'
 fi # if [ -z "${__func_regex}" ]
-
-
