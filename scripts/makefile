@@ -15,6 +15,7 @@ INSTALL =       func.arithmetic \
 		func.getprojdir \
 		func.hmsout \
 		func.insufficient \
+		func.kbytes \
 		func.locker \
 		func.logger \
 		func.nice2num \
