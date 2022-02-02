@@ -46,34 +46,34 @@ then
 		else
 			case $multiplier in
 			B)
-				((number *= __byte))
+        resultnumber=$(echo $number * $__byte) | bc)
 				;;
 			K)
-				((number *= __kibibyte))
+        resultnumber=$(echo $number * $__kibibyte) | bc)
 				;;
 			M)
-				((number *= __mibibyte))
+        resultnumber=$(echo $number * $__mibibyte) | bc)
 				;;
 			G)
-				((number *= __gibibyte))
+        resultnumber=$(echo $number * $__gibibyte) | bc)
 				;;
 			T)
-				((number *= __tibibyte))
+        resultnumber=$(echo $number * $__tibibyte) | bc)
 				;;
 			P)
-				((number *= __pibibyte))
+        resultnumber=$(echo $number * $__pibibyte) | bc)
 				;;
 			E)
-				((number *= __etibyte))
+        resultnumber=$(echo $number * $__eibibyte) | bc)
 				;;
 			Z)
-				((number *= __zibibyte))
+        resultnumber=$(echo $number * $__zibibyte) | bc)
 				;;
 			\?)
 				errecho "Bad Suffix $multiplier"
 				;;
 			esac
-			echo $number
+			echo $resultnumber
 		fi
 	fi
 	##########
