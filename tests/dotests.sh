@@ -3,14 +3,22 @@
 # it would be nice to add color
 
 fail=0
-for test_script in test.*.sh
+nametext="TESTNAME="
+for test_script in testscript.*.sh
 do
-  if [[ ${test_script} ]]
+  testname=$(grep "${nametext}" ${test_script})
+  if [[ -z "${testname}" ]]
   then
-    echo "[PASS] ${test_script}"
-  else
+    echo "testing script \"${test_script}\" is missing TESTNAME"
     echo "[FAIL] ${test_script}"
-    fail=1
+    ((fail++))
+  fi
+  if [[ ! ${test_script} ]]
+  then
+    echo -e "[FAIL] ${test_script}\n\t${testname:${#nametext}}"
+    ((fail++))
+  else
+    echo -e "[PASS] ${test_script}\n\t${testname:${#nametext}}"
   fi
 done
 exit ${fail}
