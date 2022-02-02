@@ -22,14 +22,29 @@ then
 	source func.insufficient
 
   function toseconds() {
+    declare -a secondresult
     if [[ $# -lt 1 ]]
     then
       insufficient 1 "at least one argument in time format required"
       exit -1
     fi
-    echo "$1" | awk -F: '{ if (NF == 1) {print $NF} }' | bc
-    echo "$1" | awk -F: '{ if (NF == 2) {print $1 "* 60 + " $2} }' | bc
-    echo "$1" | awk -F: '{ if (NF == 3) {print $1 " * 3600 + " $2 " * 60 + " $3} }' | bc
+    secondresult[0]=$(echo "$1" | awk -F: '{ if (NF == 1) {print $NF} }' | bc)
+    secondresult[1]=$(echo "$1" | awk -F: '{ if (NF == 2) {print $1 "* 60 + " $2} }' | bc)
+    secondresult[2]=$(echo "$1" | awk -F: '{ if (NF == 3) {print $1 " * 3600 + " $2 " * 60 + " $3} }' | bc)
+    for i in $(seq 0 2)
+    do
+      tresult="${secondresult[${i}]}"
+      if [[ ! -z "${tresult}" ]]
+      then
+        if [[ "${tresult:0:1}" == "." ]]
+        then
+          result="0${tresult}"
+        else
+          result="${tresult}"
+        fi
+      fi
+    done
+    echo ${result}
    }
 	export -f toseconds
 fi # if [ -z "${__functoseconds}" ]
