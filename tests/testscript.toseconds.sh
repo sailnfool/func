@@ -26,10 +26,10 @@ testresult[3]="72640.25"
 testvalue[4]=".08"
 testresult[4]="0.08"
 resultvar=0
-set -x
 for i in $(seq 0 4)
 do
   answer=$(toseconds "${testvalue[${i}]}")
+  echo "answer=${answer}; test=${testvalue[${i}]}"
   if [[ ! "${answer}" == "${testresult[${i}]}" ]]
   then
     ((resultvar+=1))
