@@ -24,6 +24,7 @@ INSTALL =       func.arithmetic \
 		func.pathmunge \
 		func.random \
 		func.regex \
+		func.toseconds \
 		func.uuid \
 		zfunc.zfsparent \
 		zfunc.results \
