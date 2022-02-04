@@ -48,26 +48,47 @@ then
 			B)
         resultnumber=$(echo $number * $__byte) | bc)
 				;;
-			K)
+			KIB)
         resultnumber=$(echo $number * $__kibibyte) | bc)
 				;;
-			M)
+			K)
+        resultnumber=$(echo $number * $__kbyte) | bc)
+				;;
+			MIB)
         resultnumber=$(echo $number * $__mibibyte) | bc)
 				;;
-			G)
+			M)
+        resultnumber=$(echo $number * $__mbyte) | bc)
+				;;
+			GIB)
         resultnumber=$(echo $number * $__gibibyte) | bc)
 				;;
-			T)
+			G)
+        resultnumber=$(echo $number * $__gbyte) | bc)
+				;;
+			TIB)
         resultnumber=$(echo $number * $__tibibyte) | bc)
 				;;
-			P)
+			T)
+        resultnumber=$(echo $number * $__tbyte) | bc)
+				;;
+			PIB)
         resultnumber=$(echo $number * $__pibibyte) | bc)
 				;;
-			E)
+			P)
+        resultnumber=$(echo $number * $__pbyte) | bc)
+				;;
+			EIB)
         resultnumber=$(echo $number * $__eibibyte) | bc)
 				;;
-			Z)
+			E)
+        resultnumber=$(echo $number * $__ebyte) | bc)
+				;;
+			ZIB)
         resultnumber=$(echo $number * $__zibibyte) | bc)
+				;;
+			Z)
+        resultnumber=$(echo $number * $__zbyte) | bc)
 				;;
 			\?)
 				errecho "Bad Suffix $multiplier"
@@ -82,4 +103,3 @@ then
 	}
 	export -f nice2num
 fi # if [[ -z "${__funcnice2num}" ]]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
