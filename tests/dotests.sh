@@ -4,7 +4,7 @@
 
 fail=0
 nametext="TESTNAME="
-for test_script in testscript.*.sh
+for test_script in "test.*.sh"
 do
   testname=$(grep "${nametext}" ${test_script})
   if [[ -z "${testname}" ]]
