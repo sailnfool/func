@@ -41,8 +41,9 @@ then
       ############################################################
       # Now strip the bibyte suffix off the end
       ############################################################
-		  multiplier=$(echo $nicenum | \
-			  sed "s/^.*[0-9]*\([${__kbibytessuffix}]\)/\1/")
+      multiplier=${nicenum:${#number}}
+#		  multiplier=$(echo $nicenum | \
+#			  sed "s/^.*[0-9]*\([${__kbibytessuffix}]\)/\1/")
 
 		  if [[ -z "${multiplier}" ]]
 		  then
