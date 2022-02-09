@@ -1,0 +1,52 @@
+#!/bin/bash
+####################
+# Copyright (c) 2022 Sea2Cloud
+# 3901 Moorea Dr.
+# Modesto, CA 95356
+# 408-910-9134
+#
+# Author - Robert E. Novak aka REN
+#	sailnfool@gmail.com
+#	skype:sailnfool.ren
+#
+#_____________________________________________________________________
+# Rev.|Auth.| Date     | Notes
+#_____________________________________________________________________
+# 1.0 | REN |01/24/2022| Initial Release
+#_____________________________________________________________________
+#
+
+########################################################################
+# Author: Robert E. Novak
+# email: sailnfool@gmail.com
+#
+# func_os
+# Find the name of the installled operating system
+########################################################################
+if [ -z "${__funcos}" ]
+then
+  export __funcos=1
+  function func_os() {
+    echo $(sed -e '/^ID=/s/^ID=\(.*\)$/\1/' < /etc/os-release)
+  }
+  #################### 
+  # end of function func_os
+  #################### 
+  export -f func_os
+fi # if [ -z "${__funcos}" ]
+
+########################################################################
+# func_arch
+# Find the name of the installled operating system
+########################################################################
+if [ -z "${__funcarch}" ]
+then
+  export __funcarch=1
+  function func_arch() {
+    echo $(uname -m)
+  }
+  #################### 
+  # end of function func_arch
+  #################### 
+  export -f func_arch
+fi # if [ -z "${__funcarch}" ]
