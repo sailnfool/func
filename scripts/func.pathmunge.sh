@@ -27,7 +27,7 @@
 if [ -z "${__funcpathmunge}" ]
 then
 	export __funcpathmunge=1
-  source errecho
+  source func.errecho
 	##########
 	function func_pathmunge() {
 		USAGE="${FUNCNAME} <dir> [ after ]"
@@ -42,7 +42,7 @@ then
 		    [ "$2" == "after" ] && export PATH="$PATH:$path" || export PATH="$path:$PATH"
 		  }
 		else
-			errecho "$1 is not a directory" "${USAGE}"
+			errecho -i "$1 is not a directory" "${USAGE}"
 		fi
 		echo "export PATH=$PATH" > $BASHRC_ADDPATH
 	}
