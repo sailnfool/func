@@ -44,6 +44,10 @@ then
         fi
       fi
     done
+    if [[ "${result}" == "0" ]]
+    then
+      result="0.0"
+    fi
     echo ${result}
    }
 	export -f toseconds
