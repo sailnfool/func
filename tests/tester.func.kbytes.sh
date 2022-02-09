@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 ####################
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
@@ -44,10 +44,30 @@ do
 	esac
 done
 
+if [[ -z "${__kbytessuffix}" ]]
+then
+  errecho -i "__kbytessuffix not initialized"
+  exit 1
+fi
+if [[ -z "${__kbibytessuffix}" ]]
+then
+  errecho -i "__kbibytessuffix not initialized"
+  exit 1
+fi
+if [[ -z "${__kbytesvalue[@]}" ]]
+then
+  errecho -i "__kbytesvalue not initialized"
+  exit 1
+fi
+if [[ -z "${__kbibytesvalue[@]}" ]]
+then
+  errecho -i "__kbibytesvalue not initialized"
+  exit 1
+fi
 for i in $(seq 0 $((${#__kbytessuffix}-1)) )
 do
-  bytesuffix=${__kbytesuffix:${i}:1}
-  bibytesuffix=$__kbibytesuffix[${i}]
+  bytesuffix=${__kbytessuffix:${i}:1}
+  bibytesuffix=${__kbibytessuffix[${i}]}
 
   ############################################################ 
   # Note that this is a string comparison rather then a 
@@ -59,7 +79,7 @@ do
   then
     failure="TRUE"
   fi
-  if [[ "${__kbibytesvalue[${bytesuffix}]}" != \
+  if [[ "${__kbibytesvalue[${bibytesuffix}]}" != \
     "$(echo \"1024 ^ ${i}\" | bc)" ]]
   then
     failure="TRUE"
