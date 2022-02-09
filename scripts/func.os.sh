@@ -1,7 +1,6 @@
 #!/bin/bash
 ####################
 # Copyright (c) 2022 Sea2Cloud
-# 3901 Moorea Dr.
 # Modesto, CA 95356
 # 408-910-9134
 #
@@ -27,7 +26,7 @@ if [ -z "${__funcos}" ]
 then
   export __funcos=1
   function func_os() {
-    echo $(sed -e '/^ID=/s/^ID=\(.*\)$/\1/' < /etc/os-release)
+    echo $(sed -ne '/^ID=/s/^ID=\(.*\)$/\1/p' < /etc/os-release)
   }
   #################### 
   # end of function func_os
