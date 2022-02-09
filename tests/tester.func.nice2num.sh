@@ -71,7 +71,7 @@ do
   then
     failure="TRUE"
   fi
-  if [[ "${verbosemode}" == "TRUE" ]]
+  if [[ "${verbose_mode}" == "TRUE" ]]
   then
     echo -e "${suffix}\t$(nice2num 1${suffix})"
   fi
@@ -82,7 +82,7 @@ do
   then
     failure="TRUE"
   fi
-  if [[ "${verbosemode}" == "TRUE" ]]
+  if [[ "${verbose_mode}" == "TRUE" ]]
   then
     echo -e "${suffix}\t$(nice2num 1${suffix})"
   fi
