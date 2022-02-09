@@ -33,7 +33,6 @@ passstring="[\033[92mPASS\033[m]"
 nametext="TESTNAME="
 for test_script in tester.*.sh
 do
-  echo ${test_script}
   testname=$(grep -h "${nametext}" ${test_script})
   if [[ -z "${testname}" ]]
   then
