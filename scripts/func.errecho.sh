@@ -40,42 +40,17 @@ then
 	export __funcerrecho=1
 	function errecho() {>&2
 		PL=1
-		pbs=""
-		if [ "$1" = "-e" ]
-		then
-			pbs="-e"
-			shift
-		fi
-		if [ "$1" = "-i" ]
+		pbs="-e"
+		if [[ "$1" == "-i" ]]
 		then
 			PL=2
+      shift
 		fi
 		local FN=${FUNCNAME[${PL}]}
 		local LN=${BASH_LINENO[${PL}]}
 		local SF=${BASH_SOURCE[${PL}]}
 		local CM=${0##*/}
-		if [ "${pbs}" = "-e" ]
-		then
-			if [ -t 1 ]
-			then
-				/bin/echo "${pbs}" $@
-			else
-				/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: \r\n"$@
-			fi
-		else
-
-      ##################################################
-      # If File descriptor "1" is open, then we are sending
-      # output to a terminal.  If the output is to a file,
-      # then give more verbose output
-      ##################################################
-			if [ -t 1 ]
-			then
-				/bin/echo "${pbs}" $@
-			else
-				/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: "$@
-			fi
-		fi
+		/bin/echo "${pbs}" "${SF}->${CM}::${FN}:${LN}: \r\n\t"$@
 	} # End of function errecho
 	export -f errecho
 
