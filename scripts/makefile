@@ -21,6 +21,7 @@ INSTALL =       func.arithmetic \
 		func.nice2num \
 		func.onefilehash \
 		func.onefilereformat \
+		func.os \
 		func.pathmunge \
 		func.random \
 		func.regex \
@@ -40,7 +41,6 @@ INSTALL =       func.arithmetic \
 		pathmunge \
 		sourcedate \
 		uuid
-#		func.kbytes \
 #		func.kkbytes \
 #		func.kerrecho \
 #		func.knice2num \
