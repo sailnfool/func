@@ -66,7 +66,7 @@ then
             errecho -i "${__kbytessuffix}"
             exit 1
           fi
-          resultnumber=${__kbytesvalue[${multiplier}]}
+          resultnumber=$(echo "${number} * ${__kbytesvalue[${multiplier}]}" | bc)
         else
 
           ##################################################
@@ -83,7 +83,7 @@ then
             errecho -i "${!__kbibytessuffix[@]}"
             exit 1
           fi
-          resultnumber=${__kbibytesvalue[${multiplier}]}
+          resultnumber=$(echo "${number} * ${__kbibytesvalue[${multiplier}]}" | bc)
         fi
       fi
 			echo $resultnumber
