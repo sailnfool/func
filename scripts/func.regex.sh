@@ -13,11 +13,12 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.2 | REN |02/20/2022| Modernized to [[]]
 # 1.1 | REN |02/01/2022| Tweaked documentation
 # 1.0 | REN |03/25/2021| original version
 #_____________________________________________________________________
 #
-if [ -z "${__func_regex}" ]
+if [[ -z "${__func_regex}" ]]
 then
 	export __func_regex=1
 
@@ -34,4 +35,4 @@ then
 	re_hexnumber='^[0-9a-fA-F][0-9a-fA-F]*$'
 	re_integer='^[0-9][0-9]*$'
 	re_decimal='^[+\-][0-9]*\.[0-9]*$'
-fi # if [ -z "${__func_regex}" ]
+fi # if [[ -z "${__func_regex}" ]]
