@@ -35,6 +35,22 @@ then
 fi # if [ -z "${__funcos}" ]
 
 ########################################################################
+# func_os_version_id
+# Find the name of the installled operating system
+########################################################################
+if [ -z "${__funcos_version_id}" ]
+then
+  export __funcos_version_id=1
+  function func_os_version_id() {
+    echo $(sed -ne '/^VERSION_ID=/s/^VERSION_ID=\(.*\)$/\1/p' < /etc/os-release)
+  }
+  #################### 
+  # end of function func_os
+  #################### 
+  export -f func_os_version_id
+fi # if [ -z "${__funcos_version_id}" ]
+
+########################################################################
 # func_arch
 # Find the name of the installled operating system
 ########################################################################
