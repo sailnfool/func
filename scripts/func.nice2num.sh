@@ -14,7 +14,7 @@
 #_____________________________________________________________________
 #
 # The format of the numbers as KB vs, KiB is defined at:
-# https://www.gbmb.org/blog/what-is-the-difference-between-megabytes-and-mebibytes-32
+# https://physics.nist.gov/cuu/Units/binary.html
 ########################################################################
 source func.errecho
 source func.kbytes
@@ -29,7 +29,7 @@ then
 
 	  if [[ $# -ne 1 ]]
 	  then
-		  errecho "Missing Parameter"
+		  errecho "${FUNCNAME[0]} Missing Parameter"
 		  echo ""
 	  else
       ############################################################
@@ -56,12 +56,12 @@ then
         if [[ "${#multiplier}" -eq 1 ]]
         then
 
-          ##################################################
+          ##############################################################
           # To understand the following existence test, see:
           # https://linuxhint.com/associative_arrays_bash_examples/
           # Also see:
           # https://wiki.bash-hackers.org/syntax/pe#use_an_alternate_value
-          ##################################################
+          ##############################################################
           if [[ ! ${__kbytesvalue[${multiplier}]+_} ]]
           then
             errecho -i "multiplier \"${multiplier}\" not found"
@@ -72,6 +72,20 @@ then
           fi
           resultnumber=$(echo "${number} * ${__kbytesvalue[${multiplier}]}" | bc)
         else
+          ##############################################################
+          # Some purists may only use a two letter suffix, e.g. Ki vs.
+          # KiB.  This if statement handles conversion to a three
+          # letter suffix.
+          ##############################################################
+          if [[ "${#multiplier}" -eq 2 ]]
+          then
+            if [[ "${multiplier}" -eq "BY" ]]
+            then
+              multiplier="BYT"
+            else
+              multiplier="${multiplier}B"
+            fi
+          fi
 
           ##################################################
           # To understand the following existence test, see:
