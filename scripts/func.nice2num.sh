@@ -6,11 +6,15 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.2 | REN |03/17/2022| Added documentation reference to the 
+#                      | difference between megabytes and mebibytes
 # 1.1 | REN |02/01/2022| added robustness and modernization
 #                      | triggered reconstruction of func.kbytes
 # 1.0 | REN |05/26/2020| original version
 #_____________________________________________________________________
 #
+# The format of the numbers as KB vs, KiB is defined at:
+# https://www.gbmb.org/blog/what-is-the-difference-between-megabytes-and-mebibytes-32
 ########################################################################
 source func.errecho
 source func.kbytes
