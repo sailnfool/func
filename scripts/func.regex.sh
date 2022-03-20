@@ -34,5 +34,41 @@ then
 	####################
 	re_hexnumber='^[0-9a-fA-F][0-9a-fA-F]*$'
 	re_integer='^[0-9][0-9]*$'
+	re_signedinteger='^[+\-][0-9][0-9]*$'
 	re_decimal='^[+\-][0-9]*\.[0-9]*$'
+  export re_hexnumber
+  export re_integer
+  export re_signedinteger
+  export re_decimal
+
+  ###
+  # We only do this if we find the global variable __kbytessuffix which
+  # is defined in func.kbytes is non-zero.  If it wasn't defined we
+  # don't need this.
+  # Create a regular expression for nicenumbers
+  # First we sort through all of the letters in the kbibytessuffix
+  # and kbytessuffix to put them in a single string.
+  ###
+  if [[ ! -z "${__kbytessuffix}" ]]
+  then
+    let1=/tmp/letters1$$
+    let2=/tmp/letters2$$
+    sorted=/tmp/sorted$$
+    rm -f ${let1} ${let2} ${sorted}
+	  allcat="${__kbibytessuffix[*]} ${__kbytessuffix}"
+	  for i in $(seq 0 ${#allcat})
+	  do
+	    echo -e "${allcat:${i}:1}\n" >> ${let1}
+	  done
+    tr "A-Z" "a-z" < ${let1} > ${let2}
+	  cat ${let1} ${let2} | sort -u | \
+      tr -d " " | sed -e '/^$/d' > ${sorted}
+	  while read inletter
+	  do
+	    matcher="${matcher}${inletter}"
+	  done < /tmp/sorted
+	  re_nicenumber="[0-9][0-9]*[${matcher}][${matcher}]*"
+    export re_nicenumber
+  fi
+  echo "${re_nicenumber}"
 fi # if [[ -z "${__func_regex}" ]]
