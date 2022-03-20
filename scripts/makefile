@@ -1,11 +1,12 @@
 SHELL=/bin/bash
 PREFIX?=$(HOME)
+LPREFIX=$(HOME)/.local
 SPREFIX?=/usr/local
 PREFIX2?=/tftpboot/global/rnovak
 .sh:
 	@rm -f $@
 	cp $< $@
-INSTALL =       func.arithmetic \
+LINSTALL =       func.arithmetic \
 		func.config \
 		func.cwave \
 		func.debug \
@@ -28,8 +29,8 @@ INSTALL =       func.arithmetic \
 		func.toseconds \
 		func.uuid \
 		zfunc.zfsparent \
-		zfunc.results \
-		find_sim \
+		zfunc.results
+INSTALL =		find_sim \
 		getb2sum \
 		getgitroot \
 		histogram \
@@ -47,15 +48,20 @@ INSTALL =       func.arithmetic \
 #		func.kinsufficient \
 
 EXECDIR := $(PREFIX)/bin
+LEXECDIR := $(LPREFIX)/bin
 EXECDIR2 := $(PREFIX2)/bin
 SEXECDIR := $(SPREFIX)/sbin
 
 
 .PHONY: clean uninstall all
-all: $(INSTALL)
+all: $(LINSTALL) $(INSTALL)
 install: $(INSTALL)
 	mkdir -p $(EXECDIR)
 	install -o $(USER) -C $? $(EXECDIR)
+	rm -f $?
+linstall: $(LINSTALL)
+	mkdir -p $(LEXECDIR)
+	install -o $(USER) -C $? $(LEXECDIR)
 	rm -f $?
 sinstall: $(INSTALL)
 	mkdir -p $(SEXECDIR)
