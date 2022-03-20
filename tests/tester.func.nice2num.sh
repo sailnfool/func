@@ -87,20 +87,11 @@ do
     echo -e "${suffix}\t$(nice2num 1${suffix})"
   fi
 done < ${kbibtable}
+# Previously forgot to cleanup
+rm -f ${kbtable} ${kbibtable}
 if [[ "${failure}" == "TRUE" ]]
 then
   exit 1
 else
   exit 0
 fi
-
-testingsuffix=MiB
-testingnumber=1048576
-answer=$(nice2num 1${testingsuffix})
-if [[ "${answer}" == "${testingnumber}" ]]
-then
-  exit 0
-else
-  exit 1
-fi
-
