@@ -66,9 +66,8 @@ then
 	  while read inletter
 	  do
 	    matcher="${matcher}${inletter}"
-	  done < /tmp/sorted
+	  done < ${sorted}
 	  re_nicenumber="[0-9][0-9]*[${matcher}][${matcher}]*"
     export re_nicenumber
   fi
-  echo "${re_nicenumber}"
 fi # if [[ -z "${__func_regex}" ]]
