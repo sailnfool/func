@@ -20,6 +20,7 @@ LINSTALL =       func.arithmetic \
 		func.locker \
 		func.logger \
 		func.nice2num \
+		func.num2nice \
 		func.onefilehash \
 		func.onefilereformat \
 		func.os \
