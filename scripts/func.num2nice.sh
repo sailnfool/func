@@ -37,6 +37,8 @@ then
     local kbibprefix
     local foundk
     local foundkbib
+    local toobig
+    local toobibig
 
 
     ####################################################################
@@ -63,8 +65,16 @@ then
       else
         convert="kbyte"
         bignumber=$1
-    fi #      if [[ "$1" = "-b" ]]
+      fi #      if [[ "$1" = "-b" ]]
     fi #	  if [[ $# -lt 1 ]]
+    toobig=$(echo "${bignumber} - $(nice2num 1000Z)" | bc)
+    toobibig=$(echo "${bignumber} - $(nice2num 1024ZIB)" | bc)
+    if [[ ! ( ( "${toobig:0:1}" = "-" ) && ( "${toobibig:0:1}" = "-" ) ) ]]
+    then
+      errecho "Number is too big, maxnumber is $(nice2num 999Z)\n" \
+        "Requested ${bignumber}, too large by ${toobig}"
+      exit 1
+    fi
 
     ####################################################################
     # The idea here is that we take the big number and divide it by the
@@ -72,6 +82,7 @@ then
     # is less than 1000 (or 1024) we have the prefix for the named
     # power.
     ####################################################################
+    kindex=-1
     for (( i=0; i < ${#__kbytessuffix}; i++))
     do
 #      echo "__kbytessuffix:$i:1 = ${__kbytessuffix:$i:1}"
@@ -94,6 +105,14 @@ then
 #      echo "kquotient = ${kquotient}"
 #      echo "kbibquotient = ${kbibquotient}"
 
+      ##################################################################
+      # This test seems strange, but it is because the numbers are
+      # too big to work in the following numeric comparison
+      ##################################################################
+      if [[ "${#kquotient}" -gt 6 ]]
+      then
+        continue
+      fi
       if [[ "${kquotient}" -lt "1000" ]]
       then
         kprefix=${kquotient}
@@ -115,6 +134,20 @@ then
         fi
       fi
     done
+
+    ####################################################################
+    # Check to seee if we fell out of the loop with no found
+    # result
+    ####################################################################
+    if [[ "${kindex}" -eq "-1" ]]
+    then
+      errecho "${FUNCNAME[0]} Fell out of the loop with ${kindex}"
+      errecho "${FUNCNAME[0]}" "Invalid result, kindex=${kindex}, "\
+        "result=${result}, kprefix=${kprefix}"
+      errecho "bignumber=${bignumber}, kquotient=${kquotient}, "\
+        "kdivisor=${kdivisor}"
+      exit 1
+    fi
     if [[ ( "${convert}" = "kbyte" ) && ( "${foundk}" = "TRUE" ) ]]
     then
       result=$(echo "${kprefix}${__kbytessuffix:${kindex}:1}")
@@ -123,8 +156,10 @@ then
         echo ${result}
         exit 0
       else
-        echo "Invalid result, kindex=${kindex}, result=${result}, "\
-          "kprefix=${kprefix}"
+        errecho "${FUNCNAME[0]}" "Invalid result, kindex=${kindex}, "\
+          "result=${result}, kprefix=${kprefix}"
+        errecho "bignumber=${bignumber}, kquotient=${kquotient}, "\
+          "kdivisor=${kdivisor}"
         exit 1
       fi
     fi
