@@ -50,7 +50,7 @@ for ((i=998;i<1024;i++))
 do
   for ((j=0;j<${#__kbytessuffix};j++))
   do
-    $(num2nice $(nice2num "$i${__kbytessuffix:$j:1}") )
+    echo $(num2nice $(nice2num "$i${__kbytessuffix:$j:1}") )
   done
 done
 exit 1
