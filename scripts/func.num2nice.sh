@@ -100,7 +100,11 @@ then
 #      echo kbibdivisor = "${kbibdivisor}"
 
       kquotient=$(echo "${bignumber} / ${kdivisor}" | bc)
+      kquo100=$(echo "( ${bignumber} * 100 ) / ${kdivisor}" | bc)
+      kquo100=$((kquo100 + 5))
       kbibquotient=$(echo "${bignumber} / ${kbibdivisor}" | bc)
+      kbibquo100=$(echo " ( ${bignumber} * 100 ) / ${kbibdivisor}" | bc)
+      kbibquo100=$((kbibquo100 + 5))
 
 #      echo "kquotient = ${kquotient}"
 #      echo "kbibquotient = ${kbibquotient}"
@@ -116,6 +120,10 @@ then
       if [[ "${kquotient}" -lt "1000" ]]
       then
         kprefix=${kquotient}
+        if [[ "${#kprefix}" -eq 1 ]]
+        then
+          kprefix="${kquotient}.${kquo100:1:1}"
+        fi
         foundk="TRUE"
         if [[ "${convert}" = "kbyte" ]]
         then
