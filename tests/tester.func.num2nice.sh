@@ -46,7 +46,7 @@ do
 		;;
 	esac
 done
-for ((i=998;i<1024;i++))
+for ((i=1298;i<1324;i++))
 do
   for ((j=0;j<${#__kbytessuffix};j++))
   do
