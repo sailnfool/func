@@ -4,6 +4,20 @@ scriptname=${0##*/}
 # Copyright (C) 2022 Sea2cloud Storage, Inc.  All Rights Reserved
 # Modesto, CA 95356
 #
+# dotests - run a series of scripts to test the bash functions in
+#           the tests subdirectory which should have a 1-1
+#           correspondence to the bash functions in the scripts
+#           directory.  Note that each of the test scripts must contain
+#           the "nametext" string to be able to announce the teste
+#           which is being run.  The test functions exit with either
+#           an exit value of 1 <FAIL> or 0 <PASS>
+#
+#           One of the tests has a -v option (verbose) option.  It 
+#           would be good to add this as a parameter to this master 
+#           script, but then all of the tests would have to be -v aware
+#           which will take a bit of work to not only add it but to
+#           verify that it is supported in a testing script and not
+#           produce excess output if it does not.
 # Author - Robert E. Novak aka REN
 # sailnfool@gmail.com
 # skype: sailnfool.ren
@@ -14,23 +28,10 @@ scriptname=${0##*/}
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.1 | REN |04/08/2022| Improved documentation
 # 1.0 | REN |02/20/2022| Initial Release
 #_____________________________________________________________________
 #
-# dotests - run a series of scripts to test the bash functions in
-#           the tests subdirectory which should have a 1-1
-#           correspondence to the bash functions in the scripts
-#           directory.  Note that each of the test scripts must contain
-#           the "nametext" string to be able to announce the test
-#           which is being run.  The test functions exit with either
-#           an exit value of 1 <FAIL> or 0 <PASS>
-#
-#           One of the tests has a -v option (verbose) option.  It 
-#           would be good to add this as a parameter to this master 
-#           script, but then all of the tests would have to be -v aware
-#           which will take a bit of work to not only add it but to
-#           verify that it is supported in a testing script and not
-#           produce excess output if it does not.
 ########################################################################
 
 fail=0
@@ -57,7 +58,7 @@ do
   fi
 
   ######################################################################
-  # Execute each testscript and isse the pass/fail message as
+  # Execute each testscript and issue the pass/fail message as
   # appropriate
   ######################################################################
   if [[ ! ${test_script} ]]
