@@ -23,21 +23,13 @@ source func.debug
 source func.errecho
 source func.insufficient
 
-USAGE="\r\n${scriptname} [-h] [ -d <#> ] [ [-i <ignoredir> ] ... ]
-\t\t<filename> <dirname>\r\n
+USAGE="\r\n${scriptname} [-[hv] [ -d <#> ] [ [-i <ignoredir> ] ... ]
+<filename> <dirname>\r\n
 \t\treturn a list of files in <dirname> which have the same hash as\r\n
 \t\t<filename> (A better similarity test is needed)\r\n
 \r\n
 \t-d\t<#>\tSet the diagnostic levels\r\n
-\t\t\tDEBUGOFF 0\r\n
-\t\t\tDEBUGWAVE 2 - print indented entry/exit to functions\r\n
-\t\t\tDEBUGWAVAR 3 - print variable data from functions if enabled\r\n
-\t\t\tDEBUGSTRACE 5 = prefix the executable with strace\r\n
-\t\t\t                (if implement)\r\n
-\t\t\tDEBUGNOEXECUTE or\t\n
-\t\t\tDEBUGNOEX 6 - generate and display the command lines but don't\r\n
-\t\t\t              execute the script\r\n
-\t\t\tDEBUGSETX 9 - turn on set -x to debug\r\n
+\t\t\tUse -v to see diagnostic level help\r\n
 \t-h\tPrint this message\r\n
 \t-i\t<ignoredir>\tignore everything under <ignoredir>\r\n
 \t\tE.G.:\r\n
@@ -49,20 +41,28 @@ USAGE="\r\n${scriptname} [-h] [ -d <#> ] [ [-i <ignoredir> ] ... ]
 \t\t\tand the files in the directories '.ignore' or '.archive'\r\n
 \t\t\tBy default any directories named .archive .Archive or \r\n
 \t\t\tArchive are ignored\r\n
+\t-v\rShow diagnostic levels, must precede -h\r\n
 "
-optionargs="hd:i:"
+VERBOSE_USAGE="\t\t\tDEBUGOFF 0\r\n
+\t\t\tDEBUGWAVE 2 - print indented entry/exit to functions\r\n
+\t\t\tDEBUGWAVAR 3 - print variable data from functions if enabled\r\n
+\t\t\tDEBUGSTRACE 5 = prefix the executable with strace\r\n
+\t\t\t                (if implement)\r\n
+\t\t\tDEBUGNOEXECUTE or\t\n
+\t\t\tDEBUGNOEX 6 - generate and display the command lines but\r\n
+\t\t\t              don't execute the script\r\n
+\t\t\tDEBUGSETX 9 - turn on set -x to debug\r\n
+"
+
+optionargs="hd:i:v"
 NUMARGS=2
 FUNC_DEBUG="0"
 export FUNC_DEBUG
 nodirs="-not -type d -a"
-onlytell="0"
-addtell="0"
-stamptell="0"
-filetell="0"
-datetell="1"
 ignoredir=""
 declare -a ignorelist
 ignorelist=(".archive")
+verbose="FALSE"
 
 while getopts ${optionargs} name
 do
@@ -77,11 +77,18 @@ do
 		;;
 	h)
 		echo -e ${USAGE}
+    if [[ "${verbose} = "TRUE" ]]
+    then
+      echo -e ${VERBOSE_USAGE}
+    fi
 		exit 0
 		;;
 	i)
     ignorelist+=("${OPTARG}")
 		;;
+  v)
+    verbose="TRUE"
+    ;;
 	\?)
 		errecho "-e" "invalid option: -$OPTARG"
 		errecho "-e" ${USAGE}
@@ -131,8 +138,8 @@ for filename in $(cat ${timesort})
 do
 	filehash=$(getb2sum $filename)
 #	echo "${filehash} ${filename}" >> ${hashlist}
-	echo "${filehash:4} ${filename}"
-#	echo "${filehash:4}" >> ${shorthash}
+	echo "${filehash:0:4} ${filename}"
+#	echo "${filehash:0:4}" >> ${shorthash}
 done
 #sort ${hashlist}
 #sort ${shortlist}
