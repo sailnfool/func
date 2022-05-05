@@ -32,7 +32,6 @@ LINSTALL =       func.arithmetic \
 		zfunc.zfsparent \
 		zfunc.results
 INSTALL =		find_sim \
-		getb2sum \
 		getgitroot \
 		histogram \
 		mypr \
@@ -41,7 +40,6 @@ INSTALL =		find_sim \
 		pinger2 \
 		proj_setup \
 		pathmunge \
-		sourcedate \
 		uuid
 #		func.kkbytes \
 #		func.kerrecho \
