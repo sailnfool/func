@@ -41,7 +41,7 @@ USAGE="\r\n${scriptname} [-[hv] [ -d <#> ] [ [-i <ignoredir> ] ... ]
 \t\t\tand the files in the directories '.ignore' or '.archive'\r\n
 \t\t\tBy default any directories named .archive .Archive or \r\n
 \t\t\tArchive are ignored\r\n
-\t-v\rShow diagnostic levels, must precede -h\r\n
+\t-v\tShow diagnostic levels, must precede -h\r\n
 "
 VERBOSE_USAGE="\t\t\tDEBUGOFF 0\r\n
 \t\t\tDEBUGWAVE 2 - print indented entry/exit to functions\r\n
@@ -77,7 +77,7 @@ do
 		;;
 	h)
 		echo -e ${USAGE}
-    if [[ "${verbose} = "TRUE" ]]
+    if [[ "${verbose}" = "TRUE" ]]
     then
       echo -e ${VERBOSE_USAGE}
     fi
@@ -90,7 +90,7 @@ do
     verbose="TRUE"
     ;;
 	\?)
-		errecho "-e" "invalid option: -$OPTARG"
+		errecho "-e" "invalid option: -${name}"
 		errecho "-e" ${USAGE}
 		exit 1
 		;;
@@ -133,7 +133,7 @@ shortlist=${fileprefix}.shortlist
 shorthash=${fileprefix}.shorthash
 find ${dirname} -type f -a -name ${filename} -print \
   2> /dev/null > ${rawlist}
-ls -t $(cat $rawlist) > ${timesort}
+ls -t $(cat "${rawlist}") > ${timesort}
 for filename in $(cat ${timesort})
 do
 	filehash=$(getb2sum $filename)
@@ -149,4 +149,4 @@ done
 # 	grep ${hashes} ${shortlist}
 # done
 #more ${fileprefix}*
-rm "${fileprefix}.*"
+rm -f ${fileprefix}.*
