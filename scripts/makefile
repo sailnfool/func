@@ -31,7 +31,8 @@ LINSTALL =       func.arithmetic \
 		func.uuid \
 		zfunc.zfsparent \
 		zfunc.results
-INSTALL =		find_sim \
+INSTALL =		dohashes \
+		find_sim \
 		getgitroot \
 		histogram \
 		mypr \
