@@ -1,8 +1,8 @@
 #!/bin/bash
-###########################################################################
+########################################################################
 # Author: Robert E. Novak
-# email: novak5@llnl.gov, sailnfool@gmail.com
-###########################################################################
+# email: sailnfool@gmail.com
+########################################################################
 #
 # Histogram
 #
@@ -17,9 +17,22 @@
 #
 # the awk command had integer overflow in computing 2^30, 2^31, 2^32, etc.
 # Had to use bc command to get proper computations done
+########################################################################
+# There is still a potential bug of having 'awk' overflow if the number
+# of files in a single bin exceeds 2^30.  To make this more efficient,
+# The bins should be BASH associative arrays that the bin index is
+# simply an arbitrary string of digits as is the value of the bin
+# count.  This will involve using bc to increment the bin count. Need
+# to verify the size of the BASH number that can handle ((num++)).  If
+# it is 2^64, then we can speedup using BASH alone.
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.1 | REN |05/11/2022| Improved initial checking parameters
+#                      | Added commentary outline for efficiently
+#                      | Improving the count calculation and bypassing
+#                      | using awk and bc to avoid overflow and for
+#                      | improving efficiency.
 # 1.0 | REN |03/26/2020| Initial Release
 #_____________________________________________________________________
 #
@@ -27,7 +40,7 @@ source func.debug
 source func.errecho
 source func.insufficient
 
-USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> ...\r\n
+USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> [<dir> ...]\r\n
 \t\tSummarize the count of the number of files in this tree sorted by\r\n
 \t\tthe size of the files.  This application is single threaded and\r\n
 \t\tused the 'find' command.  The output is saved in the /tmp\r\n
@@ -37,8 +50,8 @@ USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> ...\r\n
 \t-d\t#\tEnable diagnostics\r\n
 "
 VERBOSE="Outputs the file bin sizes in human readable form:\r\n
-b = bytes\r\n
-k = kilobytes\t(kiB = 1024)\r\n
+B = Bytes\r\n
+K = Kilobytes\t(kiB = 1024)\r\n
 M = Megabytes\t(MiB)\r\n
 G = Gigabytes\t(GiB)\r\n
 T = Terabytes\t(TiB)\r\n
@@ -47,8 +60,9 @@ P = Petabytes\t(PiB)\r\n
 Y = Yettabytes\t(YiB)\r\n
 Z = Zettabytes\t(ZiB)\r\n
 "
-optionargs="hvd:"
 NUMARGS=1
+TMPFILE=/tmp/bins.$$
+optionargs="hvd:"
 if [ $# -lt "${NUMARGS}" ]
 then
 	errecho "No directory specified"
@@ -82,11 +96,24 @@ if [ $# -lt ${NUMARGS} ]
 then
 	errecho "-e" ${USAGE}
 	insufficient ${NUMARGS} $@
+  errecho -e ${USAGE}
 	exit -2
 fi
 
-
-suffixes="bkMGTEPYZ"
+########################################################################
+# Run through the remaining parameters and make sure they are all
+# directories.  Quit if they are not.
+########################################################################
+for rootdir in $*
+do
+  if [[ ! -d ${rootdir} ]]
+  then
+    errecho "Not a directory: ${rootdir}"
+    errecho -e ${USAGE}
+    exit -1
+  fi
+done
+suffixes="BKMGTEPYZ"
 for rootdir in $*
 do
   if [ ! -d ${rootdir} ]
@@ -127,7 +154,8 @@ do
      prefix=$(echo "a=2^${power}/1024^${index};scale=0;a/1"|bc -l)
      filesize=$(echo "scale=0;2^${power}"|bc -l)
      human=$(printf "%d%s" ${prefix} ${suffix})
-     $(echo printf "%*s:\t%*s\t%d\n" 6 ${human} 15 ${filesize} ${count}) >> ${countname}
+     $(echo printf "%*s:\t%*s\t%d\n" 6 \
+       ${human} 15 ${filesize} ${count}) >> ${countname}
    done
 }
 done
