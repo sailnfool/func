@@ -48,6 +48,7 @@ USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> [<dir> ...]\r\n
 \t-h\t\tPrint this message\r\n
 \t-v\t\tProvide verbose help\r\n
 \t-d\t#\tEnable diagnostics\r\n
+\t-s\t#\tspecify the length of the short hash used.
 "
 VERBOSE="Outputs the file bin sizes in human readable form:\r\n
 B = Bytes\r\n
@@ -62,7 +63,8 @@ Z = Zettabytes\t(ZiB)\r\n
 "
 NUMARGS=1
 TMPFILE=/tmp/bins.$$
-optionargs="hvd:"
+shortlen=4
+optionargs="hvd:s:"
 if [ $# -lt "${NUMARGS}" ]
 then
 	errecho "No directory specified"
@@ -85,6 +87,9 @@ do
     FUNC_DEBUG=${OPTARG}
     export FUNC_DEBUG
     ;;
+  s)
+    shortlen="${OPTARG}"
+    ;;
   \?)
     errecho "-e" "invalid option: -${OPTARG}"
     errecho "-e" ${USAGE}
@@ -92,6 +97,8 @@ do
     ;;
   esac
 done
+shift $((OPTIND-1))
+
 if [ $# -lt ${NUMARGS} ]
 then
 	errecho "-e" ${USAGE}
@@ -145,7 +152,7 @@ do
  | parallel b2sum -a blake2bp {} 2> /dev/null >> ${countprefix}.txt
   while read -r full
   do
-     short=${full:0:4}
+     short=${full:0:${shortlen}}
 #     long=${full:0:128}
 #     filname=${full:128}
     if [[ ${countshort[$short}]+_} ]]
