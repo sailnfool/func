@@ -169,6 +169,7 @@ suffixes="BKMGTEPYZ"
 # all of the files and compute both the hash of the file and the name
 # of the file.
 ########################################################################
+topir=$(pwd)
 for rootdir in $*
 do
 
@@ -222,13 +223,9 @@ do
   if [[ "${filecount}" -ge 2000 ]]
   then
     echo "Large directory ${rootdir} has ${filecount} files"
-    cd "${rootdir}"
-    dirlist="$(find . -maxdepth 1 -type d -print 2> /dev/null)"
-    dirlist=$(echo "${dirlist}" | sed 's/^\.$//')
-    echo dohashes ${dirlist}
-    dohashes ${dirlist}
-#    dohashes $(sudo find . -maxdepth 1 -type d -print 2> /dev/null)
-    sudo find .  -maxdepth 0 -type f -print 2>/dev/null \
+    cd "${topdir}/${rootdir}"
+    dohashes $(find . -maxdepth 1 -type d -print 2> /dev/null | sed 's/^\.$//')
+    find .  -maxdepth 0 -type f -print 2>/dev/null \
       | parallel ${chshh} {} >> ${countname}
   else
 	  ####################################################################
@@ -238,7 +235,7 @@ do
 	  cd ${rootdir}
 	  OLDIFS=$IFS
 	  IFS=" "
-	  sudo find . -type f -print 2> /dev/null                                    \
+	  find . -type f -print 2> /dev/null                                    \
 	    | parallel ${chshh} {} 2> /dev/null >> ${countname}
   fi
   ######################################################################
