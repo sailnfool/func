@@ -36,6 +36,8 @@
 #                      | the hashes for the chunks to add them to the
 #                      | dirtree to get a feel for the size of the
 #                      | hashspace.
+#                      | added -t to make the dirtree somewhere other
+#                      | then /tmp
 # 1.1 | REN |05/11/2022| Improved initial checking parameters
 #                      | Added commentary outline for efficiently
 #                      | Improving the count calculation and bypassing
@@ -55,6 +57,10 @@ source func.insufficient
 cryptohashnum="1"
 cryptohash="b2sum -a blake2bp"
 cryptohashhexlen="128"
+dirtree="/${HOME}/github/func/etc/dirtree"
+NUMARGS=1
+TMPFILE=/tmp/bins.$$
+shortlen=4
 
 USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> [<dir> ...]\r\n
 \t\tSummarize the count of the number of files in this tree sorted by\r\n
@@ -63,10 +69,12 @@ USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> [<dir> ...]\r\n
 \t\tdirectory.\r\n
 \t-h\t\tPrint this message\r\n
 \t-v\t\tProvide verbose help\r\n
-\t-d\t#\tEnable diagnostics\r\n
 \t-c\t<crypto>\tUse <crypto> instead of ${cryptohash} for computing\r\n
 \t\t\tthe hash of the file and of the filename/path\r\n
-\t-s\t#\tspecify the length of the short hash used.
+\t-d\t#\tEnable diagnostics\r\n
+\t-s\t#\tspecify the length of the short hash used.\r\n
+\t-t\t<dir>\tSpecify the name of the hash directory tree \r\n
+\t\t\tdefault: ${dirtree}\r\n
 "
 VERBOSE="Outputs the file bin sizes in human readable form:\r\n
 B = Bytes\r\n
@@ -79,11 +87,8 @@ P = Petabytes\t(PiB)\r\n
 Y = Yettabytes\t(YiB)\r\n
 Z = Zettabytes\t(ZiB)\r\n
 "
-NUMARGS=1
-TMPFILE=/tmp/bins.$$
-shortlen=4
-optionargs="hvc:d:s:"
-if [ $# -lt "${NUMARGS}" ]
+optionargs="hvc:d:s:t:"
+if [[ $# -lt "${NUMARGS}" ]]
 then
 	errecho "No directory specified"
   exit -1
@@ -101,6 +106,9 @@ do
     errecho -e ${VERBOSE}
     exit 0
     ;;
+  c)
+    cryptohash="${OPTARG}"
+    ;;
   d)
     FUNC_DEBUG="${OPTARG}"
     export FUNC_DEBUG
@@ -114,10 +122,15 @@ do
     fi
     shortlen="${OPTARG}"
     ;;
-  c)
-    cryptohash="${OPTARG}"
+  t)
+    if [[ ! -d "${OPTARG}" ]]
+    then
+      errecho -e "-t ${OPTARG}\tis not a directory"
+      errecho -e ${USAGE}
+      exit 3
+    fi
+    dirtree="${OPTARG}"
     ;;
-
   \?)
     errecho "-e" "invalid option: -${OPTARG}"
     errecho "-e" ${USAGE}
@@ -229,6 +242,7 @@ do
      filenamelong=${filenamefull:0:${cryptohashhexlen}}
      mkdir -p ${dirtree}/${short} ${dirtree}/${shortfilename}
      touch ${dirtree}/${short}/${cryptohashnum}:${long}
-     echo "${filename}" > ${dirtree}/${shortfilename}/${cryptohashnum}:${filenamefull}
+     echo "${filename}" > \
+       ${dirtree}/${shortfilename}/${cryptohashnum}:${filenamefull}
   done < ${countname}.txt
 done
