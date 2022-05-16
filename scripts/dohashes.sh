@@ -28,6 +28,14 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.2 | REN |05/16/2022| Added parameter override for the cryptographic
+#                      | program to be executed.  Also created a
+#                      | directory tree for all of the hash names of
+#                      | both the files and the directories.
+#                      | TBD: Break the files into chunks and compute
+#                      | the hashes for the chunks to add them to the
+#                      | dirtree to get a feel for the size of the
+#                      | hashspace.
 # 1.1 | REN |05/11/2022| Improved initial checking parameters
 #                      | Added commentary outline for efficiently
 #                      | Improving the count calculation and bypassing
@@ -40,6 +48,14 @@ source func.debug
 source func.errecho
 source func.insufficient
 
+########################################################################
+# The following are hard coded for now.  Ideally they should be looked
+# up in a global table.
+########################################################################
+cryptohashnum="1"
+cryptohash="b2sum -a blake2bp"
+cryptohashhexlen="128"
+
 USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> [<dir> ...]\r\n
 \t\tSummarize the count of the number of files in this tree sorted by\r\n
 \t\tthe size of the files.  This application is single threaded and\r\n
@@ -48,6 +64,8 @@ USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> [<dir> ...]\r\n
 \t-h\t\tPrint this message\r\n
 \t-v\t\tProvide verbose help\r\n
 \t-d\t#\tEnable diagnostics\r\n
+\t-c\t<crypto>\tUse <crypto> instead of ${cryptohash} for computing\r\n
+\t\t\tthe hash of the file and of the filename/path\r\n
 \t-s\t#\tspecify the length of the short hash used.
 "
 VERBOSE="Outputs the file bin sizes in human readable form:\r\n
@@ -64,7 +82,7 @@ Z = Zettabytes\t(ZiB)\r\n
 NUMARGS=1
 TMPFILE=/tmp/bins.$$
 shortlen=4
-optionargs="hvd:s:"
+optionargs="hvc:d:s:"
 if [ $# -lt "${NUMARGS}" ]
 then
 	errecho "No directory specified"
@@ -84,12 +102,22 @@ do
     exit 0
     ;;
   d)
-    FUNC_DEBUG=${OPTARG}
+    FUNC_DEBUG="${OPTARG}"
     export FUNC_DEBUG
     ;;
   s)
+    if [[ "${OPTARG}" =~ $re_integer ]]
+    then
+      errecho -e "-s ${OPTARG}\tis not an integer"
+      errecho -e ${USAGE}
+      exit 2
+    fi
     shortlen="${OPTARG}"
     ;;
+  c)
+    cryptohash="${OPTARG}"
+    ;;
+
   \?)
     errecho "-e" "invalid option: -${OPTARG}"
     errecho "-e" ${USAGE}
@@ -122,59 +150,85 @@ do
 done
 suffixes="BKMGTEPYZ"
 declare -A countshort
+
+########################################################################
+# Now that we have a list of directories, run through the list.  Find
+# all of the files and compute both the hash of the file and the name
+# of the file.
+########################################################################
 for rootdir in $*
 do
-  if [ ! -d ${rootdir} ]
-  then
-    errecho "Not a directory: ${rootdir}"
-    exit -1
-  fi
+
+  ######################################################################
+  # skip over any special root file system directories
+  ######################################################################
+  case $(realpath ${rootdir}) in
+    /proc)
+      continue
+      ;;
+    /lost+found)
+      continue
+      ;;
+    /swap)
+      continue
+      ;;
+    /dev)
+      continue
+      ;;
+    esac
+
+  ######################################################################
+  # The following is dead code since the directory check above made
+  # this redundant
+  ######################################################################
+#   if [ ! -d ${rootdir} ]
+#   then
+#     errecho "Not a directory: ${rootdir}"
+#     exit -1
+#   fi
+
   basedirname=${rootdir##*/}
   countprefix=/tmp/file.hashes.$$
   countprefix2=/tmp/file.hashes2.$$
   countname=${countprefix}.${basedirname}.txt
-  echo "*** Start ***" > ${countname}
-  echo "*** Path = $(realpath ${rootdir})" >> ${countname}
-  echo "**** Dir = ${basedirname}" >> ${countname}
-  echo "***** Size $(du -s -h ${rootdir} 2> /dev/null )" >> ${countname}
+
+  ######################################################################
+  # This code is not part of the main path.  May need to resurrect it
+  # later.
+  ######################################################################
+#   echo "*** Start ***" > ${countname}
+#   echo "*** Path = $(realpath ${rootdir})" >> ${countname}
+#   echo "**** Dir = ${basedirname}" >> ${countname}
+#   echo "***** Size $(du -s -h ${rootdir} 2> /dev/null )" >> ${countname}
+
+  rm -f ${countprefix} ${countprefix2}
+
+  ######################################################################
+  # search through the rootdir tree.  Compute the hash of each file
+  # found by "find" and save those hashes & filenames in countname.txt
+  ######################################################################
   cd ${rootdir}
   OLDIFS=$IFS
   IFS=" "
-
-  rm -f ${countprefix} ${countprefix2}
-  ####################
-  # Potential bug here.  Awk on many machines only supports 32-bit
-  # integers.  If the size[n] for any bucket overflows that count
-  # then this will silently provide erroneous results.  It should
-  # probably be redone with bc
-  ####################
   find . -type f -print 2> /dev/null                                    \
- | parallel b2sum -a blake2bp {} 2> /dev/null >> ${countprefix}.txt
+ | parallel ${cryptohash} {} 2> /dev/null >> ${countname}.txt
+
+  ######################################################################
+  # For each of the hashcodes that we created, take the short prefix
+  # and create a directory of the short prefix and touch a zero length
+  # placeholder for the filename manifest.  Then compute the hash
+  # of the filename and create the entries for that as well.
+  ######################################################################
   while read -r full
   do
      short=${full:0:${shortlen}}
-#     long=${full:0:128}
-#     filname=${full:128}
-    if [[ ${countshort[$short}]+_} ]]
-    then
-      ((countshort[${short}]++))
-    else
-      countshort+=([${short}]=1)
-    fi
-  done < ${countprefix}.txt
-#     if [[ ${countshort[${short}]+_} ]]
-#     then
-#       ((countshort[${short}]++))
-#     else
-#       countshort+=([${short}]=1)
-#     fi
-#   done < ${countprefix}
-  for i in ${!countshort[@]}
-  do
-    if [[ "${countshort[${i}]}" -gt 1 ]]
-    then
-      echo "found ${i}"
-      grep ${i} ${countprefix}.txt
-    fi
-  done
+     long=${full:0:${cryptohashhexlen}}
+     filename=${full:${cryptohashhexlen}}
+     filenamefull="$(echo "${filename}" | ${cryptohash} 2>/dev/null)"
+     shortfilename=${filenamefull:0:${shortlen}}
+     filenamelong=${filenamefull:0:${cryptohashhexlen}}
+     mkdir -p ${dirtree}/${short} ${dirtree}/${shortfilename}
+     touch ${dirtree}/${short}/${cryptohashnum}:${long}
+     echo "${filename}" > ${dirtree}/${shortfilename}/${cryptohashnum}:${filenamefull}
+  done < ${countname}.txt
 done
