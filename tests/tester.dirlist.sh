@@ -1,0 +1,55 @@
+#!/bin/basg
+####################
+# Author - Robert E. Novak aka REN
+#	sailnfool@gmail.com
+#	skype:sailnfool.ren
+#_____________________________________________________________________
+# Rev.|Auth.| Date     | Notes
+#_____________________________________________________________________
+# 1.0 | REN |03/20/2022| testing regex
+#_____________________________________________________________________
+#
+########################################################################
+source func.kbytes
+source func.regex
+
+TESTNAME="Test of function descending large directories"
+USAGE="\r\n${0##*/} [-[hv]]\r\n
+\t-h\t\tPrint this message\r\n
+\t-v\t\tVerbose mode to show values\r\n
+\t\tVerifies that the regular expression for integers, numbers,\r\n
+\t\thexadecimal numbers and nicenumbers work correctly.\r\n
+\t\tNormally emits only PASS|FAIL message\r\n
+"
+
+optionargs="hv"
+verbose_mode="FALSE"
+failure="FALSE"
+
+while getopts ${optionargs} name
+do
+	case ${name} in
+	h)
+		echo -e ${USAGE}
+		exit 0
+		;;
+	v)
+		verbose_mode="TRUE"
+		;;
+	\?)
+		errecho "-e" "invalid option: -$OPTARG"
+		errecho "-e" ${USAGE}
+		exit 1
+		;;
+	esac
+done
+
+topdir=/home
+filecount=$(countfiles ${topdir})
+if [[ "${filecount}" -ge 2000 ]]
+then
+  echo "Large directory ${topdir} has ${filecount} files"
+  cd ${topdir}
+  dirlist="$(find . -maxdepth 1 -type d -print 2>/dev/null | sed 's/^\.$//')"
+  echo ${dirlist}
+fi
