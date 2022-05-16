@@ -201,9 +201,10 @@ do
 #   fi
 
   basedirname=${rootdir##*/}
+  nodotbasedirname=$(echo ${basedirname} | tr "." "_")
   countprefix=/tmp/file.hashes.$$
   countprefix2=/tmp/file.hashes2.$$
-  countname=${countprefix}.${basedirname}.txt
+  countname=${countprefix}.${nodotbasedirname}.txt
 
   ######################################################################
   # This code is not part of the main path.  May need to resurrect it
@@ -214,7 +215,7 @@ do
 #   echo "**** Dir = ${basedirname}" >> ${countname}
 #   echo "***** Size $(du -s -h ${rootdir} 2> /dev/null )" >> ${countname}
 
-  rm -f ${countprefix} ${countprefix2}
+  rm -f ${countprefix} ${countprefix2} ${countname}
 
   ######################################################################
   # search through the rootdir tree.  Compute the hash of each file
@@ -240,9 +241,10 @@ do
      filenamefull="$(echo "${filename}" | ${cryptohash} 2>/dev/null)"
      shortfilename=${filenamefull:0:${shortlen}}
      filenamelong=${filenamefull:0:${cryptohashhexlen}}
+     filenamefullname=${filenamefull:${cryptohashhexlen}}
      mkdir -p ${dirtree}/${short} ${dirtree}/${shortfilename}
      touch ${dirtree}/${short}/${cryptohashnum}:${long}
-     echo "${filename}" > \
-       ${dirtree}/${shortfilename}/${cryptohashnum}:${filenamefull}
+#     echo "${dirtree}/${shortfilename}/${cryptohashnum}:${filenamelong}"
+     echo "${filename}" > ${dirtree}/${shortfilename}/${cryptohashnum}:${filenamelong}
   done < ${countname}
 done
