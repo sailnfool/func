@@ -210,6 +210,11 @@ do
 
   rm -f ${countprefix} ${countprefix2} ${countname}
   echo ${rootdir}
+  if [[ \( -d ${rootdir} \) && \( ! -r ${rootdir} \) ]]
+  then
+    echo skipping ${rootdir} not readable
+    continue
+  fi
   filecount=$(countfiles ${rootdir})
   if [[ "${filecount}" -ge 2000 ]]
   then
@@ -221,7 +226,6 @@ do
 #    dohashes $(sudo find . -maxdepth 1 -type d -print 2> /dev/null)
     sudo find .  -maxdepth 0 -type f -print 2>/dev/null \
       | parallel ${chshh} {} >> ${countname}
-    continue
   else
 	  ####################################################################
 	  # search through the rootdir tree.  Compute the hash of each file
