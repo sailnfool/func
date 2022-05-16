@@ -57,6 +57,7 @@ source func.insufficient
 cryptohashnum="1"
 cryptohash="b2sum -a blake2bp"
 cryptohashhexlen="128"
+cryptohashfilenameoffset=$((cryptohashhexlen+2))
 dirtree="/${HOME}/github/func/etc/dirtree"
 NUMARGS=1
 TMPFILE=/tmp/bins.$$
@@ -162,7 +163,6 @@ do
   fi
 done
 suffixes="BKMGTEPYZ"
-declare -A countshort
 
 ########################################################################
 # Now that we have a list of directories, run through the list.  Find
@@ -188,17 +188,10 @@ do
     /dev)
       continue
       ;;
+    /snap)
+      continue
+      ;;
     esac
-
-  ######################################################################
-  # The following is dead code since the directory check above made
-  # this redundant
-  ######################################################################
-#   if [ ! -d ${rootdir} ]
-#   then
-#     errecho "Not a directory: ${rootdir}"
-#     exit -1
-#   fi
 
   basedirname=${rootdir##*/}
   nodotbasedirname=$(echo ${basedirname} | tr "." "_")
@@ -237,11 +230,11 @@ do
   do
      short=${full:0:${shortlen}}
      long=${full:0:${cryptohashhexlen}}
-     filename=${full:${cryptohashhexlen}}
+     filename=${full:${cryptohashfilenameoffset}}
      filenamefull="$(echo "${filename}" | ${cryptohash} 2>/dev/null)"
      shortfilename=${filenamefull:0:${shortlen}}
      filenamelong=${filenamefull:0:${cryptohashhexlen}}
-     filenamefullname=${filenamefull:${cryptohashhexlen}}
+     filenamefullname=${filenamefull:${cryptohashfilenameoffset}}
      mkdir -p ${dirtree}/${short} ${dirtree}/${shortfilename}
      touch ${dirtree}/${short}/${cryptohashnum}:${long}
 #     echo "${dirtree}/${shortfilename}/${cryptohashnum}:${filenamelong}"
