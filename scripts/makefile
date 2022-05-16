@@ -31,7 +31,8 @@ LINSTALL =       func.arithmetic \
 		func.uuid \
 		zfunc.zfsparent \
 		zfunc.results
-INSTALL =		dohashes \
+INSTALL =		countfiles \
+		dohashes \
 		find_sim \
 		getgitroot \
 		histogram \

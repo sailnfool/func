@@ -193,6 +193,14 @@ do
       ;;
   esac
 
+  filecount=$(countfiles ${rootdir})
+  if [[ "${filecount})" -ge 2000 ]]
+  then
+    echo "Large directory ${rootdir} has ${filecount} files"
+    cd "${rootdir}"
+    dohashes $(find . -type d -maxdepth 1 -print)
+    continue
+  fi
   basedirname=${rootdir##*/}
   nodotbasedirname=$(echo ${basedirname} | tr "." "_")
   countprefix=/tmp/file.hashes.$$
