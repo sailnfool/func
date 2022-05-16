@@ -193,14 +193,6 @@ do
       ;;
   esac
 
-  filecount=$(countfiles ${rootdir})
-  if [[ "${filecount}" -ge 2000 ]]
-  then
-    echo "Large directory ${rootdir} has ${filecount} files"
-    cd "${rootdir}"
-    dohashes $(find . -type d -maxdepth 1 -print)
-    continue
-  fi
   basedirname=${rootdir##*/}
   nodotbasedirname=$(echo ${basedirname} | tr "." "_")
   countprefix=/tmp/file.hashes.$$
@@ -217,17 +209,27 @@ do
 #   echo "***** Size $(du -s -h ${rootdir} 2> /dev/null )" >> ${countname}
 
   rm -f ${countprefix} ${countprefix2} ${countname}
-
-  ######################################################################
-  # search through the rootdir tree.  Compute the hash of each file
-  # found by "find" and save those hashes & filenames in countname.txt
-  ######################################################################
-  cd ${rootdir}
-  OLDIFS=$IFS
-  IFS=" "
-  find . -type f -print 2> /dev/null                                    \
- | parallel ${chshh} {} 2> /dev/null >> ${countname}
-
+  echo ${rootdir}
+  filecount=$(countfiles ${rootdir})
+  if [[ "${filecount}" -ge 2000 ]]
+  then
+    echo "Large directory ${rootdir} has ${filecount} files"
+    cd "${rootdir}"
+    dohashes $(find . -maxdepth 1 -type d -print 2> /dev/null)
+    find .  -maxdepth 0 -type f -print 2>/dev/null \
+      | parallel ${chshh} {} >> ${countname}
+    continue
+  else
+	  ####################################################################
+	  # search through the rootdir tree.  Compute the hash of each file
+	  # found by "find" and save those hashes & filenames in countname.txt
+	  ####################################################################
+	  cd ${rootdir}
+	  OLDIFS=$IFS
+	  IFS=" "
+	  find . -type f -print 2> /dev/null                                    \
+	    | parallel ${chshh} {} 2> /dev/null >> ${countname}
+  fi
   ######################################################################
   # For each of the hashcodes that we created, take the short prefix
   # and create a directory of the short prefix and touch a zero length
