@@ -224,7 +224,7 @@ do
   OLDIFS=$IFS
   IFS=" "
   find . -type f -print 2> /dev/null                                    \
- | parallel ${cryptohash} {} 2> /dev/null >> ${countname}.txt
+ | parallel ${cryptohash} {} 2> /dev/null >> ${countname}
 
   ######################################################################
   # For each of the hashcodes that we created, take the short prefix
@@ -244,5 +244,5 @@ do
      touch ${dirtree}/${short}/${cryptohashnum}:${long}
      echo "${filename}" > \
        ${dirtree}/${shortfilename}/${cryptohashnum}:${filenamefull}
-  done < ${countname}.txt
+  done < ${countname}
 done
