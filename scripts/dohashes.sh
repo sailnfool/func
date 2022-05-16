@@ -215,7 +215,10 @@ do
   then
     echo "Large directory ${rootdir} has ${filecount} files"
     cd "${rootdir}"
-    dohashes $(sudo find . -maxdepth 1 -type d -print 2> /dev/null)
+    dirlist="$(find . -maxdepth 1 -type d -print 2> /dev/null)"
+    dirlist=$(echo "${dirlist}" | sed 's/^\. //')
+    dohashes ${dirlist}
+#    dohashes $(sudo find . -maxdepth 1 -type d -print 2> /dev/null)
     sudo find .  -maxdepth 0 -type f -print 2>/dev/null \
       | parallel ${chshh} {} >> ${countname}
     continue
