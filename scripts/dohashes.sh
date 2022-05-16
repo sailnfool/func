@@ -54,10 +54,10 @@ source func.insufficient
 # The following are hard coded for now.  Ideally they should be looked
 # up in a global table.
 ########################################################################
-cryptohashnum="1"
-cryptohash="b2sum -a blake2bp"
-cryptohashhexlen="128"
-cryptohashfilenameoffset=$((cryptohashhexlen+2))
+chshhnum="1"
+chshh="b2sum -a blake2bp"
+chshhhexlen="128"
+chshhfilenameoffset=$((chshhhexlen+2))
 dirtree="/${HOME}/github/func/etc/dirtree"
 NUMARGS=1
 TMPFILE=/tmp/bins.$$
@@ -70,7 +70,7 @@ USAGE="\r\n${0##*/} [-[hv]] [-d #] <dir> [<dir> ...]\r\n
 \t\tdirectory.\r\n
 \t-h\t\tPrint this message\r\n
 \t-v\t\tProvide verbose help\r\n
-\t-c\t<crypto>\tUse <crypto> instead of ${cryptohash} for computing\r\n
+\t-c\t<crypto>\tUse <crypto> instead of ${chshh} for computing\r\n
 \t\t\tthe hash of the file and of the filename/path\r\n
 \t-d\t#\tEnable diagnostics\r\n
 \t-s\t#\tspecify the length of the short hash used.\r\n
@@ -108,7 +108,7 @@ do
     exit 0
     ;;
   c)
-    cryptohash="${OPTARG}"
+    chshh="${OPTARG}"
     ;;
   d)
     FUNC_DEBUG="${OPTARG}"
@@ -182,7 +182,7 @@ do
     /lost+found)
       continue
       ;;
-    /swap)
+    /swapfile)
       continue
       ;;
     /dev)
@@ -191,7 +191,7 @@ do
     /snap)
       continue
       ;;
-    esac
+  esac
 
   basedirname=${rootdir##*/}
   nodotbasedirname=$(echo ${basedirname} | tr "." "_")
@@ -218,7 +218,7 @@ do
   OLDIFS=$IFS
   IFS=" "
   find . -type f -print 2> /dev/null                                    \
- | parallel ${cryptohash} {} 2> /dev/null >> ${countname}
+ | parallel ${chshh} {} 2> /dev/null >> ${countname}
 
   ######################################################################
   # For each of the hashcodes that we created, take the short prefix
@@ -229,15 +229,15 @@ do
   while read -r full
   do
      short=${full:0:${shortlen}}
-     long=${full:0:${cryptohashhexlen}}
-     filename=${full:${cryptohashfilenameoffset}}
-     filenamefull="$(echo "${filename}" | ${cryptohash} 2>/dev/null)"
+     long=${full:0:${chshhhexlen}}
+     filename=${full:${chshhfilenameoffset}}
+     filenamefull="$(echo "${filename}" | ${chshh} 2>/dev/null)"
      shortfilename=${filenamefull:0:${shortlen}}
-     filenamelong=${filenamefull:0:${cryptohashhexlen}}
-     filenamefullname=${filenamefull:${cryptohashfilenameoffset}}
+     filenamelong=${filenamefull:0:${chshhhexlen}}
+     filenamefullname=${filenamefull:${chshhfilenameoffset}}
      mkdir -p ${dirtree}/${short} ${dirtree}/${shortfilename}
-     touch ${dirtree}/${short}/${cryptohashnum}:${long}
-#     echo "${dirtree}/${shortfilename}/${cryptohashnum}:${filenamelong}"
-     echo "${filename}" > ${dirtree}/${shortfilename}/${cryptohashnum}:${filenamelong}
+     touch ${dirtree}/${short}/${chshhnum}:${long}
+#     echo "${dirtree}/${shortfilename}/${chshhnum}:${filenamelong}"
+     echo "${filename}" > ${dirtree}/${shortfilename}/${chshhnum}:${filenamelong}
   done < ${countname}
 done
