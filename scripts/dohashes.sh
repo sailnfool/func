@@ -194,7 +194,7 @@ do
   esac
 
   filecount=$(countfiles ${rootdir})
-  if [[ "${filecount})" -ge 2000 ]]
+  if [[ "${filecount}" -ge 2000 ]]
   then
     echo "Large directory ${rootdir} has ${filecount} files"
     cd "${rootdir}"
