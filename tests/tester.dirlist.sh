@@ -43,8 +43,7 @@ do
 		;;
 	esac
 done
-
-topdir=/home
+topdir=/home/rnovak
 filecount=$(countfiles ${topdir})
 if [[ "${filecount}" -ge 2000 ]]
 then
@@ -52,4 +51,14 @@ then
   cd ${topdir}
   dirlist="$(find . -maxdepth 1 -type d -print 2>/dev/null | sed 's/^\.$//')"
   echo ${dirlist}
+  for dir in ${dirlist}
+  do
+    if [[ -d ${dir} ]]
+    then
+      if [[ ! -r ${dir} ]]
+      then
+        echo cannot read "./${dir}"
+      fi
+    fi
+  done
 fi

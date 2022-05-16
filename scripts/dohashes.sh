@@ -210,10 +210,13 @@ do
 
   rm -f ${countprefix} ${countprefix2} ${countname}
   echo ${rootdir}
-  if [[ ! -r ${rootdir} ]]
+  if [[ -d ${rootdir} ]]
   then
-    echo skipping ${rootdir} not readable
-    continue
+	  if [[ ! -r ${rootdir} ]]
+	  then
+	    echo skipping ${rootdir} not readable
+	    continue
+	  fi
   fi
   filecount=$(countfiles ${rootdir})
   if [[ "${filecount}" -ge 2000 ]]
