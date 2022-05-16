@@ -215,8 +215,8 @@ do
   then
     echo "Large directory ${rootdir} has ${filecount} files"
     cd "${rootdir}"
-    dohashes $(find . -maxdepth 1 -type d -print 2> /dev/null)
-    find .  -maxdepth 0 -type f -print 2>/dev/null \
+    dohashes $(sudo find . -maxdepth 1 -type d -print 2> /dev/null)
+    sudo find .  -maxdepth 0 -type f -print 2>/dev/null \
       | parallel ${chshh} {} >> ${countname}
     continue
   else
@@ -227,7 +227,7 @@ do
 	  cd ${rootdir}
 	  OLDIFS=$IFS
 	  IFS=" "
-	  find . -type f -print 2> /dev/null                                    \
+	  sudo find . -type f -print 2> /dev/null                                    \
 	    | parallel ${chshh} {} 2> /dev/null >> ${countname}
   fi
   ######################################################################
