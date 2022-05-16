@@ -169,7 +169,7 @@ suffixes="BKMGTEPYZ"
 # all of the files and compute both the hash of the file and the name
 # of the file.
 ########################################################################
-topir=$(pwd)
+topdir=$(pwd)
 for rootdir in $*
 do
 
@@ -218,12 +218,15 @@ do
 	    echo skipping ${rootdir} not readable
 	    continue
 	  fi
+  else
+    continue
   fi
   filecount=$(countfiles ${rootdir})
   if [[ "${filecount}" -ge 2000 ]]
   then
     echo "Large directory ${rootdir} has ${filecount} files"
-    cd "${topdir}/${rootdir}"
+    goback=$(pwd)
+    cd "${rootdir}"
     dohashes $(find . -maxdepth 1 -type d -print 2> /dev/null | sed 's/^\.$//')
     find .  -maxdepth 0 -type f -print 2>/dev/null \
       | parallel ${chshh} {} >> ${countname}
@@ -258,4 +261,5 @@ do
 #     echo "${dirtree}/${shortfilename}/${chshhnum}:${filenamelong}"
      echo "${filename}" > ${dirtree}/${shortfilename}/${chshhnum}:${filenamelong}
   done < ${countname}
+  cd ${goback}
 done
