@@ -210,7 +210,7 @@ do
 #   echo "***** Size $(du -s -h ${rootdir} 2> /dev/null )" >> ${countname}
 
   rm -f ${countprefix} ${countprefix2} ${countname}
-  echo ${rootdir}
+  echo $(realpath ${rootdir})
   if [[ -d ${rootdir} ]]
   then
 	  if [[ ! -r ${rootdir} ]]
@@ -224,7 +224,7 @@ do
   filecount=$(countfiles ${rootdir})
   if [[ "${filecount}" -ge 2000 ]]
   then
-    echo "Large directory ${rootdir} has ${filecount} files"
+    echo "$(realpath ${rootdir}) has ${filecount} files"
     goback=$(pwd)
     cd "${rootdir}"
     dohashes $(find . -maxdepth 1 -type d -print 2> /dev/null | sed 's/^\.$//')
