@@ -45,22 +45,15 @@ do
 done
 
 echo "Nicenumber string is ${re_nicenumber}"
-integertest="12345"
-signednumber1test="+123"
-signednumber2test="-123"
-decimalnumber1test="-123.45"
-hex1test="face1"
-hex2test="DEADBeef9"
-nicenum1test="1M"
-nicenum2test="1MIB"
-nicenum3test="1BYT"
-nicenum4test="99ZIB"
 
+integertest="12345"
 if [[ ! "${integertest}" =~ ${re_integer} ]]
 then
   failure="TRUE"
 fi
 
+signednumber1test="+123"
+signednumber2test="-123"
 if [[ ! "${signednumber1test}" =~ ${re_signedinteger} ]]
 then
   failure="TRUE"
@@ -71,11 +64,14 @@ then
   failure="TRUE"
 fi
 
+decimalnumber1test="-123.45"
 if [[ ! "${decimalnumber1test}" =~ ${re_decimal} ]]
 then
   failure="TRUE"
 fi
 
+hex1test="face1"
+hex2test="DEADBeef9"
 if [[ ! "${hex1test}" =~ ${re_hexnumber} ]]
 then
   failure="TRUE"
@@ -86,6 +82,10 @@ then
   failure="TRUE"
 fi
 
+nicenum1test="1M"
+nicenum2test="1MIB"
+nicenum3test="1BYT"
+nicenum4test="99ZIB"
 if [[ ! "${nicenum1test}" =~ ${re_nicenumber} ]]
 then
   failure="TRUE"
@@ -102,6 +102,25 @@ then
 fi
 
 if [[ ! "${nicenum4test}" =~ ${re_nicenumber} ]]
+then
+  failure="TRUE"
+fi
+
+hash1teststring="This is a test with b2sum"
+hash1result=$(echo ${hash1teststring} | b2sum)
+hash1hash="01c:${hash1result:0:128}"
+hash2hash="01:${hash1result:0:128}"
+
+if [[ ! "${hash1hash} =~ re_cryptohash ]]
+then
+  failure="TRUE"
+fi
+
+########################################################################
+# Note that in this case if the match works then the matching pattern
+# is broken
+########################################################################
+if [[ "${hash2hash} =~ re_cryptohash ]]
 then
   failure="TRUE"
 fi

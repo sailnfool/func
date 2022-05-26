@@ -40,7 +40,7 @@ then
 	re_integer='^[0-9][0-9]*$'
 	re_signedinteger='^[+\-][0-9][0-9]*$'
 	re_decimal='^[+\-][0-9]*\.[0-9]*$'
-  re_cryptohash='^[0-9][0-9]*:[0-9a-fA-F][0-9a-fA-F]*$'
+  re_cryptohash='^[0-9a-fA-F]{3}:[0-9a-fA-F][0-9a-fA-F]*$'
   export re_hexnumber
   export re_integer
   export re_signedinteger
