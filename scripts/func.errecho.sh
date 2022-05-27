@@ -41,11 +41,16 @@ then
 	function errecho() {>&2
 		PL=1
 		pbs="-e"
-		if [[ "$1" == "-i" ]]
+		if [[ "$1" = "-i" ]]
 		then
 			PL=2
       shift
 		fi
+    if [[ "$1" = "-e" ]]
+    then
+		  pbs="-e"
+      shift
+    fi
 		local FN=${FUNCNAME[${PL}]}
 		local LN=${BASH_LINENO[${PL}]}
 		local SF=${BASH_SOURCE[${PL}]}
