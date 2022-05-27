@@ -36,7 +36,9 @@ then
   #
   # Note that there is also a "re_nicenumber" found in func.kbytes
 	####################
+  re_hexdigit='^[0-9a-fA-F]$'
 	re_hexnumber='^[0-9a-fA-F][0-9a-fA-F]*$'
+  re_digit='^[0-9]$'
 	re_integer='^[0-9][0-9]*$'
 	re_signedinteger='^[+\-][0-9][0-9]*$'
 	re_decimal='^[+\-][0-9]*\.[0-9]*$'
