@@ -13,6 +13,7 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.4 | REN |05/27/2022| Added re_hexdigit, re_digit
 # 1.3 | REN |05/19/2022| Added re_cryptohash, moved re_nicenumber to
 #                      | func.kbytes
 # 1.2 | REN |02/20/2022| Modernized to [[]]
@@ -24,7 +25,7 @@ if [[ -z "${__func_regex}" ]]
 then
 	export __func_regex=1
 
-	####################
+  ######################################################################
 	# Define a set of regular expressions for various tests of inputs
 	# When you want to test a variable, do NOT place the expansion of
 	# the re_xxxx value in quotes.  It will not work.
@@ -34,8 +35,17 @@ then
 	#     echo "$input_value is a valid hex number
 	# fi
   #
+  # Often used to test arguments passed when using getopts to process
+  # Bash script parameters for example the value passed to debug (-d)
+  # if [[ "${OPTARG}" =~ $re_digit ]]
+  # then
+  #   debug="${OPTARG}"
+  # else
+  #   echo -e ${USAGE}
+  # fi
+  #
   # Note that there is also a "re_nicenumber" found in func.kbytes
-	####################
+  ######################################################################
   re_hexdigit='^[0-9a-fA-F]$'
 	re_hexnumber='^[0-9a-fA-F][0-9a-fA-F]*$'
   re_digit='^[0-9]$'
