@@ -1,5 +1,8 @@
 #!/bin/bash
-####################
+########################################################################
+# Copyright (C) 2022 Sea2cloud Storage, Inc.  All Rights Reserved
+# Modesto, CA 95356
+#
 # This defines 3 functions:
 # errecho
 # stderrecho
@@ -18,10 +21,12 @@
 #  command line arguments but that will wait for a later day.
 # stderrnecho drops the output of a trailing newline character like
 #  the "-n" optional parameter to echo (see man echo)
-####################
+########################################################################
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
+# License CC by Sea2Cloud Storage, Inc.
+# see https://creativecommons.org/licenses/by/4.0/legalcode
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
@@ -34,7 +39,7 @@
 # 1.0 | REN |09/06/2018| original version
 #_____________________________________________________________________
 #
-####################
+########################################################################
 if [ -z "${__funcerrecho}" ]
 then
 	export __funcerrecho=1
