@@ -1,4 +1,4 @@
-#!/bin/basg
+#!/bin/bash
 ####################
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
@@ -10,8 +10,6 @@
 #_____________________________________________________________________
 #
 ########################################################################
-source func.kbytes
-source func.regex
 
 TESTNAME="Test of function descending large directories"
 USAGE="\r\n${0##*/} [-[hv]]\r\n

@@ -1,4 +1,4 @@
-#!/bin/basg
+#!/bin/bash
 ####################
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
@@ -12,6 +12,7 @@
 ########################################################################
 source func.kbytes
 source func.regex
+source func.errecho
 
 TESTNAME="Test of function regex (func.regex) from\n\thttps://github.com/sailnfool/func"
 USAGE="\r\n${0##*/} [-[hv]]\r\n

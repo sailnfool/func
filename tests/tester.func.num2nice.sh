@@ -1,4 +1,4 @@
-#!/bin/basg
+#!/bin/bash
 ####################
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
