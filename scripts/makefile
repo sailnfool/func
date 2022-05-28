@@ -9,11 +9,13 @@ PREFIX2?=/tftpboot/global/rnovak
 LINSTALL =       func.arithmetic \
 		func.config \
 		func.cwave \
+		func.dec2hex \
 		func.debug \
 		func.doshells \
 		func.env \
 		func.errecho \
 		func.getprojdir \
+		func.hex2dec \
 		func.hmsout \
 		func.insufficient \
 		func.kbytes \
