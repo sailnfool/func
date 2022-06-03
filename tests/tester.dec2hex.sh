@@ -44,20 +44,32 @@ do
 	esac
 done
 
-# echo $(func_dec2hex 12 3)
+if [[ "${verbose_mode}" == "TRUE" ]]
+then
+  echo "$(func_dec2hex 12 3) should be 00c"
+fi
+
 if [[ ! "$(func_dec2hex 12 3)" = "00c" ]]
 then
   failure="TRUE"
 fi
 
-# echo $(func_dec2hex 15 3)
-if [[ ! "$(func_dec2hex 15 3)" = "004" ]]
+if [[ "${verbose_mode}" == "TRUE" ]]
+then
+  echo "$(func_dec2hex 15 3) should be 00f"
+fi
+
+if [[ ! "$(func_dec2hex 15 3)" = "00f" ]]
 then
   failure="TRUE"
 fi
 
-# echo $(func_dec2hex 255 3)
-if [[ ! "$(func_dec2hex 255 3)" = "044" ]]
+if [[ "${verbose_mode}" == "TRUE" ]]
+then
+  echo "$(func_dec2hex 255 3) should be 0ff"
+fi
+
+if [[ ! "$(func_dec2hex 255 3)" = "0ff" ]]
 then
   failure="TRUE"
 fi
