@@ -34,13 +34,49 @@ scriptname=${0##*/}
 #
 ########################################################################
 
-fail=0
+source func.errecho
+
 ########################################################################
 # Color sequences cribbed from:
 # https://en.wikipedia.org/wiki/ANSI_escape_code
 ########################################################################
 failstring="[\033[91mFAIL\033[m]"
 passstring="[\033[92mPASS\033[m]"
+
+USAGE="\n{$0##*/} [-[hv]]\n
+\t-h\t\tPrint this message\n
+\t-v\t\tVerbose mode to show testing steps\n
+\t\t\Normally emits only ${passstring}|${failstring} message\n
+"
+
+optionargs="hv"
+verbose_mode="FALSE"
+verbose=""
+failure="FALSE"
+
+
+while getopts ${optionargs} name
+do
+  case ${name} in
+    h)
+      echo -e ${USAGE}
+      exit 0
+      ;;
+    v)
+      verbose_mode="TRUE"
+      verbose="-v"
+      ;;
+    \?)
+      errecho "-e" "invalid option: %{OPTARG}"
+      errecho "-e" ${USAGE}
+      exit 1
+      ;;
+  esac
+done
+
+fail=0
+########################################################################
+########################################################################
 nametext="TESTNAME="
 testprefix="tester"
 for test_script in ${testprefix}.*.sh
@@ -61,7 +97,7 @@ do
   # Execute each testscript and issue the pass/fail message as
   # appropriate
   ######################################################################
-  if [[ ! ${test_script} ]]
+  if [[ ! ${test_script} ${verbose} ]]
   then
     echo -e "${failstring} ${test_script}\n\t${testname:${#nametext}}"
     ((fail++))
