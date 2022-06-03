@@ -6,7 +6,7 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
-# 1.0 | REN |02/08/2022| testing nice2num
+# 1.0 | REN |02/08/2022| testing num2nice
 #_____________________________________________________________________
 #
 ########################################################################
@@ -46,12 +46,17 @@ do
 		;;
 	esac
 done
+shift $(( ${OPTIND} -1 ))
+
 for ((i=1298;i<1324;i++))
 do
   for ((j=0;j<${#__kbytessuffix};j++))
   do
-    echo "Requesting $i${__kbytessuffix:$j:1}"
-    echo $(num2nice $(nice2num "$i${__kbytessuffix:$j:1}") )
+    if [[ "${verbose_mode}" == "TRUE" ]]
+    then
+      echo "Requesting $i${__kbytessuffix:$j:1}"
+      echo $(num2nice $(nice2num "$i${__kbytessuffix:$j:1}") )
+    fi
   done
 done
 exit 1
