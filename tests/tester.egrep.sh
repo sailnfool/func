@@ -68,19 +68,35 @@ successresults[1]="1"
 successresults[1]+="12"
 successresults[1]+="123"
 successresutls[1]+="1234"
+maxtest=1
 
-for i in $(seq 0 ${maxtest}
+for i in $(seq 0 ${maxtest})
 do
+  rm -f /tmp/good_$i.txt /tmp/test_$i.txt
+  for j in ${successresults[${i}]}
+  do
+    echo $j >> /tmp/good_$i.txt
+  done
   result=$(egrep ${successtests[$i]} ${TESTINPUT})
   count=0
   for j in ${result}
   do
+    echo $j >> /tmp/test_$i.txt
     ((count++))
   done
   if [[ "${verbose_mode}" == "TRUE" ]]
   then
     echo "There were ${count} results"
+    if [[ ! $(diff /tmp/good_$i.txt /tmp/test_$i.txt) ]]
+    then
+      failure="TRUE"
+    fi
   fi
 done
-rm -f ${TESTINPUT}
-exit 0
+rm -f ${TESTINPUT} /tmp/good_*.txt /tmp/test_*.txt
+if [[ "${failure}" == "FALSE" ]]
+then
+  exit 1
+else
+  exit 0
+fi
