@@ -73,13 +73,21 @@ do
       ;;
   esac
 done
+shift $(( ${OPTIND} -1 ))
+
 
 fail=0
 ########################################################################
 ########################################################################
 nametext="TESTNAME="
 testprefix="tester"
-for test_script in ${testprefix}.*.sh
+if [[ "$#" -gt 0 ]]
+then
+  testlist="$@"
+else
+  testlist=${testprefix}.*.sh
+fi
+for test_script in ${testlist}
 do
   ######################################################################
   # pull the TESTNAME from each testing file and issue an error if it
@@ -97,7 +105,7 @@ do
   # Execute each testscript and issue the pass/fail message as
   # appropriate
   ######################################################################
-  if [[ ! ${test_script} ${verbose} ]]
+  if [[ ! $(bash ${test_script} ${verbose}) ]]
   then
     echo -e "${failstring} ${test_script}\n\t${testname:${#nametext}}"
     ((fail++))
