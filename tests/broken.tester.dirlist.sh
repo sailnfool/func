@@ -22,7 +22,7 @@ USAGE="\r\n${0##*/} [-[hv]]\r\n
 
 optionargs="hv"
 verbose_mode="FALSE"
-failure="FALSE"
+fail=0
 
 while getopts ${optionargs} name
 do
@@ -41,6 +41,7 @@ do
 		;;
 	esac
 done
+fail=0
 topdir=/home/rnovak
 filecount=$(countfiles ${topdir})
 if [[ "${filecount}" -ge 2000 ]]
@@ -48,7 +49,6 @@ then
   echo "Large directory ${topdir} has ${filecount} files"
   cd ${topdir}
   dirlist="$(find . -maxdepth 1 -type d -print 2>/dev/null | sed 's/^\.$//')"
-  echo ${dirlist}
   for dir in ${dirlist}
   do
     if [[ -d ${dir} ]]
@@ -56,7 +56,9 @@ then
       if [[ ! -r ${dir} ]]
       then
         echo cannot read "./${dir}"
+        ((fail++))
       fi
     fi
   done
 fi
+exit ${fail}

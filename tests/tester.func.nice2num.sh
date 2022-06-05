@@ -6,6 +6,7 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.1 | REN |06/04/2022| Tweaked to exit with the number of fails
 # 1.0 | REN |02/08/2022| testing nice2num
 #_____________________________________________________________________
 #
@@ -23,7 +24,7 @@ USAGE="\r\n${0##*/} [-[hv]]\r\n
 
 optionargs="hv"
 verbose_mode="FALSE"
-failure="FALSE"
+fail=0
 
 while getopts ${optionargs} name
 do
@@ -43,6 +44,8 @@ do
 	esac
 done
 
+shift $(( ${OPTIND} -1 ))
+
 kbtable="/tmp/kbyte_table_$$.txt"
 cat > ${kbtable} <<EOF
 B	1
@@ -54,6 +57,7 @@ P	1000000000000000
 E	1000000000000000000
 Z	1000000000000000000000
 EOF
+
 kbibtable="/tmp/kbibyte_table_$$.txt"
 cat > ${kbibtable} <<EOF2
 BYT	1
@@ -67,31 +71,30 @@ ZIB	1180591620717411303424
 EOF2
 while read -r suffix value
 do
-  if [[ "$(nice2num 1${suffix})" != "${value}" ]]
-  then
-    failure="TRUE"
-  fi
   if [[ "${verbose_mode}" == "TRUE" ]]
   then
     echo -e "${suffix}\t$(nice2num 1${suffix})"
+  fi
+  if [[ "$(nice2num 1${suffix})" != "${value}" ]]
+  then
+    ((fail++))
   fi
 done < ${kbtable}
 while read -r suffix value
 do
-  if [[ "$(nice2num 1${suffix})" != "${value}" ]]
-  then
-    failure="TRUE"
-  fi
   if [[ "${verbose_mode}" == "TRUE" ]]
   then
     echo -e "${suffix}\t$(nice2num 1${suffix})"
   fi
+  if [[ "$(nice2num 1${suffix})" != "${value}" ]]
+  then
+    ((fail++))
+  fi
 done < ${kbibtable}
+
+########################################################################
 # Previously forgot to cleanup
+########################################################################
 rm -f ${kbtable} ${kbibtable}
-if [[ "${failure}" == "TRUE" ]]
-then
-  exit 1
-else
-  exit 0
-fi
+
+exit ${fail}

@@ -22,7 +22,7 @@ USAGE="\r\n${0##*/} [-[hv]]\r\n
 
 optionargs="hv"
 verbose_mode="FALSE"
-failure="FALSE"
+fail=0
 
 while getopts ${optionargs} name
 do
@@ -57,27 +57,34 @@ aa
 ax
 EOF
 
-declare -a successtests
-declare -a successresults
-declare -a failtests
+########################################################################
+# tv short for testvalue
+# tr short for testresults
+# fv short for failvalue
+# fr short for failrsults
+########################################################################
+declare -a tv
+declare -a tr
+declare -a fv
+declare -a fr
 
-successtests[0]="^[0-9]\$"
-successresults[0]="1"
-successtests[1]='^[0-9]{1,}$'
-successresults[1]="1"
-successresults[1]+="12"
-successresults[1]+="123"
-successresutls[1]+="1234"
+tv[0]="^[0-9]\$"
+tr[0]="1"
+tv[1]='^[0-9]{1,}$'
+tr[1]="1"
+tr[1]+="12"
+tr[1]+="123"
+tr[1]+="1234"
 maxtest=1
 
 for i in $(seq 0 ${maxtest})
 do
   rm -f /tmp/good_$i.txt /tmp/test_$i.txt
-  for j in ${successresults[${i}]}
+  for j in ${tr[${i}]}
   do
     echo $j >> /tmp/good_$i.txt
   done
-  result=$(egrep ${successtests[$i]} ${TESTINPUT})
+  result=$(egrep ${tv[$i]} ${TESTINPUT})
   count=0
   for j in ${result}
   do
@@ -89,14 +96,9 @@ do
     echo "There were ${count} results"
     if [[ ! $(diff /tmp/good_$i.txt /tmp/test_$i.txt) ]]
     then
-      failure="TRUE"
+      ((fail++))
     fi
   fi
 done
 rm -f ${TESTINPUT} /tmp/good_*.txt /tmp/test_*.txt
-if [[ "${failure}" == "FALSE" ]]
-then
-  exit 1
-else
-  exit 0
-fi
+exit ${fail}

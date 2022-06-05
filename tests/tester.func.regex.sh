@@ -6,6 +6,8 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.1 | REN |06/04/2022| Tweaked to exit with number of fails and to
+#                      | use arrays for test values and results
 # 1.0 | REN |03/20/2022| testing regex
 #_____________________________________________________________________
 #
@@ -25,7 +27,7 @@ USAGE="\r\n${0##*/} [-[hv]]\r\n
 
 optionargs="hv"
 verbose_mode="FALSE"
-failure="FALSE"
+fail=0
 
 while getopts ${optionargs} name
 do
@@ -45,90 +47,62 @@ do
 	esac
 done
 
-echo "Nicenumber string is ${re_nicenumber}"
-
-integertest="12345"
-if [[ ! "${integertest}" =~ ${re_integer} ]]
-then
-  failure="TRUE"
-fi
-
-signednumber1test="+123"
-signednumber2test="-123"
-if [[ ! "${signednumber1test}" =~ ${re_signedinteger} ]]
-then
-  failure="TRUE"
-fi
-
-if [[ ! "${signednumber2test}" =~ ${re_signedinteger} ]]
-then
-  failure="TRUE"
-fi
-
-decimalnumber1test="-123.45"
-if [[ ! "${decimalnumber1test}" =~ ${re_decimal} ]]
-then
-  failure="TRUE"
-fi
-
-hex1test="face1"
-hex2test="DEADBeef9"
-if [[ ! "${hex1test}" =~ ${re_hexnumber} ]]
-then
-  failure="TRUE"
-fi
-
-if [[ ! "${hex2test}" =~ ${re_hexnumber} ]]
-then
-  failure="TRUE"
-fi
-
-nicenum1test="1M"
-nicenum2test="1MIB"
-nicenum3test="1BYT"
-nicenum4test="99ZIB"
-if [[ ! "${nicenum1test}" =~ ${re_nicenumber} ]]
-then
-  failure="TRUE"
-fi
-
-if [[ ! "${nicenum2test}" =~ ${re_nicenumber} ]]
-then
-  failure="TRUE"
-fi
-
-if [[ ! "${nicenum3test}" =~ ${re_nicenumber} ]]
-then
-  failure="TRUE"
-fi
-
-if [[ ! "${nicenum4test}" =~ ${re_nicenumber} ]]
-then
-  failure="TRUE"
-fi
-
-hash1teststring="This is a test with b2sum"
-hash1result=$(echo ${hash1teststring} | b2sum)
-hash1hash="01c:${hash1result:0:128}"
-hash2hash="01:${hash1result:0:128}"
-
-if [[ ! "${hash1hash} =~ re_cryptohash ]]
-then
-  failure="TRUE"
-fi
+shift $(( ${OPTIND} - 1 ))
 
 ########################################################################
-# Note that in this case if the match works then the matching pattern
+# tv is short for testvalue
+# Tt is short for testtype
+########################################################################
+tv[0]="12345"
+tr[0]="${re_integer}"
+tv[1]="+123"
+tr[1]="${re_signedinteger}"
+tv[2]="-123"
+tt[2]="${re_signedinteger}"
+tv[3]="-123.45"
+tt[3]="${re_decimal}"
+tv[4]="face1"
+tt[4]="${re_hexnumber}"
+tv[5]="DEADBeef9"
+tt[5]="${re_hexnumber}"
+tv[6]="1M"
+tt[6]="${re_nicenumber}"
+tv[7]="1MIB"
+tt[7]="${re_nicenumber}"
+tv[8]="1BYT"
+tt[8]="${re_nicenumber}"
+tv[9]="99ZIB"
+tt[9]="${re_nicenumber}"
+
+hash1result=$(b2sum < /dev/null)
+tv[10]="01c:${hash1result:0:128}"
+tt[10]="${re_cryptohash}"
+maxtests=10
+
+for ti in $(seq 0 "${maxtests}")
+do
+  if [[ ! "${tv[${t1}]}" =~ ${tt[${ti}]} ]]
+  then
+    ((fail++))
+  fi
+done
+
+
+hash1result=$(b2sum < /dev/null)
+fv[0]="01:${hash1result:0:128}"
+ft[0]="${re_cryptohash}"
+maxfails=0
+
+########################################################################
+# In this case if the pattern match succeeds then it
 # is broken
 ########################################################################
-if [[ "${hash2hash} =~ re_cryptohash ]]
-then
-  failure="TRUE"
-fi
+for ti in $(seq 0 "${maxfails}")
+do
+  if [[ "${fv[0]}" =~ ${ft[${ti}]} ]]
+  then
+    ((fail++))
+  fi
+done
 
-if [[ "${failure}" = "TRUE" ]]
-then
-  exit 1
-else
-  exit 0
-fi
+exit ${fail}

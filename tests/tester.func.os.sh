@@ -8,7 +8,7 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
-# 1.1 | REN |02/08/2022| Restructured to use arrays
+# 1.1 | REN |06/04/2022| Tweaked to exit with the number of fails
 # 1.0 | REN |02/01/2022| testing reconstructed kbytes
 #_____________________________________________________________________
 #
@@ -26,7 +26,7 @@ USAGE="\r\n${0##*/} [-[hv]]\r\n
 
 optionargs="hv"
 verbose_mode="FALSE"
-failure="FALSE"
+fail=0
 
 while getopts ${optionargs} name
 do
@@ -46,15 +46,18 @@ do
 	esac
 done
 
+shift $(( ${OPTIND} - 1 ))
+
+fail=0
 if [[ -z "${__funcos}" ]]
 then
   errecho -i "funcos not found"
-  exit 1
+  ((fail++))
 fi
 if [[ ! -f /etc/os-release ]]
 then
   errecho -i "/etc/os-release not found are you on a Debian OS?"
-  exit 1
+  ((fail++))
 fi
 check_os=$(sed -ne '/^ID=/s/^ID=\(.*\)$/\1/p' < /etc/os-release)
 if [[ "${verbose_mode}" == "TRUE" ]]
@@ -65,16 +68,12 @@ fi
 if [[ "${check_os}" != "$(func_os)" ]] 
 then
   errecho -i "Operating system mismatch \"${check_os}\" vs. \"$(func_os)\""
-  failure="TRUE"
+  ((fail++))
 fi
 if [[ "$(uname -m)" != "$(func_arch)" ]]
 then
   errecho -i "Architecture mismatch \"$(uname -m)\" vs. \"$(func_arch)\""
-  failure="TRUE"
+  ((fail++))
 fi
-if [[ "${failure}" == "FALSE" ]]
-then
-  exit 0
-else
-  exit 1
-fi
+
+exit ${fail}

@@ -6,6 +6,7 @@
 #_____________________________________________________________________
 # Rev.|Auth.| Date     | Notes
 #_____________________________________________________________________
+# 1.2 | REN |06/04/2022| Tweaked to exit with number of fails
 # 1.1 | REN |02/08/2022| Restructured to use arrays
 # 1.0 | REN |02/01/2022| testing reconstructed kbytes
 #_____________________________________________________________________
@@ -24,7 +25,7 @@ USAGE="\r\n${0##*/} [-[hv]]\r\n
 
 optionargs="hv"
 verbose_mode="FALSE"
-failure="FALSE"
+fail=0
 
 while getopts ${optionargs} name
 do
@@ -77,12 +78,12 @@ do
   if [[ "${__kbytesvalue[${bytesuffix}]}" != \
     "$(echo \"1000 ^ ${i}\" | bc)" ]]
   then
-    failure="TRUE"
+    ((fail++))
   fi
   if [[ "${__kbibytesvalue[${bibytesuffix}]}" != \
     "$(echo \"1024 ^ ${i}\" | bc)" ]]
   then
-    failure="TRUE"
+    ((fail++))
   fi
   if [[ "${verbose_mode}" == "TRUE" ]]
   then
@@ -92,9 +93,4 @@ do
       "value=\"${__kbibytesvalue[${bibytesuffix}]}\""
   fi
 done
-if [[ "${failure}" == "FALSE" ]]
-then
-  exit 0
-else
-  exit 1
-fi
+exit ${fail}
