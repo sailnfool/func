@@ -72,37 +72,35 @@ tv[0]="^[0-9]\$"
 tr[0]="1"
 tv[1]='^[0-9]{1,}$'
 tr[1]="1"
-tr[1]+="12"
-tr[1]+="123"
-tr[1]+="1234"
+tr[1]+=" 12"
+tr[1]+=" 123"
+tr[1]+=" 1234"
 maxtest=1
 
 for i in $(seq 0 ${maxtest})
 do
   rm -f /tmp/good_$i.txt /tmp/test_$i.txt
-  echo ${tr[${i}]}
   for j in ${tr[${i}]}
   do
-    echo -e "${j}\n" 
-    echo -e "${j}\n" >> /tmp/good_$i.txt
+    echo  "${j}" >> /tmp/good_$i.txt
   done
   result=$(egrep ${tv[$i]} ${TESTINPUT})
   count=0
   for j in ${result}
   do
     echo "$j" >> /tmp/test_$i.txt
-    ((count++))
   done
-  more /tmp/*_$i.txt
-  diff /tmp/*_$i.txt
   if [[ "${verbose_mode}" == "TRUE" ]]
   then
-    echo "There were ${count} results"
-    if [[ ! $(diff /tmp/good_$i.txt /tmp/test_$i.txt) ]]
-    then
-      diff /tmp/good_$i.txt /tmp/test_$i.txt
-      ((fail++))
-    fi
+    more /tmp/good_${i}.txt /tmp/test_${i}.txt
+    diff /tmp/good_${i}.txt /tmp/test_${i}.txt
+    cmp /tmp/good_${i}.txt /tmp/test_${i}.txt
+  fi
+  if [[ ! $(diff /tmp/good_$i.txt /tmp/test_$i.txt) ]]
+  then
+    diff /tmp/good_${i}.txt /tmp/test_${i}.txt
+    cmp /tmp/good_${i}.txt /tmp/test_${i}.txt
+    ((fail++))
   fi
 done
 rm -f ${TESTINPUT} /tmp/good_*.txt /tmp/test_*.txt
