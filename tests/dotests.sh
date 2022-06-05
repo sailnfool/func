@@ -78,6 +78,8 @@ shift $(( ${OPTIND} -1 ))
 
 fail=0
 ########################################################################
+# Retrieve the name of the test from within the test itself with the
+# prefix nametext.
 ########################################################################
 nametext="TESTNAME="
 testprefix="tester"
@@ -101,12 +103,19 @@ do
     ((fail++))
   fi
 
+  rm -f /tmp/${test_script}_$$.txt
   ######################################################################
   # Execute each testscript and issue the pass/fail message as
   # appropriate
   ######################################################################
-  if [[ ! $(bash ${test_script} ${verbose}) ]]
+  $(bash ${test_script} ${verbose} >> /tmp/${test_script}_$$.txt)
+  result=$?
+#  if [[ ! $(bash ${test_script} ${verbose}) ]]
+  if [[ ! "${result}" == 0 ]]
   then
+    echo "${test_script} exited with ${result}"
+    cat /tmp/${test_script}_$$/txt
+    rm -f /tmp/${test_script}_$$/txt
     echo -e "${failstring} ${test_script}\n\t${testname:${#nametext}}"
     ((fail++))
   else
@@ -114,6 +123,10 @@ do
   fi
 done
 
+if [[ "${verbose_mode}" == "TRUE" ]]
+then
+  echo "Found ${fail} failures"
+fi
 ########################################################################
 # Note that we have kept track if any tests failed.  If all worked,
 # then we exit cleanly.
