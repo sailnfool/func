@@ -82,7 +82,7 @@ then
     # Create the regular expression that will recognize strings like:
     # 1M, 1MiB, 10T, 10TiB, etc.
 	  ####################################################################
-	  re_nicenumber="[0-9][0-9]*[${matcher}][${matcher}]*"
+	  re_nicenumber="^[0-9][0-9]*[${matcher}][${matcher}]*$"
 
 	  ####################################################################
     # Delete the temporary files.
