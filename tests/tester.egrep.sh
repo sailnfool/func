@@ -94,14 +94,30 @@ do
   then
     more /tmp/good_${i}.txt /tmp/test_${i}.txt
     diff /tmp/good_${i}.txt /tmp/test_${i}.txt
+    echo "verbose diff result $?"
     cmp /tmp/good_${i}.txt /tmp/test_${i}.txt
+    echo "verbose cmp result $?"
   fi
-  if [[ ! $(diff /tmp/good_$i.txt /tmp/test_$i.txt) ]]
+  diff /tmp/good_${i}.txt /tmp/test_${i}.txt
+  diffresult=$?
+  if [[ "${diffresult}" -ne 0 ]]
   then
-    diff /tmp/good_${i}.txt /tmp/test_${i}.txt
-    cmp /tmp/good_${i}.txt /tmp/test_${i}.txt
+    if [[ "${verbose_mode}" == "TRUE" ]]
+    then
+      diff /tmp/good_${i}.txt /tmp/test_${i}.txt
+      echo "diff result $?"
+      cmp /tmp/good_${i}.txt /tmp/test_${i}.txt
+      echo "cmp result $?"
+    fi
     ((fail++))
   fi
 done
-rm -f ${TESTINPUT} /tmp/good_*.txt /tmp/test_*.txt
+if [[ "${verbose_mode}" == "FALSE" ]]
+then
+  rm -f ${TESTINPUT} /tmp/good_*.txt /tmp/test_*.txt
+fi
+if [[ "${fail}" -gt 0 ]]
+then
+  echo "About to fail with ${fail}"
+fi
 exit ${fail}
