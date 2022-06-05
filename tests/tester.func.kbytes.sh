@@ -67,30 +67,46 @@ then
 fi
 for i in $(seq 0 $((${#__kbytessuffix}-1)) )
 do
-  bytesuffix=${__kbytessuffix:${i}:1}
-  bibytesuffix=${__kbibytessuffix[${i}]}
+  k_bytesuffix=${__kbytessuffix:${i}:1}
+  k_bibytesuffix=${__kbibytessuffix[${i}]}
 
   ############################################################ 
   # Note that this is a string comparison rather then a 
   # numeric comparison since the higher end numbers will
   # exceed the capacity of native integers on a machine
   ############################################################ 
-  if [[ "${__kbytesvalue[${bytesuffix}]}" != \
-    "$(echo \"1000 ^ ${i}\" | bc)" ]]
+  if [[ "${__kbytesvalue[${k_bytesuffix}]}" != \
+    $(echo "1000 ^ ${i}" | bc) ]]
   then
+    if [[ "${verbose_mode}" == "TRUE" ]]
+    then
+      echo "Byte Suffix $i = \"${k_bytesuffix}\", " \
+        "value=\"${__kbytesvalue[${k_bytesuffix}]}\""
+      echo -n "Computed value= "
+      echo "1000 ^ ${i}" |bc
+      echo ""
+    fi
     ((fail++))
   fi
-  if [[ "${__kbibytesvalue[${bibytesuffix}]}" != \
-    "$(echo \"1024 ^ ${i}\" | bc)" ]]
+  if [[ "${__kbibytesvalue[${k_bibytesuffix}]}" != \
+    $(echo "1024 ^ ${i}" | bc) ]]
   then
+    if [[ "${verbose_mode}" == "TRUE" ]]
+    then
+      echo "BiByte Suffix $i = \"${k_bibytesuffix}\", " \
+        "value=\"${__kbibytesvalue[${k_bibytesuffix}]}\""
+      echo -n "Computed value= "
+      echo "1024 ^ ${i}" |bc
+      echo ""
+    fi
     ((fail++))
   fi
-  if [[ "${verbose_mode}" == "TRUE" ]]
-  then
-    echo "Byte Suffix $i = \"${bytesuffix}\", " \
-      "value=\"${__kbytesvalue[${bytesuffix}]}\""
-    echo "BiByte Suffix $i = \"${bibytesuffix}\", " \
-      "value=\"${__kbibytesvalue[${bibytesuffix}]}\""
-  fi
+#   if [[ "${verbose_mode}" == "TRUE" ]]
+#   then
+#     echo "Byte Suffix $i = \"${k_bytesuffix}\", " \
+#       "value=\"${__kbytesvalue[${k_bytesuffix}]}\""
+#     echo "BiByte Suffix $i = \"${k_bibytesuffix}\", " \
+#       "value=\"${__kbibytesvalue[${k_bibytesuffix}]}\""
+#   fi
 done
 exit ${fail}
