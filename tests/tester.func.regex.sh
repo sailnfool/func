@@ -51,37 +51,37 @@ shift $(( ${OPTIND} - 1 ))
 
 ########################################################################
 # tv is short for testvalue
-# Tt is short for testtype
+# tt is short for testtype
 ########################################################################
 tv[0]="12345"
-tr[0]="${re_integer}"
+tt[0]=${re_integer}
 tv[1]="+123"
-tr[1]="${re_signedinteger}"
+tt[1]=${re_signedinteger}
 tv[2]="-123"
-tt[2]="${re_signedinteger}"
+tt[2]=${re_signedinteger}
 tv[3]="-123.45"
-tt[3]="${re_decimal}"
+tt[3]=${re_decimal}
 tv[4]="face1"
-tt[4]="${re_hexnumber}"
+tt[4]=${re_hexnumber}
 tv[5]="DEADBeef9"
-tt[5]="${re_hexnumber}"
+tt[5]=${re_hexnumber}
 tv[6]="1M"
-tt[6]="${re_nicenumber}"
+tt[6]=${re_nicenumber}
 tv[7]="1MIB"
-tt[7]="${re_nicenumber}"
+tt[7]=${re_nicenumber}
 tv[8]="1BYT"
-tt[8]="${re_nicenumber}"
+tt[8]=${re_nicenumber}
 tv[9]="99ZIB"
-tt[9]="${re_nicenumber}"
+tt[9]=${re_nicenumber}
 
 hash1result=$(b2sum < /dev/null)
 tv[10]="01c:${hash1result:0:128}"
-tt[10]="${re_cryptohash}"
+tt[10]=${re_cryptohash}
 maxtests=10
 
 for ti in $(seq 0 "${maxtests}")
 do
-  if [[ ! "${tv[${t1}]}" =~ ${tt[${ti}]} ]]
+  if [[ ! "${tv[${ti}]}" =~ ${tt[${ti}]} ]]
   then
     ((fail++))
   fi
@@ -90,7 +90,7 @@ done
 
 hash1result=$(b2sum < /dev/null)
 fv[0]="01:${hash1result:0:128}"
-ft[0]="${re_cryptohash}"
+ft[0]=${re_cryptohash}
 maxfails=0
 
 ########################################################################
