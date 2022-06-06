@@ -15,6 +15,7 @@ LINSTALL =       func.arithmetic \
 		func.env \
 		func.errecho \
 		func.getprojdir \
+		func.hashcanonical \
 		func.hex2dec \
 		func.hmsout \
 		func.insufficient \
@@ -34,6 +35,7 @@ LINSTALL =       func.arithmetic \
 		zfunc.zfsparent \
 		zfunc.results
 INSTALL =		countfiles \
+		createhashcanonical \
 		dohashes \
 		find_sim \
 		getgitroot \
