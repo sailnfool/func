@@ -16,7 +16,7 @@
 # 1.0 | REN |03/15/2021| original version
 #_____________________________________________________________________
 #
-if [ -z "${__func_locker}" ]
+if [[ -z "${__func_locker}" ]]
 then
 	export __func_locker=1
 	
@@ -58,18 +58,23 @@ then
   ############################################################
 	func_getlock()
 	{
+    func_getlock_USAGE="func_getlock [ <lockfile> [<sleeptime> [<spincount>]]]\n
+\t\twhere <lockfile> is the lockfile to acquire\n
+\t\tand <sleeptime> is the maximum seconds to wait for acquisition\n
+\t\tand <spincoun> is the number of times to wait for <sleeptime>\n
+"
 		lockcount=0
 		sleeptime=1
 		maxspins="${MAXSPINS}"
 		OLD_FUNC_VERBOSE=${FUNC_VERBOSE}
 		FUNC_VERBOSE=1
 
-		re='^[0-9]+$'
 		maxspins=${MAXSPINS}
     case $# in
       0)
   			errecho "${FUNCNAME}" "${LINENO}" \
   			    "No lockfile specified"
+        errecho "${func_getlock_USAGE}"
   			exit 1
         ;;
       1)
@@ -77,24 +82,28 @@ then
         ;;
       2)
 			  lockfile="$1"
-				if ! [[ "$2" =~ $re_integer ]]; then
+				if [[ ! "$2" =~ $re_integer ]]
+        then
 					errecho "${FUNCNAME}" "${LINENO}" \
 						"Not a number - $2"
+          errecho "${func_getlock_USAGE}"
 					exit 1
 				fi
 				sleeptime="$2"
         ;;
       3)
 			  lockfile="$1"
-				if ! [[ "$2" =~ $re_integer ]]; then
+				if [[ ! "$2" =~ $re_integer ]]; then
 					errecho "${FUNCNAME}" "${LINENO}" \
 						"Not a number - $2"
+          errecho "${func_getlock_USAGE}"
 					exit 1
 				fi
 				sleeptime="$2"
-				if ! [[ "$3" =~ $re_integer ]]; then
+				if [[ ! "$3" =~ $re_integer ]]; then
 					errecho "${FUNCNAME}" "${LINENO}" \
 						"Not a number - $3"
+          errecho "${func_getlock_USAGE}"
 					exit 1
 				fi
 				maxspins="$3"
@@ -102,17 +111,19 @@ then
       \?)
         errecho "${FUNCNAME}" "${LINENO}" \
           "Invalied arguments $@"
+        errecho "${func_getlock_USAGE}"
+        exit 1
         ;;
     esac
 
-		while [ -f "${lockfile}" ]
+		while [[ -f "${lockfile}" ]]
 		do
 			errecho "${FUNCNAME}" "${LINENO}" \
 				"Sleeping on lock acquisition for lock owned by"
 			errecho "${FUNCNAME}" "${LINENO}" \
-				$(ls -l "${lockfile}")
+				$(ls -l "${lockfile}" | cut -d " " -f 3)
 			((++lockcount))
-			if [ "${lockcount}" -gt "${maxspins}" ]
+			if [[ "${lockcount}" -gt "${maxspins}" ]]
 			then
 				errecho "${FUNCNAME}" "${LINENO}" \
 					"Exceeded ${maxspins} spins waiting for lock, quitting"
@@ -131,7 +142,7 @@ then
 	################################################################
 	func_releaselock()
 	{
-		if [ $# -eq 0 ]
+		if [[ $# -eq 0 ]]
 		then
 			errecho "${FUNCNAME}" "${LINENO}" \
 			    "No lockfile specified"
@@ -145,7 +156,13 @@ then
 #			fi
 		fi
     lockfile="$1"
-		rm -f "${lockfile}"
+    if [[ -f "${lockfile}" ]]
+    then
+		  rm -f "${lockfile}"
+    else
+      errecho ${FUNCNAME} ${LINENO} \
+        "Nothing to release, ${lockfile} not found"
+    fi
 	}
 	export -f func_releaselock
 
@@ -157,13 +174,13 @@ then
     mkdir -p ${HOME_RESULTS} ${TESTDIR} ${ETCDIR} 
     touch ${LOCKERRS} ${TESTLOG}
 
-    if [ ! -r ${BATCHNUMBERFILE} ]
+    if [[ ! -r ${BATCHNUMBERFILE} ]]
     then
       func_getlock ${LOCKFILE_BATCHNUMBERFILE}
       echo 0 > ${BATCHNUMBERFILE}
       func_releaselock ${LOCKFILE_BATCHNUMBERFILE}
     fi
-    if [ ! -r ${TESTNUMBERFILE} ]
+    if [[ ! -r ${TESTNUMBERFILE} ]]
     then
       func_getlock ${LOCKFILE_TESTNUMBERFILE}
       echo 0 > ${TESTNUMBERFILE}
@@ -199,12 +216,12 @@ then
   ############################################################
   func_getcounter()
   {
-    if [ $# -ne 2 ]
+    if [[ $# -ne 2 ]]
     then
       insufficient 2
     fi
     func_getlock "$1"
-    if [ ! -r "$2" ]
+    if [[ ! -r "$2" ]]
     then
       echo 0 > "$2"
     fi
@@ -219,7 +236,7 @@ then
   ############################################################
   func_putcounter()
   {
-    if [ $# -ne 3 ]
+    if [[ $# -ne 3 ]]
     then
       insufficient 3
     fi
@@ -234,7 +251,7 @@ then
   ############################################################
   func_getnextcounter()
   {
-    if [ $# -ne 2 ]
+    if [[ $# -ne 2 ]]
     then
       insufficient 2
     fi
@@ -243,4 +260,4 @@ then
     func_putcounter "$1" "$2" "${value}"
   }
   export -f func_getnextcounter
-fi #if [ -z "${__func_locker}" ]
+fi # if [[ -z "${__func_locker}" ]]
