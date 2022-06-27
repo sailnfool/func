@@ -26,14 +26,14 @@ then
 	export __func_regex=1
 
   ######################################################################
-	# Define a set of regular expressions for various tests of inputs
-	# When you want to test a variable, do NOT place the expansion of
-	# the re_xxxx value in quotes.  It will not work.
-	#
-	# if [[ "$input_value" =~ $re_hexnumber ]]
-	# then
-	#     echo "$input_value is a valid hex number
-	# fi
+  # Define a set of regular expressions for various tests of inputs
+  # When you want to test a variable, do NOT place the expansion of
+  # the re_xxxx value in quotes.  It will not work.
+  #
+  # if [[ "$input_value" =~ $re_hexnumber ]]
+  # then
+  #     echo "$input_value is a valid hex number
+  # fi
   #
   # Often used to test arguments passed when using getopts to process
   # Bash script parameters for example the value passed to debug (-d)
