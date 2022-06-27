@@ -13,8 +13,9 @@ then
   export Cnum2bits
   export Cnum2hexdigits
   export Chash2num
+  export Chexbits=4
   
-  export YesFSdir=/home/rnovak/Dropbox/YesFs
+  export YesFSdir=/home/rnovak/Dropbox/YesFS
 
   export Fnum2hash="num2hash.csv"
   export Fnum2bin="num2bin.csv"
