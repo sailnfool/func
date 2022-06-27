@@ -28,14 +28,13 @@ scriptname=${0##/*}
 #_____________________________________________________________________
 
 
-source func.canonical
+source func.hashcanonical
 source func.errecho
 source func.regex
 source func.debug
 
-canonical_source=/${YesFSdir}/canonical_source_$$.csv
-
-cat > ${canonical_source} << EOF
+tmpcanonical=/tmp/canonical_source_$$.csv
+  cat > ${tmpcanonical} << EOF
 Index	short	Bits	indexCol
 001	md2sum	128
 002	md4sum	128
@@ -71,6 +70,21 @@ Index	short	Bits	indexCol
 020	Blake3sum	256
 021 b2psum 256
 EOF
+
+canonical_source=/${YesFSdir}/canonical_source.csv
+
+if [[ -r "${canonical_source}" ]]
+then
+  pushd ${HOME}/github/func
+  git pull
+  touchtimes func
+  if [[ "${HOME}/github/ren/scripts/createhashcanonical.sh" -nt "${canonical_source}" ]]
+  then
+    mv ${tmpcanonical} ${canonical_source}
+  fi
+else
+  mv ${tmpcanonical} ${canonical_source}
+fi
 canonical_dir=${canonical_source%/*}
 
 USAGE="${0##*/} [-[hv]] [-d <#>] [-f <file>]\n
@@ -187,7 +201,9 @@ fi
 # script to install other well known cryptographic hashes on the
 # local machine.
 ######################################################################
-if [[ ! $(which b3sum 2>&1 > /dev/null) ]]
+which b3sum 2>&1 > /dev/null
+b3sumresult=$?
+if [[ "${b3sumresult}" -ne 0 ]]
 then
   echo "b3sum is not installed on your machine"
   echo -n "Install now (Y/n):"
@@ -196,10 +212,9 @@ then
   then
     installanswer="Y"
   fi
-  installanswer=$(echo ${installanswer} | tr :alpha: :toupper:)
+  installanswer=$(echo ${installanswer} | tr a-z A-Z)
   case ${installanswer} in
-    Y)
-    YES)
+    Y|YES)
 
       ##############################################################
       # This should include tests to determine which OS and use
@@ -207,8 +222,7 @@ then
       ##############################################################
       sudo apt-get install b3sum
       ;;
-    N)
-    NO)
+    N|NO)
       ;;
     \?)
       echo "Invalid answer"
@@ -241,20 +255,25 @@ done
 # The Index is always a 3 digit HEX number
 # The hashbits is always an integer
 ######################################################################
+if [[ ! -r ${canonical_source} ]]
+then
+  errecho "Could not find ${canonical_source}"
+  exit 1
+fi
 count=0
 cut --fields=1-3 ${canonical_source} | \
   while read read_hashnum read_hashshort read_hashbits
 do
-  ((count+))
+  ((count++))
 
 ####################################################################
 # skip the title line
 # Compensate for mixed case
 ####################################################################
-  if [[ $(echo "${read_hashnum}"| tr :alpha: :upper:) = "INDEX" ]]
-then
-  continue
-fi
+  if [[ $(echo "${read_hashnum}"| tr  a-z A-Z ) = "INDEX" ]]
+  then
+    continue
+  fi
   if [[ ! "${read_hashnum}" =~ [0-9a-fA-F]{3} ]]
   then
     errecho "Invalid read_hashnum ${read_hashnum} on line ${count} of"
@@ -263,21 +282,24 @@ fi
   fi
   if [[ ! "${read_hashbits}" =~ re_integer ]]
   then
-    errecho "Invalid  read_hashbits ${read_hashbits} on line ${count} of"
+    errecho "Invalid  read_hashbits '${read_hashbits}' on line ${count} of"
     errecho "canonical file. It must be an integer."
   fi
   Cnum2hash[${read_hashnum}]="${read_hashshort}"
-Chash2num["${read_hashshort}"]="${read_hashnum}"
-Cnum2bits[${read_hashnum})]="${read_hashbits}"
-  Cnum2hexdigits[${read_hashnum}]="$((${read_hashbits}/${hexbits}))"
+  Chash2num["${read_hashshort}"]="${read_hashnum}"
+  Cnum2bits[${read_hashnum})]="${read_hashbits}"
+  set -x
+  Cnum2hexdigits[${read_hashnum}]="$((read_hashbits / Chexbits))"
+  set +x
 
-  foundhash=$(which ${read_hashshort})
-  if [[ -z "${foundhash}" ]]
-then
-  Cnum2bin[${read_hashnum}]=$(which ${read_hashshort})
-else
-  Cnum2bin[${read_hashnum}]=""
-fi
+  which ${read_hashshort} 2>& /dev/null
+  foundhash=$?
+  if [[ "${foundhash}" -ne 0 ]]
+  then
+    Cnum2bin[${read_hashnum}]=$(which ${read_hashshort})
+  else
+    Cnum2bin[${read_hashnum}]=""
+  fi
 done # read hash canonical
 
 ###################################################################### 
@@ -288,7 +310,7 @@ done # read hash canonical
 # num2bin
 ###################################################################### 
 filename=num2bin.csv
-target=${canonical_dir/${subdir}/${filename}
+target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
 for num in "${Cnum2bin[@]}"
 do
@@ -301,7 +323,7 @@ rm -f ${tmptarget}
 # num2bits
 ###################################################################### 
 filename=num2bits.csv
-target=${canonical_dir/${subdir}/${filename}
+target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
 for num in "${Cnum2bits[@]}"
 do
@@ -314,7 +336,7 @@ rm -f ${tmptarget}
 # num2hexdigits
 ###################################################################### 
 filename=num2hexdigits.csv
-target=${canonical_dir/${subdir}/${filename}
+target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
 for num in "${Cnum2hexdigits[@]}"
 do
@@ -327,7 +349,7 @@ rm -f ${tmptarget}
 # num2hash
 ###################################################################### 
 filename=num2hash.csv
-target=${canonical_dir/${subdir}/${filename}
+target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
 for num in "${Cnum2hash[@]}"
 do
@@ -340,13 +362,12 @@ rm -f ${tmptarget}
 # hash2num
 ###################################################################### 
 filename=hash2num.csv
-target=${canonical_dir/${subdir}/${filename}
+target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
 for hash in "${Chash2num[@]}"
 do
   echo -e "${hash}\t${Cnum2hash[${hash}]}" >> ${tmptarget}
 done
 sort ${tmptarget} > ${target}
-rm -f ${tmptarget}
+rm -f ${tmptarget} ${tmpcanonical}
 exit 0
-
