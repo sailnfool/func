@@ -186,15 +186,6 @@ shift "$(($OPTIND - 1))"
 if [[ "$#" -gt "${NUMARGS}" ]]
 then
   errecho -e "Excess parameters ignored"
-# 	  filename="$1"
-# 		if [ ! -f "${filename}" ]
-# 		then
-# 			echo "filename=${filename} is not a file"
-#       echo "parameters $@"
-# 			exit 1
-# 		fi
-# 	  canonical_source=${filename}
-# 	  canonical_dir=${canonical_source%/*}
 fi
 
 ######################################################################
@@ -251,6 +242,15 @@ do
 done
 
 ######################################################################
+# Remove the external files before we write them
+######################################################################
+rm -f /tmp/$$_${Fhash2num}
+rm -f /tmp/$$_${Fnum2hash}
+rm -f /tmp/$$_${Fnum2bits}
+rm -f /tmp/$$_${Fnum2hexdigits}
+rm -f /tmp/$$_${Fnum2hash}
+
+######################################################################
 # Canonical tables will always have the first three column as:
 # Index hashshortname #read_hashbits
 # The Index is always a 3 digit HEX number
@@ -287,42 +287,41 @@ do
     errecho "Invalid  read_hashbits '${read_hashbits}' on line ${count} of"
     errecho "canonical file. It must be an integer."
   fi
-  Cnum2hash+=([${read_hashnum}]=${read_hashshort})
   Chash2num+=([${read_hashshort}]=${read_hashnum})
+  Cnum2hash+=([${read_hashnum}]=${read_hashshort})
   Cnum2bits+=([${read_hashnum}]=${read_hashbits})
   Cnum2hexdigits+=([${read_hashnum}]=$((read_hashbits / CHEXBITS)))
+  Cnum2bin+=([${read_hashnum}]=$(which ${read_hashshort}))
+  
+  echo -e "${read_hashshort}\t${Chash2num[$read_hashshort}]}" >> /tmp/$$_${Fhash2num}
+  echo -e "${read_hashnum}\t${Cnum2hash[$read_hashnum}]}" >> /tmp/$$_${Fnum2hash}
+  echo -e "${read_hashnum}\t${Cnum2bits[$read_hashnum}]}" >> /tmp/$$_${Fnum2bits}
+  echo -e "${read_hashnum}\t${Cnum2hexdigits[$read_hashnum}]}" >> /tmp/$$_${Fnum2hexdigits}
+  echo -e "${read_hashnum}\t${Cnum2bin[$read_hashnum}]}" >> /tmp/$$_${Fnum2hash}
+
   if [[ "${verbose}" == "TRUE" ]]
   then
+    more /tmp/$$_*
     echo -n Cnum2hash[${read_hashnum}]="${read_hashshort}"
     echo =\'${Cnum2hash[${read_hashnum}]}\'
     echo "Cnum2hash has ${#Cnum2hash[@]} keys"
+    echo "Dumping Cnum2hash keys:${!Cnum2hash[@]}"
     echo -n Chash2num[${read_hashshort}]="${read_hashnum}"
     echo =\'${Chash2num[${read_hashshort}]}\'
     echo "Chash2num has ${#Chash2num[@]} keys"
+    echo "Dumping Chash2num keys:${!Chash2num[@]}"
     echo -n Cnum2bits[${read_hashnum}]="${read_hashbits}"
     echo =\'${Cnum2bits[${read_hashnum}]}\'
     echo "Cnum2bits has ${#Cnum2bits[@]} keys"
+    echo "Dumping Cnum2bits keys:${!Cnum2bits[@]}"
     echo -n Cnum2hexdigits[${read_hashnum}]="$((read_hashbits / CHEXBITS))"
     echo =\'${Cnum2hexdigits[${read_hashnum}]}\'
     echo "Cnum2hexdigits has ${#Cnum2hexdigits[@]} keys"
-  fi
-
-#  which ${read_hashshort} 2>&1 > /dev/null
-#  foundhash=$?
-#  set -x
-#  if [[ "${foundhash}" -ne 0 ]]
-#  then
-    Cnum2bin+=([${read_hashnum}]=$(which ${read_hashshort}))
-#  else
-#    Cnum2bin+=([${read_hashnum}]="")
-#  fi
-#  set +x
-  if [[ "${verbose}" == "TRUE" ]]
-  then
+    echo "Dumping Cnum2hexdigits keys:${!Cnum2hexdigits[@]}"
     echo -n "Cnum2bin[${read_hashnum}]=${read_hashshort}"
     echo =\'${Cnum2bin[${read_hashnum}]}\'
     echo "Cnum2bin has ${#Cnum2bin[@]} keys"
-    echo "Dumping Cnum2bin keys:${!Cnum2bin[@]}"
+  echo "Dumping Cnum2bin keys:${!Cnum2bin[@]}"
   fi
 done # read hash canonical
 
@@ -347,27 +346,8 @@ fi
 # num2bin
 ###################################################################### 
 filename=${Fnum2bin}
+tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
-tmptarget=/tmp/${filename}
-rm -f ${tmptarget}
-if [[ "${verbose}" == "TRUE" ]]
-then
-  echo "Cnum2bin has ${#Cnum2bin[@]} keys"
-  echo "Dumping Cnum2bin keys:${!Cnum2bin[@]}"
-fi
-for num in "${!Cnum2bin[@]}"
-do
-  if [[ "${verbose}" == "TRUE" ]]
-  then
-    echo Cnum2bin[${num}]=${Cnum2bin[${num}]}
-  fi
-  echo -e "${num}\t${Cnum2bin[${num}]}" >> ${tmptarget}
-done
-if [[ ! -r "${tmptarget}" ]]
-then
-  errecho "Could not find '${tmptarget}'"
-  exit 1
-fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -375,27 +355,8 @@ rm -f ${tmptarget}
 # num2bits
 ###################################################################### 
 filename=${Fnum2bits}
+tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
-tmptarget=/tmp/${filename}
-rm -f ${tmptarget}
-if [[ "${verbose}" == "TRUE" ]]
-then
-  echo "Cnum2bits has ${#Cnum2bits[@]} keys"
-  echo "Dumping Cnum2bits keys:${!Cnum2bits[@]}"
-fi
-for num in "${!Cnum2bits[@]}"
-do
-  if [[ "${verbose}" == "TRUE" ]]
-  then
-    echo Cnum2bits[${num}]=${Cnum2bits[${num}]}
-  fi
-  echo -e "${num}\t${Cnum2bits[${num}]}" >> ${tmptarget}
-done
-if [[ ! -r "${tmptarget}" ]]
-then
-  errecho "Could not find '${tmptarget}'"
-  exit 1
-fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -403,27 +364,8 @@ rm -f ${tmptarget}
 # num2hexdigits
 ###################################################################### 
 filename=${Fnum2hexdigits}
+tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
-tmptarget=/tmp/${filename}
-rm -f ${tmptarget}
-if [[ "${verbose}" == "TRUE" ]]
-then
-  echo "Cnum2hexdigits has ${#Cnum2hexdigits[@]} keys"
-  echo "Dumping Cnum2hexdigits keys:${!Cnum2hexdigits[@]}"
-fi
-for num in "${!Cnum2hexdigits[@]}"
-do
-  if [[ "${verbose}" == "TRUE" ]]
-  then
-    echo Cnum2hexdigits[${num}]=${Cnum2hexdigits[${num}]}
-  fi
-  echo -e "${num}\t${Cnum2hexdigits[${num}]}" >> ${tmptarget}
-done
-if [[ ! -r "${tmptarget}" ]]
-then
-  errecho "Could not find '${tmptarget}'"
-  exit 1
-fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -431,27 +373,8 @@ rm -f ${tmptarget}
 # num2hash
 ###################################################################### 
 filename=${Fnum2hash}
+tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
-tmptarget=/tmp/${filename}
-rm -f ${tmptarget}
-if [[ "${verbose}" == "TRUE" ]]
-then
-  echo "Cnum2hash has ${#Cnum2hash[@]} keys"
-  echo "Dumping Cnum2hash keys:${!Cnum2hash[@]}"
-fi
-for num in "${!Cnum2hash[@]}"
-do
-  if [[ "${verbose}" == "TRUE" ]]
-  then
-    echo Cnum2hash[${num}]=${Cnum2hash[${num}]}
-  fi
-  echo -e "${num}\t${Cnum2hash[${num}]}" >> ${tmptarget}
-done
-if [[ ! -r "${tmptarget}" ]]
-then
-  errecho "Could not find '${tmptarget}'"
-  exit 1
-fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -459,28 +382,9 @@ rm -f ${tmptarget}
 # hash2num
 ###################################################################### 
 filename=${Fhash2num}
+tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
-tmptarget=/tmp/${filename}
-rm -f ${tmptarget}
-if [[ "${verbose}" == "TRUE" ]]
-then
-  echo "Chash2num has ${#Chash2num[@]} keys"
-  echo "Dumping Chash2num keys:${!Chash2num[@]}"
-fi
-for hash in "${!Chash2num[@]}"
-do
-  if [[ "${verbose}" == "TRUE" ]]
-  then
-    echo Chash2num[${num}]=${Chash2num[${num}]}
-  fhash
-  echo hashe "${hash}\t${Cnum2hash[${hash}]}" >> ${tmptarget}
-  fi
-done
-if [[ ! -r "${tmptarget}" ]]
-then
-  errecho "Could not find '${tmptarget}'"
-  exit 1
-fi
 sort ${tmptarget} > ${target}
-rm -f ${tmptarget} ${tmpcanonical}
+rm -f ${tmptarget} 
+rm -f ${tmpcanonical}
 exit 0
