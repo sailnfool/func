@@ -125,6 +125,7 @@ optionargs="hdf:v"
 NUMARGS=0
 debug=${DEBUGOFF}
 verbose="FALSE"
+re_canonicalhashnumber="[0-9a-fA-F]{3}"
 
 ######################################################################
 # default defined in yfunc.global (should be the same)
@@ -274,7 +275,8 @@ do
   then
     continue
   fi
-  if [[ ! "${read_hashnum}" =~ [0-9a-fA-F]{3} ]]
+  #if [[ ! "${read_hashnum}" =~ [0-9a-fA-F]{3} ]]
+  if [[ ! "${read_hashnum}" =~ $re_canonicalhashnumber ]]
   then
     errecho "Invalid read_hashnum ${read_hashnum} on line ${count} of"
     errecho "canonical file. It must be 3 hexadecimal digits."
@@ -285,37 +287,58 @@ do
     errecho "Invalid  read_hashbits '${read_hashbits}' on line ${count} of"
     errecho "canonical file. It must be an integer."
   fi
-  if [[ "${verbose}" == "TRUE" ]]
-  then
-    echo Cnum2hash[${read_hashnum}]="${read_hashshort}"
-    echo ${Cnum2hash["${read_hashnum}"]}
-    echo Chash2num["${read_hashshort}"]="${read_hashnum}"
-    echo ${Chash2num["${read_hashnum}"]}
-    echo Cnum2bits[${read_hashnum}]="${read_hashbits}"
-    echo ${Cnum2bits["${read_hashnum}"]}
-    echo Cnum2hexdigits[${read_hashnum}]="$((read_hashbits / Chexbits))"
-    echo ${Cnum2hexdigits["${read_hashnum}"]}
-  fi
   Cnum2hash+=([${read_hashnum}]=${read_hashshort})
   Chash2num+=([${read_hashshort}]=${read_hashnum})
   Cnum2bits+=([${read_hashnum}]=${read_hashbits})
-  Cnum2hexdigits+=([${read_hashnum}]=$((read_hashbits / Chexbits)))
-
-  which ${read_hashshort} 2>&1 > /dev/null
-  foundhash=$?
-  if [[ "${foundhash}" -ne 0 ]]
-  then
-    Cnum2bin+=([${read_hashnum}]=$(which ${read_hashshort}))
-  else
-    Cnum2bin+=([${read_hashnum}]="")
-  fi
+  Cnum2hexdigits+=([${read_hashnum}]=$((read_hashbits / CHEXBITS)))
   if [[ "${verbose}" == "TRUE" ]]
   then
-    echo "Cnum2bin[${read_hashnum}]=${read_hashshort}"
-    echo ${Cnum2bin[${read_hashnum}]}
+    echo -n Cnum2hash[${read_hashnum}]="${read_hashshort}"
+    echo =\'${Cnum2hash[${read_hashnum}]}\'
+    echo "Cnum2hash has ${#Cnum2hash[@]} keys"
+    echo -n Chash2num[${read_hashshort}]="${read_hashnum}"
+    echo =\'${Chash2num[${read_hashshort}]}\'
+    echo "Chash2num has ${#Chash2num[@]} keys"
+    echo -n Cnum2bits[${read_hashnum}]="${read_hashbits}"
+    echo =\'${Cnum2bits[${read_hashnum}]}\'
+    echo "Cnum2bits has ${#Cnum2bits[@]} keys"
+    echo -n Cnum2hexdigits[${read_hashnum}]="$((read_hashbits / CHEXBITS))"
+    echo =\'${Cnum2hexdigits[${read_hashnum}]}\'
+    echo "Cnum2hexdigits has ${#Cnum2hexdigits[@]} keys"
+  fi
+
+#  which ${read_hashshort} 2>&1 > /dev/null
+#  foundhash=$?
+#  set -x
+#  if [[ "${foundhash}" -ne 0 ]]
+#  then
+    Cnum2bin+=([${read_hashnum}]=$(which ${read_hashshort}))
+#  else
+#    Cnum2bin+=([${read_hashnum}]="")
+#  fi
+#  set +x
+  if [[ "${verbose}" == "TRUE" ]]
+  then
+    echo -n "Cnum2bin[${read_hashnum}]=${read_hashshort}"
+    echo =\'${Cnum2bin[${read_hashnum}]}\'
+    echo "Cnum2bin has ${#Cnum2bin[@]} keys"
+    echo "Dumping Cnum2bin keys:${!Cnum2bin[@]}"
   fi
 done # read hash canonical
 
+if [[ "${verbose}" == "TRUE" ]]
+then
+  echo "Cnum2bin has ${#Cnum2bin[@]} keys"
+  echo "Dumping Cnum2bin keys:${!Cnum2bin[@]}"
+  echo "Cnum2bits has ${#Cnum2bits[@]} keys"
+  echo "Dumping Cnum2bits keys:${!Cnum2bits[@]}"
+  echo "Cnum2hexdigits has ${#Cnum2hexdigits[@]} keys"
+  echo "Dumping Cnum2hexdigits keys:${!Cnum2hexdigits[@]}"
+  echo "Cnum2hash has ${#Cnum2hash[@]} keys"
+  echo "Dumping Cnum2hash keys:${!Cnum2hash[@]}"
+  echo "Chash2num has ${#Chash2num[@]} keys"
+  echo "Dumping Chash2num keys:${!Chash2num[@]}"
+fi
 ###################################################################### 
 # We have finished sorting the canonical data into a separate set
 # of associative arrays, now save those arrays into key/value files
@@ -336,7 +359,7 @@ for num in "${!Cnum2bin[@]}"
 do
   if [[ "${verbose}" == "TRUE" ]]
   then
-    echo Cnum2bin["${num}"]=${Cnum2bin["${num}"]}
+    echo Cnum2bin[${num}]=${Cnum2bin[${num}]}
   fi
   echo -e "${num}\t${Cnum2bin[${num}]}" >> ${tmptarget}
 done
@@ -364,7 +387,7 @@ for num in "${!Cnum2bits[@]}"
 do
   if [[ "${verbose}" == "TRUE" ]]
   then
-    echo Cnum2bits[${num}]=${Cnum2bits["${num}"]}
+    echo Cnum2bits[${num}]=${Cnum2bits[${num}]}
   fi
   echo -e "${num}\t${Cnum2bits[${num}]}" >> ${tmptarget}
 done
@@ -392,7 +415,7 @@ for num in "${!Cnum2hexdigits[@]}"
 do
   if [[ "${verbose}" == "TRUE" ]]
   then
-    echo Cnum2hexdigits[${num}]=${Cnum2hexdigits["${num}"]}
+    echo Cnum2hexdigits[${num}]=${Cnum2hexdigits[${num}]}
   fi
   echo -e "${num}\t${Cnum2hexdigits[${num}]}" >> ${tmptarget}
 done
@@ -420,7 +443,7 @@ for num in "${!Cnum2hash[@]}"
 do
   if [[ "${verbose}" == "TRUE" ]]
   then
-    echo Cnum2hash[${num}]=${Cnum2hash["${num}"]}
+    echo Cnum2hash[${num}]=${Cnum2hash[${num}]}
   fi
   echo -e "${num}\t${Cnum2hash[${num}]}" >> ${tmptarget}
 done
@@ -448,7 +471,7 @@ for hash in "${!Chash2num[@]}"
 do
   if [[ "${verbose}" == "TRUE" ]]
   then
-    echo Chash2num["${num}"]=${Chash2num["${num}"]}
+    echo Chash2num[${num}]=${Chash2num[${num}]}
   fhash
   echo hashe "${hash}\t${Cnum2hash[${hash}]}" >> ${tmptarget}
   fi
