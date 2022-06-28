@@ -296,23 +296,23 @@ do
     echo Cnum2hexdigits[${read_hashnum}]="$((read_hashbits / Chexbits))"
     echo ${Cnum2hexdigits["${read_hashnum}"]}
   fi
-  Cnum2hash+=(["${read_hashnum}"]="${read_hashshort})"
-  Chash2num+=(["${read_hashshort}"]="${read_hashnum})"
-  Cnum2bits+=(["${read_hashnum}"]="${read_hashbits})"
-  Cnum2hexdigits+=(["${read_hashnum}"]="$((read_hashbits / Chexbits)))"
+  Cnum2hash+=([${read_hashnum}]=${read_hashshort})
+  Chash2num+=([${read_hashshort}]=${read_hashnum})
+  Cnum2bits+=([${read_hashnum}]=${read_hashbits})
+  Cnum2hexdigits+=([${read_hashnum}]=$((read_hashbits / Chexbits)))
 
   which ${read_hashshort} 2>&1 > /dev/null
   foundhash=$?
   if [[ "${foundhash}" -ne 0 ]]
   then
-    Cnum2bin+=(["${read_hashnum}"]=$(which ${read_hashshort}))
+    Cnum2bin+=([${read_hashnum}]=$(which ${read_hashshort}))
   else
-    Cnum2bin+=(["${read_hashnum}"]="")
+    Cnum2bin+=([${read_hashnum}]="")
   fi
   if [[ "${verbose}" == "TRUE" ]]
   then
-    echo Cnum2bin["${read_hashnum}"]="${read_hashshort}"
-    echo ${Cnum2bin["${read_hashnum}"]}
+    echo "Cnum2bin[${read_hashnum}]=${read_hashshort}"
+    echo ${Cnum2bin[${read_hashnum}]}
   fi
 done # read hash canonical
 
