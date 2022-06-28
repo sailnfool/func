@@ -3,6 +3,12 @@ if [[ -z "${__canonicalarrays}" ]]
 then
   __canonicalarrays=1
 
+  ####################################################################
+  # A constant to convert number of hash bits to the number of hex
+  # digits to represent those bits
+  ####################################################################
+  export CHEXBITS=4
+
   declare -A Cnum2hash
   declare -A Cnum2bin
   declare -A Cnum2bits
@@ -13,7 +19,6 @@ then
   export Cnum2bits
   export Cnum2hexdigits
   export Chash2num
-  export Chexbits=4
   
   export YesFSdir=/home/rnovak/Dropbox/YesFS
 
