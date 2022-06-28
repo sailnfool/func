@@ -76,8 +76,8 @@ canonical_source=/${YesFSdir}/canonical_source.csv
 if [[ -r "${canonical_source}" ]]
 then
   pushd ${HOME}/github/func
-  git pull
-  touchtimes func
+  git pull 2>&1 > /dev/null
+  touchtimes func 2>&1 > /dev/null
   if [[ "${HOME}/github/ren/scripts/createhashcanonical.sh" -nt "${canonical_source}" ]]
   then
     mv ${tmpcanonical} ${canonical_source}
@@ -280,25 +280,39 @@ do
     errecho "canonical file. It must be 3 hexadecimal digits."
     exit 1
   fi
-  if [[ ! "${read_hashbits}" =~ re_integer ]]
+  if [[ ! "${read_hashbits}" =~ $re_integer ]]
   then
     errecho "Invalid  read_hashbits '${read_hashbits}' on line ${count} of"
     errecho "canonical file. It must be an integer."
   fi
-  Cnum2hash[${read_hashnum}]="${read_hashshort}"
-  Chash2num["${read_hashshort}"]="${read_hashnum}"
-  Cnum2bits[${read_hashnum})]="${read_hashbits}"
-  set -x
-  Cnum2hexdigits[${read_hashnum}]="$((read_hashbits / Chexbits))"
-  set +x
+  if [[ "${verbose}" == "TRUE" ]]
+  then
+    echo Cnum2hash[${read_hashnum}]="${read_hashshort}"
+    echo ${Cnum2hash["${read_hashnum}"]}
+    echo Chash2num["${read_hashshort}"]="${read_hashnum}"
+    echo ${Chash2num["${read_hashnum}"]}
+    echo Cnum2bits[${read_hashnum}]="${read_hashbits}"
+    echo ${Cnum2bits["${read_hashnum}"]}
+    echo Cnum2hexdigits[${read_hashnum}]="$((read_hashbits / Chexbits))"
+    echo ${Cnum2hexdigits["${read_hashnum}"]}
+  fi
+  Cnum2hash+=(["${read_hashnum}"]="${read_hashshort})"
+  Chash2num+=(["${read_hashshort}"]="${read_hashnum})"
+  Cnum2bits+=(["${read_hashnum}"]="${read_hashbits})"
+  Cnum2hexdigits+=(["${read_hashnum}"]="$((read_hashbits / Chexbits)))"
 
-  which ${read_hashshort} 2>& /dev/null
+  which ${read_hashshort} 2>&1 > /dev/null
   foundhash=$?
   if [[ "${foundhash}" -ne 0 ]]
   then
-    Cnum2bin[${read_hashnum}]=$(which ${read_hashshort})
+    Cnum2bin+=(["${read_hashnum}"]=$(which ${read_hashshort}))
   else
-    Cnum2bin[${read_hashnum}]=""
+    Cnum2bin+=(["${read_hashnum}"]="")
+  fi
+  if [[ "${verbose}" == "TRUE" ]]
+  then
+    echo Cnum2bin["${read_hashnum}"]="${read_hashshort}"
+    echo ${Cnum2bin["${read_hashnum}"]}
   fi
 done # read hash canonical
 
@@ -309,65 +323,141 @@ done # read hash canonical
 ###################################################################### 
 # num2bin
 ###################################################################### 
-filename=num2bin.csv
+filename=${Fnum2bin}
 target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
-for num in "${Cnum2bin[@]}"
+rm -f ${tmptarget}
+if [[ "${verbose}" == "TRUE" ]]
+then
+  echo "Cnum2bin has ${#Cnum2bin[@]} keys"
+  echo "Dumping Cnum2bin keys:${!Cnum2bin[@]}"
+fi
+for num in "${!Cnum2bin[@]}"
 do
+  if [[ "${verbose}" == "TRUE" ]]
+  then
+    echo Cnum2bin["${num}"]=${Cnum2bin["${num}"]}
+  fi
   echo -e "${num}\t${Cnum2bin[${num}]}" >> ${tmptarget}
 done
+if [[ ! -r "${tmptarget}" ]]
+then
+  errecho "Could not find '${tmptarget}'"
+  exit 1
+fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
 ###################################################################### 
 # num2bits
 ###################################################################### 
-filename=num2bits.csv
+filename=${Fnum2bits}
 target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
-for num in "${Cnum2bits[@]}"
+rm -f ${tmptarget}
+if [[ "${verbose}" == "TRUE" ]]
+then
+  echo "Cnum2bits has ${#Cnum2bits[@]} keys"
+  echo "Dumping Cnum2bits keys:${!Cnum2bits[@]}"
+fi
+for num in "${!Cnum2bits[@]}"
 do
+  if [[ "${verbose}" == "TRUE" ]]
+  then
+    echo Cnum2bits[${num}]=${Cnum2bits["${num}"]}
+  fi
   echo -e "${num}\t${Cnum2bits[${num}]}" >> ${tmptarget}
 done
+if [[ ! -r "${tmptarget}" ]]
+then
+  errecho "Could not find '${tmptarget}'"
+  exit 1
+fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
 ###################################################################### 
 # num2hexdigits
 ###################################################################### 
-filename=num2hexdigits.csv
+filename=${Fnum2hexdigits}
 target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
-for num in "${Cnum2hexdigits[@]}"
+rm -f ${tmptarget}
+if [[ "${verbose}" == "TRUE" ]]
+then
+  echo "Cnum2hexdigits has ${#Cnum2hexdigits[@]} keys"
+  echo "Dumping Cnum2hexdigits keys:${!Cnum2hexdigits[@]}"
+fi
+for num in "${!Cnum2hexdigits[@]}"
 do
+  if [[ "${verbose}" == "TRUE" ]]
+  then
+    echo Cnum2hexdigits[${num}]=${Cnum2hexdigits["${num}"]}
+  fi
   echo -e "${num}\t${Cnum2hexdigits[${num}]}" >> ${tmptarget}
 done
+if [[ ! -r "${tmptarget}" ]]
+then
+  errecho "Could not find '${tmptarget}'"
+  exit 1
+fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
 ###################################################################### 
 # num2hash
 ###################################################################### 
-filename=num2hash.csv
+filename=${Fnum2hash}
 target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
-for num in "${Cnum2hash[@]}"
+rm -f ${tmptarget}
+if [[ "${verbose}" == "TRUE" ]]
+then
+  echo "Cnum2hash has ${#Cnum2hash[@]} keys"
+  echo "Dumping Cnum2hash keys:${!Cnum2hash[@]}"
+fi
+for num in "${!Cnum2hash[@]}"
 do
+  if [[ "${verbose}" == "TRUE" ]]
+  then
+    echo Cnum2hash[${num}]=${Cnum2hash["${num}"]}
+  fi
   echo -e "${num}\t${Cnum2hash[${num}]}" >> ${tmptarget}
 done
+if [[ ! -r "${tmptarget}" ]]
+then
+  errecho "Could not find '${tmptarget}'"
+  exit 1
+fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
 ###################################################################### 
 # hash2num
 ###################################################################### 
-filename=hash2num.csv
+filename=${Fhash2num}
 target=${canonical_dir}/${subdir}/${filename}
 tmptarget=/tmp/${filename}
-for hash in "${Chash2num[@]}"
+rm -f ${tmptarget}
+if [[ "${verbose}" == "TRUE" ]]
+then
+  echo "Chash2num has ${#Chash2num[@]} keys"
+  echo "Dumping Chash2num keys:${!Chash2num[@]}"
+fi
+for hash in "${!Chash2num[@]}"
 do
-  echo -e "${hash}\t${Cnum2hash[${hash}]}" >> ${tmptarget}
+  if [[ "${verbose}" == "TRUE" ]]
+  then
+    echo Chash2num["${num}"]=${Chash2num["${num}"]}
+  fhash
+  echo hashe "${hash}\t${Cnum2hash[${hash}]}" >> ${tmptarget}
+  fi
 done
+if [[ ! -r "${tmptarget}" ]]
+then
+  errecho "Could not find '${tmptarget}'"
+  exit 1
+fi
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget} ${tmpcanonical}
 exit 0
