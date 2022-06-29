@@ -32,7 +32,6 @@ source func.hashcanonical
 source func.errecho
 source func.regex
 source func.debug
-source yfunc.global
 
 ########################################################################
 # The "HERE" file must always be up to date.  In addition, the
