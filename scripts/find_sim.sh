@@ -43,16 +43,6 @@ USAGE="\r\n${scriptname} [-[hv] [ -d <#> ] [ [-i <ignoredir> ] ... ]
 \t\t\tArchive are ignored\r\n
 \t-v\tShow diagnostic levels, must precede -h\r\n
 "
-VERBOSE_USAGE="\t\t\tDEBUGOFF 0\r\n
-\t\t\tDEBUGWAVE 2 - print indented entry/exit to functions\r\n
-\t\t\tDEBUGWAVAR 3 - print variable data from functions if enabled\r\n
-\t\t\tDEBUGSTRACE 5 = prefix the executable with strace\r\n
-\t\t\t                (if implement)\r\n
-\t\t\tDEBUGNOEXECUTE or\t\n
-\t\t\tDEBUGNOEX 6 - generate and display the command lines but\r\n
-\t\t\t              don't execute the script\r\n
-\t\t\tDEBUGSETX 9 - turn on set -x to debug\r\n
-"
 
 optionargs="hd:i:v"
 NUMARGS=2
@@ -79,7 +69,7 @@ do
 		echo -e ${USAGE}
     if [[ "${verbose}" = "TRUE" ]]
     then
-      echo -e ${VERBOSE_USAGE}
+      echo -e ${DEBUG_USAGE}
     fi
 		exit 0
 		;;
