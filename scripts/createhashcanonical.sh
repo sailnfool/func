@@ -190,7 +190,7 @@ do
 		exit 0
 		;;
 	esac
-done # while read read_hashnum read_hashshort read_hashbits
+done # while getopts ${optionargs} name
 
 shift "$(($OPTIND - 1))"
 
@@ -251,7 +251,7 @@ do
   then
     rm -f ${canonical_dir}/${subdir}/${i}.csv
   fi
-done
+done # for i in num2bin num2hash num2bits hash2num
 
 ######################################################################
 # Remove the external files before we write them
@@ -282,22 +282,24 @@ then
   more ${canonical_source}
 fi
 
+########################################################################
+# An earlier implementation of this had the "cut" command piped into
+# the while statement.  It took me a long time to realize that the
+# reason that the global associative arrays were empty AFTER the 
+# while loop was because piping the cut command into the while put the
+# cut command and the while loop into a subshell and the global arrays
+# belonged to the subshell, but expired when the subshell (containing
+# the while loop) ended and they were unavailable outside the while
+# loop.  I fixed this by sending the output of the cut command to
+# a file and then redirecting the file as the input to the while loop
+# which does not create a separate shell... Only 2 days to realize
+# (at about 3 AM) what I had done to myself.
+########################################################################
 count=0
-set -x
-cut -d " " --fields=1-3 ${canonical_source} | \
-  while read read_hashnum read_hashshort read_hashbits
+cut -d " " --fields=1-3 ${canonical_source} > ${tmpcanonical}
+while read read_hashnum read_hashshort read_hashbits
 do
   ((count++))
-  #?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?
-  # Removable diagnostics
-  #?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?
-  if [[ "${verbose}" == "TRUE" ]]
-  then
-    echo "${0##*/}: Line ${count} of ${canonical_source}"
-    echo "read_hashnum='${read_hashnum}'"
-    echo "read_hashshort='${read_hashshort}'"
-    echo "read_hashbits='${read_hashbits}'"
-  fi
 
 ####################################################################
 # skip the title line
@@ -324,77 +326,21 @@ do
   Cnum2hexdigits+=([${read_hashnum}]=$((read_hashbits / CHEXBITS)))
   Cnum2bin+=([${read_hashnum}]=$(which ${read_hashshort}))
   
-  echo -e "${read_hashshort}\t${Chash2num[$read_hashshort}]}" >> /tmp/$$_${Fhash2num}
-  echo -e "${read_hashnum}\t${Cnum2hash[$read_hashnum}]}" >> /tmp/$$_${Fnum2hash}
-  echo -e "${read_hashnum}\t${Cnum2bits[$read_hashnum}]}" >> /tmp/$$_${Fnum2bits}
-  echo -e "${read_hashnum}\t${Cnum2hexdigits[$read_hashnum}]}" >> /tmp/$$_${Fnum2hexdigits}
-  echo -e "${read_hashnum}\t${Cnum2bin[$read_hashnum}]}" >> /tmp/$$_${Fnum2hash}
+done < ${tmpcanonical} # while read read_hashnum read_hashshort read_hashbits
 
-  #?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?
-  # Removable diagnostics
-  #?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?
-  if [[ "${verbose}" == "TRUE" ]]
-  then
-    # more /tmp/$$_*
-    echo -n Cnum2hash[${read_hashnum}]="${read_hashshort}"
-    echo =\'${Cnum2hash[${read_hashnum}]}\'
-    echo "Cnum2hash has ${#Cnum2hash[@]} keys"
-    echo "Dumping Cnum2hash keys:${!Cnum2hash[@]}"
-    for i in "${!Cnum2hash[@]}";do \
-      echo -e "Cnum2hash[$i]=\'${Cnum2hash[$i]}\'";done
-    echo -n Chash2num[${read_hashshort}]="${read_hashnum}"
-    echo =\'${Chash2num[${read_hashshort}]}\'
-    echo "Chash2num has ${#Chash2num[@]} keys"
-    echo "Dumping Chash2num keys:${!Chash2num[@]}"
-    for i in "${!Chash2num[@]}";do \
-      echo -e "Chash2num[$i]=\'${Chash2num[$i]}\'";done
-    echo -n Cnum2bits[${read_hashnum}]="${read_hashbits}"
-    echo =\'${Cnum2bits[${read_hashnum}]}\'
-    echo "Cnum2bits has ${#Cnum2bits[@]} keys"
-    echo "Dumping Cnum2bits keys:${!Cnum2bits[@]}"
-    for i in "${!Cnum2bits[@]}";do \
-      echo -e "Cnum2bits[$i]=\'${Cnum2bits[$i]}\'";done
-    echo -n Cnum2hexdigits[${read_hashnum}]="$((read_hashbits / CHEXBITS))"
-    echo =\'${Cnum2hexdigits[${read_hashnum}]}\'
-    echo "Cnum2hexdigits has ${#Cnum2hexdigits[@]} keys"
-    echo "Dumping Cnum2hexdigits keys:${!Cnum2hexdigits[@]}"
-    for i in "${!Cnum2hexdigits[@]}";do \
-      echo -e "Cnum2hexdigits[$i]=\'${Cnum2hexdigits[$i]}\'";done
-    echo -n "Cnum2bin[${read_hashnum}]=${read_hashshort}"
-    echo =\'${Cnum2bin[${read_hashnum}]}\'
-    echo "Cnum2bin has ${#Cnum2bin[@]} keys"
-    echo "Dumping Cnum2bin keys:${!Cnum2bin[@]}"
-    for i in "${!Cnum2bin[@]}";do \
-      echo -e "Cnum2bin[$i]=\'${Cnum2bin[$i]}\'";done
-  fi
-done # while read read_hashnum read_hashshort read_hashbits
-
-  #?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?
-  # Removable diagnostics
-  #?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?
-if [[ "${verbose}" == "TRUE" ]]
-then
-  echo "Cnum2bin has ${#Cnum2bin[@]} keys"
-  echo "Dumping Cnum2bin keys:${!Cnum2bin[@]}"
-  echo "Cnum2bits has ${#Cnum2bits[@]} keys"
-  echo "Dumping Cnum2bits keys:${!Cnum2bits[@]}"
-  echo "Cnum2hexdigits has ${#Cnum2hexdigits[@]} keys"
-  echo "Dumping Cnum2hexdigits keys:${!Cnum2hexdigits[@]}"
-  echo "Cnum2hash has ${#Cnum2hash[@]} keys"
-  echo "Dumping Cnum2hash keys:${!Cnum2hash[@]}"
-  echo "Chash2num has ${#Chash2num[@]} keys"
-  echo "Dumping Chash2num keys:${!Chash2num[@]}"
-fi
 ###################################################################### 
-# We have finished sorting the canonical data into a separate set
+# We have finished distributing the canonical data into a separate set
 # of associative arrays, now save those arrays into key/value files
-# with a tab separation between the key and value.
+# with a tab separation between the key and value and sort them by
+# the key.  Note that the value is always enclosed in ""
 ###################################################################### 
 # num2bin
 ###################################################################### 
 filename=${Fnum2bin}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
+for i in "${!Cnum2bin[@]}";do \
+  echo -e "$i\t\"${Cnum2bin[$i]}\"" >> ${tmptarget};done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -404,6 +350,8 @@ rm -f ${tmptarget}
 filename=${Fnum2bits}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
+for i in "${!Cnum2bits[@]}";do \
+  echo -e "$i\t\"${Cnum2bits[$i]}\"" >> ${tmptarget};done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -413,6 +361,8 @@ rm -f ${tmptarget}
 filename=${Fnum2hexdigits}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
+for i in "${!Cnum2hexdigits[@]}";do \
+  echo -e "$i\t\"${Cnum2hexdigits[$i]}\"" >> ${tmptarget};done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -422,6 +372,8 @@ rm -f ${tmptarget}
 filename=${Fnum2hash}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
+for i in "${!Cnum2hash[@]}";do \
+  echo -e "$i\t\"${Cnum2hash[$i]}\"">> ${tmptarget} ;done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -431,6 +383,8 @@ rm -f ${tmptarget}
 filename=${Fhash2num}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
+for i in "${!Chash2num[@]}";do \
+  echo -e "$i\t\"${Chash2num[$i]}\"" >> ${tmptarget} ;done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget} 
 rm -f ${tmpcanonical}
