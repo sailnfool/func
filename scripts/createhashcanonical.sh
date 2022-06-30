@@ -339,7 +339,7 @@ filename=${Fnum2bin}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
 for i in "${!Cnum2bin[@]}";do \
-  echo -e "$i\t\"${Cnum2bin[$i]}\"" >> ${tmptarget};done
+  echo -e "$i\t${Cnum2bin[$i]}" >> ${tmptarget};done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -350,7 +350,7 @@ filename=${Fnum2bits}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
 for i in "${!Cnum2bits[@]}";do \
-  echo -e "$i\t\"${Cnum2bits[$i]}\"" >> ${tmptarget};done
+  echo -e "$i\t${Cnum2bits[$i]}" >> ${tmptarget};done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -361,7 +361,7 @@ filename=${Fnum2hexdigits}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
 for i in "${!Cnum2hexdigits[@]}";do \
-  echo -e "$i\t\"${Cnum2hexdigits[$i]}\"" >> ${tmptarget};done
+  echo -e "$i\t${Cnum2hexdigits[$i]}" >> ${tmptarget};done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -372,7 +372,7 @@ filename=${Fnum2hash}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
 for i in "${!Cnum2hash[@]}";do \
-  echo -e "$i\t\"${Cnum2hash[$i]}\"">> ${tmptarget} ;done
+  echo -e "$i\t${Cnum2hash[$i]}">> ${tmptarget} ;done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget}
 
@@ -383,7 +383,7 @@ filename=${Fhash2num}
 tmptarget=/tmp/$$_${filename}
 target=${canonical_dir}/${subdir}/${filename}
 for i in "${!Chash2num[@]}";do \
-  echo -e "$i\t\"${Chash2num[$i]}\"" >> ${tmptarget} ;done
+  echo -e "$i\t${Chash2num[$i]}" >> ${tmptarget} ;done
 sort ${tmptarget} > ${target}
 rm -f ${tmptarget} 
 rm -f ${tmpcanonical}
