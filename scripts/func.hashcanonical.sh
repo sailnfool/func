@@ -31,6 +31,7 @@ then
   export Fnum2bits="num2bits.csv"
   export Fnum2hexdigits="num2hexdigits.csv"
   export Fhash2num="hash2num.csv"
+  export Fcanonicalhash="canonical_source.csv"
 
   export re_canonicalhashnumber="[0-9a-fA-F]{3}"
 
