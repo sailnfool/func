@@ -8,9 +8,9 @@
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.0 | REN |08/13/2021| Initial Release
+# 1.0 |REN|08/13/2021| Initial Release
 #_____________________________________________________________________
 #
 # Look for the parent directory which contains the .git file with 

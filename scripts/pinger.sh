@@ -10,15 +10,15 @@
 #	skype:sailnfool.ren
 #
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 2.2 | REN |03/15/2021| Fixed the column command invocation.
-# 2.1 | REN |06/27/2020| brought up to date with getopts
-# 2.0 | REN |12/03/2019| Modified to use more source'd functions
-# 1.1 | REN |07/29/2010| Installed new prolog, cleaned up the
+# 2.2 |REN|03/15/2021| Fixed the column command invocation.
+# 2.1 |REN|06/27/2020| brought up to date with getopts
+# 2.0 |REN|12/03/2019| Modified to use more source'd functions
+# 1.1 |REN|07/29/2010| Installed new prolog, cleaned up the
 #                      | temporary files on exit and added a 
 #                      | correct exit code
-# 1.0 | REN |07/22/2010| Initial Release
+# 1.0 |REN|07/22/2010| Initial Release
 #_____________________________________________________________________
 #
 source func.errecho

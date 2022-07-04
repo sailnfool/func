@@ -4,9 +4,9 @@
 # sailnfool@gmail.com
 # skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.0 | REN |12/03/2019| Initial Release
+# 1.0 |REN|12/03/2019| Initial Release
 #_____________________________________________________________________
 ####################
 # Standard Prolog for stc utilities found in stc_prolog.sh

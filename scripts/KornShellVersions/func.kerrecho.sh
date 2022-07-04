@@ -23,15 +23,15 @@
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 2.1 | REN |05/20/2020| removed vim directive.  Added additional
+# 2.1 |REN|05/20/2020| removed vim directive.  Added additional
 #                      | bash builtins to report the name of the
 #                      | source file, the command that is executing
 #                      | the name of the function that is throwing
 #                      | the error number and the line number
-# 2.0 | REN |11/14/2019| added vim directive and header file
-# 1.0 | REN |09/06/2018| original version
+# 2.0 |REN|11/14/2019| added vim directive and header file
+# 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
 #
 ####################

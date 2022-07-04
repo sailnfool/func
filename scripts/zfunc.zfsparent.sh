@@ -8,9 +8,9 @@
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.0 | REN |06/17/2020| Set the parent directory of zfs in-tree
+# 1.0 |REN|06/17/2020| Set the parent directory of zfs in-tree
 
 ####################
 if [ -z "${__zfunczfsparent}" ]

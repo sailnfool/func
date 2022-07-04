@@ -4,12 +4,12 @@
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.1 | REN |06/04/2022| Added command line option processing to add
+# 1.1 |REN|06/04/2022| Added command line option processing to add
 #                      | -v verbose options.  Switched to using arrays
 #                      | for the test values and result.
-# 1.0 | REN |02/02/2022| testing reconstructed kbytes
+# 1.0 |REN|02/02/2022| testing reconstructed kbytes
 #_____________________________________________________________________
 #
 ########################################################################

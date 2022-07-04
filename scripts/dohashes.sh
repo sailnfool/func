@@ -26,9 +26,9 @@
 # to verify the size of the BASH number that can handle ((num++)).  If
 # it is 2^64, then we can speedup using BASH alone.
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.2 | REN |05/16/2022| Added parameter override for the cryptographic
+# 1.2 |REN|05/16/2022| Added parameter override for the cryptographic
 #                      | program to be executed.  Also created a
 #                      | directory tree for all of the hash names of
 #                      | both the files and the directories.
@@ -38,12 +38,12 @@
 #                      | hashspace.
 #                      | added -t to make the dirtree somewhere other
 #                      | then /tmp
-# 1.1 | REN |05/11/2022| Improved initial checking parameters
+# 1.1 |REN|05/11/2022| Improved initial checking parameters
 #                      | Added commentary outline for efficiently
 #                      | Improving the count calculation and bypassing
 #                      | using awk and bc to avoid overflow and for
 #                      | improving efficiency.
-# 1.0 | REN |03/26/2020| Initial Release
+# 1.0 |REN|03/26/2020| Initial Release
 #_____________________________________________________________________
 #
 source func.debug

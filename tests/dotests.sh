@@ -26,10 +26,10 @@ scriptname=${0##*/}
 # see https://creativecommons.org/licenses/by/4.0/legalcode
 # for a complete copy of the Creative Commons Attribution license
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.1 | REN |04/08/2022| Improved documentation
-# 1.0 | REN |02/20/2022| Initial Release
+# 1.1 |REN|04/08/2022| Improved documentation
+# 1.0 |REN|02/20/2022| Initial Release
 #_____________________________________________________________________
 #
 ########################################################################

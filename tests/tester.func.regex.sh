@@ -4,11 +4,11 @@
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.1 | REN |06/04/2022| Tweaked to exit with number of fails and to
+# 1.1 |REN|06/04/2022| Tweaked to exit with number of fails and to
 #                      | use arrays for test values and results
-# 1.0 | REN |03/20/2022| testing regex
+# 1.0 |REN|03/20/2022| testing regex
 #_____________________________________________________________________
 #
 ########################################################################

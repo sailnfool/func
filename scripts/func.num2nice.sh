@@ -4,9 +4,9 @@
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.0 | REN |03/26/2022| original version
+# 1.0 |REN|03/26/2022| original version
 #_____________________________________________________________________
 #
 # This function is the reverse of nice2num.  However note that

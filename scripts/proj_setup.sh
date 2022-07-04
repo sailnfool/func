@@ -30,13 +30,13 @@
 #   different group ID is the check that we need as described above.
 #
 #_____________________________________________________________________
-# Rev |Auth.| Date		 | Notes
+# Rev |Aut| Date		 | Notes
 #_____________________________________________________________________
-# 2.2 | REN |12/03/2019| Fixed func_pathmunge.  Moved initialization
+# 2.2 |REN|12/03/2019| Fixed func_pathmunge.  Moved initialization
 #                      | of project path after setting project.
 #                      | Fixed projectvindir to projectbindir
-# 2.1 | REN |11/10/2019| Fixed problems with non-existent directories
-# 2.0 | REN |02/27/2019| Changes to make the script more robust
+# 2.1 |REN|11/10/2019| Fixed problems with non-existent directories
+# 2.0 |REN|02/27/2019| Changes to make the script more robust
 #                      | and less dependent on outside resources
 #_____________________________________________________________________
 ####################
@@ -74,15 +74,15 @@ else
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 2.1 | REN |05/20/2020| removed vim directive.  Added additional
+# 2.1 |REN|05/20/2020| removed vim directive.  Added additional
 #                      | bash builtins to report the name of the
 #                      | source file, the command that is executing
 #                      | the name of the function that is throwing
 #                      | the error number and the line number
-# 2.0 | REN |11/14/2019| added vim directive and header file
-# 1.0 | REN |09/06/2018| original version
+# 2.0 |REN|11/14/2019| added vim directive and header file
+# 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
 #
 ####################
@@ -170,10 +170,10 @@ else
 	# as the last line of $HOME/.bashrc
 	####################
 	#_____________________________________________________________________
-	# Rev.|Auth.| Date     | Notes
+	# Rev.|Aut| Date     | Notes
 	#_____________________________________________________________________
-	# 2.0 | REN |11/13/2019| added vim directive and header file
-	# 1.0 | REN |09/06/2018| original version
+	# 2.0 |REN|11/13/2019| added vim directive and header file
+	# 1.0 |REN|09/06/2018| original version
 	#_____________________________________________________________________
 	if [ -z "${__funcpathmunge}" ]
 	then
@@ -220,11 +220,11 @@ else
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 2.1 | REN |04/27/2020| swapped order of parameters to make func first
-# 2.0 | REN |11/14/2019| added vim directive and header file
-# 1.0 | REN |09/06/2018| original version
+# 2.1 |REN|04/27/2020| swapped order of parameters to make func first
+# 2.0 |REN|11/14/2019| added vim directive and header file
+# 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
 #
 ####################

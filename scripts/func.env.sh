@@ -7,10 +7,10 @@
 # This script is obsolete by improvements to makefile and project
 # scripts
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 2.0 | REN |11/13/2019| added vim directive and header file
-# 1.0 | REN |09/06/2018| original version
+# 2.0 |REN|11/13/2019| added vim directive and header file
+# 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
 #
 ####################

@@ -4,10 +4,10 @@
 #	sailnfool@gmail.com
 #	skype:sailnfool.ren
 #_____________________________________________________________________
-# Rev.|Auth.| Date     | Notes
+# Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
-# 1.1 | REN |06/04/2022| Tweaked to exit with the number of fails
-# 1.0 | REN |02/08/2022| testing nice2num
+# 1.1 |REN|06/04/2022| Tweaked to exit with the number of fails
+# 1.0 |REN|02/08/2022| testing nice2num
 #_____________________________________________________________________
 #
 ########################################################################
