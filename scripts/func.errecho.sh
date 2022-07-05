@@ -72,7 +72,13 @@ then
 		local LN=${BASH_LINENO[1]}
 		local SF=${BASH_SOURCE[1]}
 		local CM=${0##*/}
-		echo ${SF}->${CM}::${FN}:${LN}:$@
+    if [[ "$1" == "-q" ]]
+    then
+      shift 1
+      echo $@
+    else
+      echo ${SF}->${CM}::${FN}:${LN}:$@
+    fi
 	}
 	export -f stderrecho
 	##########
@@ -83,7 +89,13 @@ then
 		local LN=${BASH_LINENO[1]}
 		local SF=${BASH_SOURCE[1]}
 		local CM=${0##*/}
-		echo -n ${SF}->${CM}::${FN}:${LN}:$@
+    if [[ "$1" == "-q" ]]
+    then
+      shift 1
+      echo -n $@
+    else
+		  echo -n ${SF}->${CM}::${FN}:${LN}:$@
+    fi
 	}
 	export -f stderrnecho
 fi # if [ -z "${__funcerrecho}" ]
