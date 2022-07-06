@@ -76,7 +76,7 @@ Index	short	Bits
 021 b2ppsum 512
 EOF
 
-canonical_source=/${YesFSdir}/etc/canonical_source.csv
+canonical_source=/${YesFSdiretc}/canonical_source.csv
 
 ########################################################################
 # The theory is that since we have embedded a "HERE" file in this
@@ -213,8 +213,9 @@ then
   if [[ -z "${installanswer}" ]]
   then
     installanswer="Y"
+  else
+    installanswer=$(echo ${installanswer} | tr a-z A-Z)
   fi
-  installanswer=$(echo ${installanswer} | tr a-z A-Z)
   case ${installanswer} in
     Y|YES)
 
@@ -229,6 +230,7 @@ then
     \?)
       echo "Invalid answer"
       exit 1
+      ;;
   esac
 fi
 
