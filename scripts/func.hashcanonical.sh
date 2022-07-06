@@ -25,6 +25,7 @@ then
   export Chash2num
   
   export YesFSdir=/home/rnovak/Dropbox/YesFS
+  export YesFSdiretc=/home/rnovak/Dropbox/YesFS/etc
 
   export Fnum2hash="num2hash.csv"
   export Fnum2bin="num2bin.csv"
