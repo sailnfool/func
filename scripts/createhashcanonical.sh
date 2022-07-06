@@ -73,7 +73,7 @@ Index	short	Bits
 01E	KangarooTwelvesum	0
 01F	b3sum	256
 020	Blake3sum	256
-021 b2ppsum 256
+021 b2ppsum 512
 EOF
 
 canonical_source=/${YesFSdir}/canonical_source.csv
