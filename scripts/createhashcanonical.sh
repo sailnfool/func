@@ -76,7 +76,7 @@ Index	short	Bits
 021 b2ppsum 512
 EOF
 
-canonical_source=/${YesFSdir}/canonical_source.csv
+canonical_source=/${YesFSdir}/etc/canonical_source.csv
 
 ########################################################################
 # The theory is that since we have embedded a "HERE" file in this
