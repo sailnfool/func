@@ -7,6 +7,7 @@ PREFIX2?=/tftpboot/global/rnovak
 	@rm -f $@
 	cp $< $@
 LINSTALL =       func.arithmetic \
+		func.askcreatehashcanonical \
 		func.config \
 		func.cwave \
 		func.dec2hex \
