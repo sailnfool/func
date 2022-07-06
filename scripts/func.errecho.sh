@@ -72,12 +72,12 @@ then
 		local LN=${BASH_LINENO[1]}
 		local SF=${BASH_SOURCE[1]}
 		local CM=${0##*/}
-    if [[ "$1" == "-q" ]]
+    if [[ "${1}" == "-q" ]]
     then
       shift 1
       echo $@
     else
-      echo ${SF}->${CM}::${FN}:${LN}:$@
+      echo "${SF}->${CM}::${FN}:${LN}:$@"
     fi
 	}
 	export -f stderrecho
@@ -94,7 +94,7 @@ then
       shift 1
       echo -n $@
     else
-		  echo -n ${SF}->${CM}::${FN}:${LN}:$@
+		  echo -n "${SF}->${CM}::${FN}:${LN}:$@"
     fi
 	}
 	export -f stderrnecho
