@@ -17,10 +17,12 @@ LINSTALL =       func.arithmetic \
 		func.errecho \
 		func.getprojdir \
 		func.hashcanonical \
+		func.hex2binfile \
 		func.hex2dec \
 		func.hmsout \
 		func.insufficient \
 		func.kbytes \
+		func.loadcanonical \
 		func.locker \
 		func.logger \
 		func.nice2num \
