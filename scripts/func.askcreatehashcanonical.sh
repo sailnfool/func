@@ -20,6 +20,8 @@
 #
 ########################################################################
 source func.hashcanonical
+source func.insufficient
+source func.errecho
 if [[ -z "${__funcaskcreatehashcanonical}" ]]
 then
   export __funccreatehashcanonical=1
@@ -44,9 +46,9 @@ then
     else
       if [[ "${answeryes}" == "FALSE" ]]
       then
-        echo "Missing ${filecanonical}, " \
+        errecho "Missing ${filecanonical}, " \
           "run 'createhashcanonical'"
-        echo "to generate."
+        errecho "to generate."
         echo -n "Run Now (Y/n): "
         read installanswer
         if [[ -z "${installanswer}" ]]
@@ -60,7 +62,7 @@ then
             createhashcanonical
             ;;
           N|NO)
-            echo "Missing ${YesFSdiretc}/${Fcanonicalhash}, exiting"
+            errecho "Missing ${YesFSdiretc}/${Fcanonicalhash}, exiting"
             exit 1
            ;;
           \?)
