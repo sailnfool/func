@@ -1,7 +1,7 @@
 #!/bin/bash
 if [[ -z "${__canonicalarrays}" ]]
 then
-  __canonicalarrays=1
+  export __canonicalarrays=1
 
   ####################################################################
   # More info on Canonical Hash Encoding
