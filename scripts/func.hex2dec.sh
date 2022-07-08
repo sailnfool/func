@@ -21,6 +21,9 @@
 if [[ -z "${__funchex2dec}" ]]
 then
   export __funchex2dec=1
+
+  source func.insufficieant
+
   function func_hex2dec() {
     if [[ "$#" -ne 1 ]]
     then
