@@ -31,6 +31,16 @@ then
 	source func.env
   source func.insufficient
 	function doshells() {
+    local numparms
+    local scriptsuffix
+    local bin_path
+    local tmpfile
+    local splitprefix
+    local filecount
+    local list
+    local i
+    local j
+
 		numparms=2
 		scriptsuffix="${1}"
 		bin_path="${2}"
@@ -65,6 +75,7 @@ then
 		# files I split the list of files and then process each
 		# group of up to 500 files separately
 		##########
+
 		tmpfile="/tmp/stc$$.filelist.txt"
 		splitprefix="/tmp/filelist.$$."
 		ls *${scriptsuffix} 2> /dev/null > ${tmpfile}
@@ -106,6 +117,12 @@ then
 	# archive.
 	##########
 	function dorshells() {
+
+    local scriptsuffix
+    local filecount
+    local i
+    local j
+
 		scriptsuffix="$1"
 		filecount=$(ls *${scriptsuffix} 2>/dev/null | wc -l)
 		if [ ${filecount} -gt 0 ]
@@ -127,4 +144,4 @@ then
 	}
 	export -f dorshells
 fi # if [ -z "${__funcdoshells}" ]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=78,colorcolumn=72

@@ -23,6 +23,8 @@ if [[ -z "${__funcdec2hex}" ]]
 then
   export __funcdec2hex=1
   function func_dec2hex() {
+    local number
+    local digits
     case "$#" in
       0)
         insufficient 1 $@

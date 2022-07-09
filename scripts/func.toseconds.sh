@@ -22,6 +22,11 @@ then
 	source func.insufficient
 
   function toseconds() {
+
+    local secondresult
+    local tresult
+    local result
+
     declare -a secondresult
     if [[ $# -lt 1 ]]
     then
@@ -51,5 +56,5 @@ then
     echo ${result}
    }
 	export -f toseconds
-fi # if [ -z "${__functoseconds}" ]
+fi # if [[ -z "${__functoseconds}" ]]
 

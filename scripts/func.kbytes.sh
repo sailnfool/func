@@ -20,6 +20,15 @@ then
     declare -A __kbytesvalue
     declare -A __kbibytesvalue
 
+    local bytesuffix
+    local bibytesuffix
+    local let1
+    local let2
+    local sorted
+    local i
+    local allcat
+    local matcher
+
     export __kbibytessuffix=("BYT" "KIB" "MIB" "GIB" "TIB" "PIB" \
       "EIB" "ZIB")
     export __kbytessuffix="BKMGTPEZ"

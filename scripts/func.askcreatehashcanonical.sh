@@ -25,7 +25,13 @@ source func.errecho
 if [[ -z "${__funcaskcreatehashcanonical}" ]]
 then
   export __funccreatehashcanonical=1
+
   function askcreatehashcanonical() {
+    local filecanonical
+    local answeryes
+    local verbosemode
+    local installanswer
+
     # <file> "answeryes" "verbosemode"
     if [[ "$#" -ne 3 ]]
       then

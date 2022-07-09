@@ -26,6 +26,7 @@ then
     local resultnumber
     local nicenum
     local number
+    local multiplier
 
 	  if [[ $# -ne 1 ]]
 	  then

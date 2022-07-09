@@ -58,6 +58,13 @@ then
   ############################################################
 	func_getlock()
 	{
+    local func_getlock_USAGE
+    local lockfile
+    local lockcount
+    local sleeptime
+    local maxspins
+    local OLD_FUNC_VERBOSE
+
     func_getlock_USAGE="func_getlock [ <lockfile> [<sleeptime> [<spincount>]]]\n
 \t\twhere <lockfile> is the lockfile to acquire\n
 \t\tand <sleeptime> is the maximum seconds to wait for acquisition\n
@@ -142,18 +149,14 @@ then
 	################################################################
 	func_releaselock()
 	{
+
+    local lockfile
+
 		if [[ $# -eq 0 ]]
 		then
 			errecho "${FUNCNAME}" "${LINENO}" \
 			    "No lockfile specified"
 			exit 1
-#		else
-#			lockfile="$1"
-#			if [ -r "${lockfile}" ]
-#			then
-#				errecho "${FUNCNAME}" "${LINENO}" \
-#					"no such file as ${lockfile}"
-#			fi
 		fi
     lockfile="$1"
     if [[ -f "${lockfile}" ]]
@@ -194,6 +197,7 @@ then
 	################################################################
 	func_getbatchnumber()
 	{
+    local value
     value=$(func_getnextcounter "${LOCKFILE_BATCHNUMBERFIL}" \
       "${BATCHNUMBERFILE}")
 		echo "${value}"
@@ -205,6 +209,8 @@ then
 	################################################################
 	func_gettestnumber()
 	{
+    local value
+
     value=$(func_getnextcounter "${LOCKFILE_TESTNUMBERFILE}" \
       "${TESTNUMBERFILE}")
 		echo "${value}"
@@ -216,6 +222,8 @@ then
   ############################################################
   func_getcounter()
   {
+    local value
+
     if [[ $# -ne 2 ]]
     then
       insufficient 2
@@ -251,6 +259,9 @@ then
   ############################################################
   func_getnextcounter()
   {
+
+    local value
+
     if [[ $# -ne 2 ]]
     then
       insufficient 2

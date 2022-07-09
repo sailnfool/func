@@ -14,7 +14,7 @@
 #_____________________________________________________________________
 #
 ####################
-if [ -z "${__funcuuid}" ]
+if [[ -z "${__funcuuid}" ]]
 then
 	export __funcuuid=1
 	function uuid()
@@ -46,4 +46,4 @@ then
 	    echo
 	}
 	export -f uuid
-fi # if [ -z "${__funcuuid}" ]
+fi # if [[ -z "${__funcuuid}" ]]

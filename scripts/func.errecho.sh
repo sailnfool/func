@@ -44,6 +44,10 @@ if [ -z "${__funcerrecho}" ]
 then
 	export __funcerrecho=1
 	function errecho() {>&2
+
+    local PL
+    local pbs
+
 		PL=1
 		pbs="-e"
 		if [[ "$1" = "-i" ]]

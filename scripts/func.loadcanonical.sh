@@ -28,42 +28,47 @@ then
 
   function func_loadcanonical () {
 
-  ######################################################################
-  # Now read the canonical files to load up the canonical hash info
-  # Note that this is subtle the way we generate the list of filenames
-  # and the list of Associative Arrays
-  # A similar clever trick could eliminate the case statement, but my
-  # brain is aching from the number of levels of indirection.
-  ######################################################################
-  for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
-  do
-    filename=${YesFSdiretc}/$(eval echo \$F${filesuffix})
-    while read key value
+    local filesuffix
+    local filename
+    local key
+    local value
+    ######################################################################
+    # Now read the canonical files to load up the canonical hash info
+    # Note that this is subtle the way we generate the list of
+    # filenames and the list of Associative Arrays
+    # A similar clever trick could eliminate the case statement, 
+    # but my # brain is aching from the number of levels of
+    # indirection.
+    ######################################################################
+    for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
     do
-      case ${filesuffix} in
-        num2hash)
-          Cnum2hash+=([${key}]=${value})
-          ;;
-        num2bin)
-          Cnum2bin+=([${key}]=${value})
-          ;;
-        num2bits)
-          Cnum2bits+=([${key}]=${value})
-          ;;
-        num2hexdigits)
-          Cnum2hexdigits+=([${key}]=${value})
-          ;;
-        hash2num)
-          Chash2num+=([${key}]=${value})
-          ;;
-        \?)
-          errecho "${0##*/}:${FUNCNAME}:${LINENO}: " \
-            "this should never happen"
-          exit 1
-          ;;
-      esac
-    done < ${filename}
-  done # for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
-}
-export func_loadcanonical
+      filename=${YesFSdiretc}/$(eval echo \$F${filesuffix})
+      while read key value
+      do
+        case ${filesuffix} in
+          num2hash)
+            Cnum2hash+=([${key}]=${value})
+            ;;
+          num2bin)
+            Cnum2bin+=([${key}]=${value})
+            ;;
+          num2bits)
+            Cnum2bits+=([${key}]=${value})
+            ;;
+          num2hexdigits)
+            Cnum2hexdigits+=([${key}]=${value})
+            ;;
+          hash2num)
+            Chash2num+=([${key}]=${value})
+            ;;
+          \?)
+            errecho "${0##*/}:${FUNCNAME}:${LINENO}: " \
+              "this should never happen"
+            exit 1
+            ;;
+        esac
+      done < ${filename}
+    done # for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
+  }
+  export func_loadcanonical
 fi # if [[ -z "${__loadcanonical}" ]]

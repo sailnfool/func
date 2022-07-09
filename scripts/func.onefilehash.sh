@@ -22,8 +22,16 @@
 if [ -z "${__funconefilehash}" ]
 then
 	export __funconefilehash=1
+
   source func.errecho
+  
 	function onefilehash () {
+
+    local digestfile
+    local hashdir
+    local SAVEIFS
+    local hexhash
+
 		digestfile="$1"
 		hashdir="$2"
 		if [ $# -lt 2 ]
@@ -102,4 +110,4 @@ EOF_EOF
 	}
 	export -f onefilehash
 fi # if [ -z "${__funconefilehash}" ]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=78,colorcolumn=72

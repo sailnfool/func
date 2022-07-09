@@ -19,6 +19,7 @@
 # Author: Robert E. Novak
 # email: sailnfool@gmail.com
 ########################################################################
+
 ########################################################################
 # func_os
 # Find the name of the installled operating system
@@ -26,6 +27,7 @@
 if [ -z "${__funcos}" ]
 then
   export __funcos=1
+
   function func_os() {
     echo $(sed -ne '/^ID=/s/^ID=\(.*\)$/\1/p' < /etc/os-release)
   }
@@ -42,6 +44,7 @@ fi # if [ -z "${__funcos}" ]
 if [ -z "${__funcidlike}" ]
 then
   export __funcidlike=1
+
   function func_idlike() {
     echo $(sed -ne '/^ID_LIKE=/s/^ID_LIKE=\(.*\)$/\1/p' < /etc/os-release)
   }
@@ -58,6 +61,7 @@ fi # if [ -z "${__funcidlike}" ]
 if [ -z "${__funcos_version_id}" ]
 then
   export __funcos_version_id=1
+
   function func_os_version_id() {
     echo $(sed -ne '/^VERSION_ID=/s/^VERSION_ID=\(.*\)$/\1/p' < /etc/os-release)
   }
@@ -74,6 +78,7 @@ fi # if [ -z "${__funcos_version_id}" ]
 if [ -z "${__funcarch}" ]
 then
   export __funcarch=1
+
   function func_arch() {
     echo $(uname -m)
   }

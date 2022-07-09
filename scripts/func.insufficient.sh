@@ -30,6 +30,9 @@ then
 	# tell the user that they have insufficient parameters to this function
 	##########
 	function insufficient() {
+
+    local numparms
+    
 		numparms="$1"
 		shift;
 		errecho -i "Insufficient parameters $@, need ${numparms}"
@@ -46,6 +49,9 @@ then
 	# tell the user that they have a null parameter
 	##########
 	function nullparm() {
+
+    local parmnum
+
 		parmnum="$1"
 		errecho -i "Parameter #${parmnum} is null"
 		exit -1
@@ -55,4 +61,4 @@ then
 	}
 	export -f nullparm
 fi # if [ -z "${__funcinsufficient}" ]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=78,colorcolumn=72

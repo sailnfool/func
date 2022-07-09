@@ -17,6 +17,13 @@ if [ -z "${__func_hmsout}" ]
 then
 	export __func_hmsout=1
 	function hmsout() {
+
+    local number
+    local units
+    local hour
+    local mins
+    local sec
+
 		number=$1
     units=$2
     case ${units} in
@@ -43,4 +50,4 @@ then
     printf "%02d:%02d:%02d" "${hour}" "${mins}" "${sec}"
   }
 fi # if [ -z "${__func_hmsout}" ]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=78,colorcolumn=72

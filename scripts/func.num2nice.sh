@@ -28,18 +28,25 @@ then
 	export __funcnum2nice=1
 
 	num2nice () {
+
     local convert
     local bignumber
     local kdivisor
     local kbibquotient
+    local kbibdivisor
     local kquotient
+    local kquo100
+    local kbibquotient
+    local kbibquo100
     local kprefix
     local kbibprefix
     local foundk
     local foundkbib
     local toobig
     local toobibig
-
+    local kindex
+    local i
+    local result
 
     ####################################################################
     # There must be at least one argument, the number to be converted

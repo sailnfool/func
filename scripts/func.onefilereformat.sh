@@ -24,7 +24,14 @@
 if [ -z "${__funconefilereformat}" ]
 then
 	export __funconefilereformat=1
+
 	function onefilereformat() {
+
+    local numparms
+    local sourcefile
+    local sourcedir
+    local destdir
+    
 		numparms=3
 		sourcefile="$1"
 		sourcedir="$2"

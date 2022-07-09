@@ -24,31 +24,38 @@
 # 2.0 |REN|11/13/2019| added vim directive and header file
 # 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
-if [ -z "${__funcpathmunge}" ]
+if [[ -z "${__funcpathmunge}" ]]
 then
 	export __funcpathmunge=1
   source func.errecho
 	##########
 	function func_pathmunge() {
+
+    local USAGE
+    local BASHRC_ADDPATH
+
 		USAGE="${FUNCNAME} <dir> [ after ]"
 		BASHRC_ADDPATH=$HOME/.bashrc.addpath
-		if [ -d "$1" ]
+		if [[ -d "$1" ]]
 		then
-		  realpath / 2>&1 >/dev/null && path=$(realpath "$1") || path="$1"
+		  realpath / 2>&1 >/dev/null && path=$(realpath "$1") || \
+        path="$1"
 		  # GNU bash, version 2.02.0(1)-release (sparc-sun-solaris2.6) ==> TOTAL incompatibility with [[ test ]]
-		  [ -z "$PATH" ] && export PATH="$path:/bin:/usr/bin"
+		  [[ -z "${PATH}" ]] && export PATH="${path}/bin:/usr/bin"
 		  # SunOS 5.6 ==> (e)grep option "-q" not implemented !
-		  /bin/echo "$PATH" | /bin/egrep -s "(^|:)$path($|:)" >/dev/null || {
-		    [ "$2" == "after" ] && export PATH="$PATH:$path" || export PATH="$path:$PATH"
+		  /bin/echo "${PATH}" | \
+        /bin/egrep -s "(^|:)${path}($|:)" >/dev/null || {
+		    [[ "$2" == "after" ]] && export PATH="${PATH}:${path}" || \
+        export PATH="${path}:${PATH}"
 		  }
 		else
 			errecho -i "$1 is not a directory" "${USAGE}"
 		fi
-		echo "export PATH=$PATH" > $BASHRC_ADDPATH
+		echo "export PATH=${PATH}" > ${BASHRC_ADDPATH}
 	}
 	##########
 	# End of function pathmunge
 	##########
 	export -f func_pathmunge
-fi # if [ -z "${__funcpathmunge}" ]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
+fi # if [[ -z "${__funcpathmunge}" ]]
+# vim: set syntax=bash, lines=55, columns=78,colorcolumn=72

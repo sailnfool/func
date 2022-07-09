@@ -25,7 +25,15 @@ then
 	source func.errecho
 	source func.insufficient
 	function getprojdir() {
+
+    local ignorelist
+    local numparms
+    local project
+    local projectbase
+    local projdir
+
 		ignorelist=""
+
 #		stderrecho "$__FUNC__ ignorelist=${ignorelist}, 1=${1}"
 		while [ "${1}" = "-i" ]
 		do
@@ -63,13 +71,16 @@ then
     ####################
 		if [ -z "${ignorelist}" ]
 		then
-			projdir=$(find ${projectbase} -name ${project} -a -type d -a -print )
+			projdir=$(find ${projectbase} -name ${project} -a -type d \
+        -a -print )
   	else
-#		  echo "projdir=\$(find ${projectbase} -name ${project} -a -type d -a -print | sed \"${ignorelist}\" )"
+#		  echo "projdir=\$(find ${projectbase} -name ${project} -a \
+#       -type d -a -print | sed \"${ignorelist}\" )"
       projdir=""
       for ignoredir in ${ignorelist}
       do
-		    projdir=$(find ${projectbase} -name ${project} -a -type d -a -print | grep -v "${ignorelist}" )
+		    projdir=$(find ${projectbase} -name ${project} -a -type d \
+          -a -print | grep -v "${ignorelist}" )
       done
 		fi
 #		stderrecho "projdir = ${projdir}"
@@ -80,4 +91,4 @@ then
 	}
 	export -f getprojdir
 fi # if [ -z "${__funcgetprojdir}" ]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
+# vim: set syntax=bash, lines=55, columns=78,colorcolumn=72

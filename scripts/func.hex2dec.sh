@@ -25,6 +25,8 @@ then
   source func.insufficieant
 
   function func_hex2dec() {
+    local hexnum
+
     if [[ "$#" -ne 1 ]]
     then
       insufficient 1 $@

@@ -20,6 +20,9 @@ then
 # multiple of 100.  Similar for 10 or 1000.  
 	function func_introundup()
 	{
+    local number
+    local nearest
+
 		number=$1
 		nearest=$2
 		if [ -z "$nearest" ]
