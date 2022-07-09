@@ -61,9 +61,6 @@ testverify=~/github/func/etc/OTP_Hex_sample.bin
 
 while read line
 do
-  echo -n "${FUNCNAME} ${LINENO} "
-  echo "func_hex2binfile ${byteswap} ${line} ${testoutput}"
-  
   func_hex2binfile ${byteswap} ${line} ${testoutput}
 done < ${testinput}
 cmp ${testverify} ${testoutput} 2>&1 > /dev/null
