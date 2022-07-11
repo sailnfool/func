@@ -299,7 +299,7 @@ fi
 ########################################################################
 count=0
 cut -d " " --fields=1-3 ${canonical_source} > ${tmpcanonical}
-while read read_hashnum read_hashshort read_hashbits
+while IFS= read -r read_hashnum read_hashshort read_hashbits
 do
   ((count++))
 
