@@ -74,6 +74,7 @@ Index	short	Bits
 01F	b3sum	256
 020	Blake3sum	256
 021 b2ppsum 512
+022 b2psum  512
 EOF
 
 canonical_source=/${YesFSdiretc}/canonical_source.csv
