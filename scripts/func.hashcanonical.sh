@@ -26,6 +26,12 @@ then
   
   export YesFSdir=/home/rnovak/Dropbox/YesFS
   export YesFSdiretc=/home/rnovak/Dropbox/YesFS/etc
+  if [[ ! -d "${YesFSdir}" ]]
+  then
+    export YesFSdir=/tmp/YesFS
+    export YesFSdiretc=${YesFSdir}/etc
+    mkdir -p ${YesFSdiretc}
+  fi
 
   export Fnum2hash="num2hash.csv"
   export Fnum2bin="num2bin.csv"
