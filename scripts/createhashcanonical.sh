@@ -73,8 +73,8 @@ Index	short	Bits
 01E	KangarooTwelvesum	0
 01F	b3sum	256
 020	Blake3sum	256
-021 b2ppsum 512
-022 b2psum  512
+021	b2ppsum	512
+022	b2psum	512
 EOF
 
 canonical_source=/${YesFSdiretc}/canonical_source.csv
@@ -135,7 +135,7 @@ USAGE="${0##*/} [-[hv]] [-d <#>] [-f <file>]\n
 optionargs="hdf:v"
 NUMARGS=0
 debug=${DEBUGOFF}
-verbose="FALSE"
+verbosemode="FALSE"
 
 ######################################################################
 # default defined in yfunc.global (should be the same)
@@ -147,7 +147,7 @@ do
 	case ${name} in
 	h)
 		echo -e ${USAGE}
-    if [[ "${verbose}" = "TRUE" ]]
+    if [[ "${verbosemode}" = "TRUE" ]]
     then
       echo -e ${DEBUG_USAGE}
     fi
@@ -174,13 +174,13 @@ do
     fi
     ;;
 	v)
-    if [[ "${verbose}" = "FALSE" ]]
+    if [[ "${verbosemode}" = "FALSE" ]]
 		then
-      verbose="TRUE"
+      verbosemode="TRUE"
     else
-  	  if [[ "${verbose}" = "TRUE" ]]
+  	  if [[ "${verbosemode}" = "TRUE" ]]
       then
-			  verbose="FALSE"
+			  verbosemode="FALSE"
       fi
     fi
 		;;
@@ -266,7 +266,7 @@ rm -f /tmp/$$_${Fnum2hash}
 
 ######################################################################
 # Canonical tables will always have the first three columns as:
-# Index hashshortname #read_hashbits
+# Index hashshortname #got_hashbits
 # The Index is always a 3 digit HEX number
 # The hashbits is always an integer
 ######################################################################
@@ -279,7 +279,7 @@ fi
 #?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?
 # Removable diagnostics
 #?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?#?
-if [[ "${verbose}" == "TRUE" ]]
+if [[ "${verbosemode}" == "TRUE" ]]
 then
   more ${canonical_source}
 fi
@@ -297,38 +297,46 @@ fi
 # which does not create a separate shell... Only 2 days to realize
 # (at about 3 AM) what I had done to myself.
 ########################################################################
+declare -l got_hashnum
 count=0
 cut -d " " --fields=1-3 ${canonical_source} > ${tmpcanonical}
-while IFS= read -r read_hashnum read_hashshort read_hashbits
+while read  got_hashnum got_hashshort got_hashbits
 do
   ((count++))
+
+  if [[ "${verbosemode}" == "TRUE" ]]
+  then
+    echo -e "${count}:'${got_hashnum}'\t'${got_hashshort}'\t'${got_hashbits}'"
+  fi
+
 
 ####################################################################
 # skip the title line
 # Compensate for mixed case
 ####################################################################
-  if [[ $(echo "${read_hashnum}"| tr  a-z A-Z ) = "INDEX" ]]
+  if [[ "${got_hashnum}" == "index" ]]
   then
     continue
   fi
-  if [[ ! "${read_hashnum}" =~ $re_canonicalhashnumber ]]
+  if [[ ! "${got_hashnum}" =~ $re_canonicalhashnumber ]]
   then
-    errecho "Invalid read_hashnum ${read_hashnum} on line ${count} of"
+    errecho "Invalid got_hashnum '${got_hashnum}' "\
+      "length ${#got_hashnum} on line ${count} of"
     errecho "canonical file. It must be 3 hexadecimal digits."
     exit 1
   fi
-  if [[ ! "${read_hashbits}" =~ $re_integer ]]
+  if [[ ! "${got_hashbits}" =~ $re_integer ]]
   then
-    errecho "Invalid  read_hashbits '${read_hashbits}' on line ${count} of"
+    errecho "Invalid  got_hashbits '${got_hashbits}' on line ${count} of"
     errecho "canonical file. It must be an integer."
   fi
-  Chash2num+=([${read_hashshort}]=${read_hashnum})
-  Cnum2hash+=([${read_hashnum}]=${read_hashshort})
-  Cnum2bits+=([${read_hashnum}]=${read_hashbits})
-  Cnum2hexdigits+=([${read_hashnum}]=$((read_hashbits / CHEXBITS)))
-  Cnum2bin+=([${read_hashnum}]=$(which ${read_hashshort}))
+  Chash2num+=([${got_hashshort}]=${got_hashnum})
+  Cnum2hash+=([${got_hashnum}]=${got_hashshort})
+  Cnum2bits+=([${got_hashnum}]=${got_hashbits})
+  Cnum2hexdigits+=([${got_hashnum}]=$((got_hashbits / CHEXBITS)))
+  Cnum2bin+=([${got_hashnum}]=$(which ${got_hashshort}))
   
-done < ${tmpcanonical} # while read read_hashnum read_hashshort read_hashbits
+done < ${tmpcanonical} # while read got_hashnum got_hashshort got_hashbits
 
 ###################################################################### 
 # We have finished distributing the canonical data into a separate set
