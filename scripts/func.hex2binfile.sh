@@ -66,6 +66,7 @@ then
         shift 1
       fi
     fi
+    stderrecho "${LINENO} byteswap='${byteswap}'"
     ####################################################################
     # At this point the optional -b has been shifted out, make sure we
     # still have 2 parameters
@@ -121,12 +122,16 @@ then
         then
           saved="${hexstring:${index}:2}"
         else
-
-          ##############################################################
-          # The following code sometimes fails when the contents of
-          # the hexstring picks up "FALSE" as a string?????
-          ##############################################################
+          outstring="${hexstring:${index}:2}${saved}"
+          if [[ ! "${outstring}" =~ $re_hexnumber ]]
+          then
+            stderrecho "${LINENO} outstring='${outstring}'"
+          fi
           printf "\x${hexstring:${index}:2}${saved}" >> ${filename}
+          if [[ "$?" -ne 0 ]]
+          then
+            stderrecho "${LINENO} outstring='${outstring}'"
+          fi
           saved=""
         fi
       else # if [[ "$((${#hexstring} - index ))" -ge 2 ]]
