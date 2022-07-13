@@ -22,6 +22,7 @@
 source func.hashcanonical
 source func.insufficient
 source func.errecho
+source func.debug
 if [[ -z "${__funcaskcreatehashcanonical}" ]]
 then
   export __funccreatehashcanonical=1
@@ -45,7 +46,8 @@ then
 
     if [[ -r "${filecanonical}" ]]
     then
-      if [[ "${verbosemode}" == "TRUE" ]]
+      if [[ "${verbosemode}" == "TRUE" ]] && \
+        [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVAR}" ]]
       then
         cat "${filecanonical}"
       fi # if [[ "${verbosemode}" == "TRUE" ]]
