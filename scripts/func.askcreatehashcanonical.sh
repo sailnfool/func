@@ -28,21 +28,62 @@ then
   export __funccreatehashcanonical=1
 
   function askcreatehashcanonical() {
-    local filecanonical
-    local answeryes
-    local verbosemode
-    local installanswer
+    # [-v] <file> "answeryes"
 
-    # <file> "answeryes" "verbosemode"
-    if [[ "$#" -ne 3 ]]
-      then
-        insufficient 3 $@
-        exit 1
-      else
-        filecanonical="$1"
-        answeryes="$2"
-        verbosemode="$3"
-    fi # if [[ "$#" -ne 3 ]]
+    local filecanonical
+    local answeryes="FALSE"
+    local verbosemode="FALSE"
+    local verboseflag=""
+    local installanswer
+    declare -l installanswer #Always lower case
+    local name
+    local NUMARGS=1
+    local USAGE="${FUNCNAME} [-[vy]] <file>\n
+\t\t<file> is the canonical cryptographic hash file\n
+\t-v\t\tverbose mode for diagnostics\n
+\t\y\t\tanswer yes to questions\n
+"
+
+    local optionargs="hvy"
+    local OPTIND
+    local OPTARG
+
+    echo "${FUNCNAME} ${LINENO} args = $#"
+    
+    while getopts ${optionargs} name
+    do
+      case ${name} in
+        h)
+          errecho "-e" ${USAGE}
+          exit 0
+          ;;
+        v)
+          verbosemode="TRUE"
+          verboseflag="-v"
+          ;;
+        y)
+          answeryes="TRUE"
+          ;;
+        \?)
+          errecho "-e" "Invalid option -${OPTARG} $@"
+          errecho "-e" ${USAGE}
+          exit 1
+          ;;
+      esac
+    done
+
+    echo "${FUNCNAME} ${LINENO} args = $#"
+    shift $(( ${OPTIND} - 1 ))
+    echo "${FUNCNAME} ${LINENO} args = $#"
+
+    if [[ "$#" -lt "${NUMARGS}" ]]
+    then
+      insufficient "${NUMARGS} $@"
+      exit 1
+    else
+      filecanonical="$1"
+      shift 1
+    fi # if [[ "$#" -ne "${NUMARGS}" ]]
 
     if [[ -r "${filecanonical}" ]]
     then
@@ -62,14 +103,12 @@ then
         if [[ -z "${installanswer}" ]]
         then
           installanswer="Y"
-        else
-          installanswer=$(echo ${installanswer} | tr a-z A-Z)
         fi
         case ${installanswer} in
-          Y|YES)
-            createhashcanonical
+          y|yes)
+            createhashcanonical ${verboseflag}
             ;;
-          N|NO)
+          n|no)
             errecho "Missing ${YesFSdiretc}/${Fcanonicalhash}, exiting"
             exit 1
            ;;
@@ -79,7 +118,7 @@ then
            ;;
         esac
       else
-        createhashcanonical
+        createhashcanonical ${verboseflag}
       fi # if [[ "${answeryes}" == "FALSE" ]]
     fi # if [[ -r "${filecanonical}" ]]
   }
