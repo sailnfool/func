@@ -32,6 +32,12 @@ then
     local filename
     local key
     local value
+    local verbosemode="FALSE"
+
+    if [[ "$#" -eq 1 ]] && [[ "$1" == "-v" ]]
+    then
+      verbosemode="TRUE"
+    fi
     ######################################################################
     # Now read the canonical files to load up the canonical hash info
     # Note that this is subtle the way we generate the list of
@@ -40,6 +46,22 @@ then
     # but my # brain is aching from the number of levels of
     # indirection.
     ######################################################################
+    unset Cnum2hash
+    unset Cnum2bin
+    unset Cnum2bits
+    unset Cnum2hexdigits
+    unset Chash2num
+	  declare -A Cnum2hash
+	  declare -A Cnum2bin
+	  declare -A Cnum2bits
+	  declare -A Cnum2hexdigits
+	  declare -A Chash2num
+	  export Cnum2hash
+	  export Cnum2bin
+	  export Cnum2bits
+	  export Cnum2hexdigits
+	  export Chash2num
+
     for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
     do
       filename=${YesFSdiretc}/$(eval echo \$F${filesuffix})
@@ -47,19 +69,25 @@ then
       do
         case ${filesuffix} in
           num2hash)
-            Cnum2hash+=([${key}]=${value})
+            Cnum2hash+=(["${key}"]="${value}")
             ;;
           num2bin)
-            Cnum2bin+=([${key}]=${value})
+            Cnum2bin+=(["${key}"]="${value}")
+            if [[ ! "$(which ${Cnum2hash["${key}"]})" == "${value}" ]]
+            then
+              stderrecho "${FUNCNAME} ${LINENO} ***WARNING ***"
+              stderrecho "Binary for '${Cnum2hash["${key}"]}' not found"
+              stderrecho "at path '${value}'"
+            fi
             ;;
           num2bits)
-            Cnum2bits+=([${key}]=${value})
+            Cnum2bits+=(["${key}"]="${value}")
             ;;
           num2hexdigits)
-            Cnum2hexdigits+=([${key}]=${value})
+            Cnum2hexdigits+=(["${key}"]="${value}")
             ;;
           hash2num)
-            Chash2num+=([${key}]=${value})
+            Chash2num+=(["${key}"]="${value}")
             ;;
           \?)
             errecho "${0##*/}:${FUNCNAME}:${LINENO}: " \
@@ -68,7 +96,31 @@ then
             ;;
         esac
       done < ${filename}
+
     done # for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
+    if [[ "${verbosemode}" == "TRUE" ]]
+    then
+      for key in "$!{Cnum2hash[@]}"
+      do
+        echo "Cnum2hash["${key}"]='${Cnum2hash["${key}"]}'"
+      done
+      for key in "$!{Cnum2bin[@]}"
+      do
+        echo "Cnum2bin["${key}"]='${Cnum2bin["${key}"]}'"
+      done
+      for key in "$!{Cnum2bits[@]}"
+      do
+        echo "Cnum2bits["${key}"]='${Cnum2bits["${key}"]}'"
+      done
+      for key in "$!{Cnum2hexdigits[@]}"
+      do
+        echo "Cnum2hexdigits["${key}"]='${Cnum2hexdigits["${key}"]}'"
+      done
+      for key in "$!{hash2num[@]}"
+      do
+        echo "hash2num["${key}"]='${hash2num["${key}"]}'"
+      done
+    fi
   }
   export func_loadcanonical
 fi # if [[ -z "${__loadcanonical}" ]]
