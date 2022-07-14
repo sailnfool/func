@@ -35,7 +35,7 @@ then
     
 		numparms="$1"
 		shift;
-		errecho -i "Insufficient parameters $@, need ${numparms}"
+		errecho -i "Insufficient parameters '$@', need ${numparms}"
 		exit -1
 		##########
 		# end of function insufficient
