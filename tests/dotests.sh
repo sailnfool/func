@@ -12,8 +12,8 @@ scriptname=${0##*/}
 #           which is being run.  The test functions exit with either
 #           an exit value of 1 <FAIL> or 0 <PASS>
 #
-#           One of the tests has a -v option (verbose) option.  It 
-#           would be good to add this as a parameter to this master 
+#           One of the tests has a -v option (verboseflag) option.  It
+#           would be good to add this as a parameter to this master
 #           script, but then all of the tests would have to be -v aware
 #           which will take a bit of work to not only add it but to
 #           verify that it is supported in a testing script and not
@@ -50,8 +50,8 @@ USAGE="\n{$0##*/} [-[hv]]\n
 "
 
 optionargs="hv"
-verbose_mode="FALSE"
-verbose=""
+verbosemode="FALSE"
+verboseflag=""
 failure="FALSE"
 
 
@@ -63,8 +63,8 @@ do
       exit 0
       ;;
     v)
-      verbose_mode="TRUE"
-      verbose="-v"
+      verbosemode="TRUE"
+      verboseflag="-v"
       ;;
     \?)
       errecho "-e" "invalid option: %{OPTARG}"
@@ -79,17 +79,17 @@ fail=0
 ########################################################################
 nametext="TESTNAME="
 testprefix="tester"
-for test_script in ${testprefix}.*.sh
+for testscript in ${testprefix}.*.sh
 do
   ######################################################################
   # pull the TESTNAME from each testing file and issue an error if it
   # does not exist
   ######################################################################
-  testname=$(grep -h "${nametext}" ${test_script})
+  testname=$(grep -h "${nametext}" ${testscript})
   if [[ -z "${testname}" ]]
   then
-    echo "testing script \"${test_script}\" is missing TESTNAME"
-    echo "${failstring} ${test_script}"
+    echo "testing script \"${testscript}\" is missing TESTNAME"
+    echo "${failstring} ${testscript}"
     ((fail++))
   fi
 
@@ -97,12 +97,18 @@ do
   # Execute each testscript and issue the pass/fail message as
   # appropriate
   ######################################################################
-  if [[ ! ${test_script} ${verbose} ]]
+  if [[ ! -x ./${testscript} ]]
   then
-    echo -e "${failstring} ${test_script}\n\t${testname:${#nametext}}"
+    chmod +x ./${testscript}
+  fi
+  ./${testscript} ${verboseflag}
+  testresult=$?
+  if [[ ! ${testresult} -eq 0 ]]
+  then
+    echo -e "${failstring} ${testscript}\n\t${testname:${#nametext}}"
     ((fail++))
   else
-    echo -e "${passstring} ${test_script}\n\t${testname:${#nametext}}"
+    echo -e "${passstring} ${testscript}\n\t${testname:${#nametext}}"
   fi
 done
 
