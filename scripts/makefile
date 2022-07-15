@@ -7,7 +7,6 @@ PREFIX2?=/tftpboot/global/rnovak
 	@rm -f $@
 	cp $< $@
 LINSTALL =       func.arithmetic \
-		func.askcreatehashcanonical \
 		func.config \
 		func.cwave \
 		func.dec2hex \
@@ -16,13 +15,11 @@ LINSTALL =       func.arithmetic \
 		func.env \
 		func.errecho \
 		func.getprojdir \
-		func.hashcanonical \
 		func.hex2binfile \
 		func.hex2dec \
 		func.hmsout \
 		func.insufficient \
 		func.kbytes \
-		func.loadcanonical \
 		func.locker \
 		func.logger \
 		func.nice2num \
@@ -35,10 +32,13 @@ LINSTALL =       func.arithmetic \
 		func.regex \
 		func.toseconds \
 		func.uuid \
+		hash.askcreatecanonical \
+		hash.globalcanonical \
+		hash.loadcanonical \
 		zfunc.zfsparent \
 		zfunc.results
 INSTALL =		countfiles \
-		createhashcanonical \
+		hashcreatecanonical \
 		dohashes \
 		find_sim \
 		getgitroot \
