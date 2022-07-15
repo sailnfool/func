@@ -7,9 +7,9 @@
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 1.2 |REN|05/19/2022| moved re_nicenumber to here instead of
-#                      | func.regex
+#                    | func.regex
 # 1.1 |REN|02/08/2022| redo using arrays instead of named variables
-#                      | see the accompanying test function
+#                    | see the accompanying test function
 # 1.0 |REN|02/01/2022| Reconstructed from func.nice2num
 #_____________________________________________________________________
 #
@@ -20,83 +20,94 @@ then
     declare -A __kbytesvalue
     declare -A __kbibytesvalue
 
-    local bytesuffix
-    local bibytesuffix
-    local let1
-    local let2
-    local sorted
-    local i
-    local allcat
-    local matcher
+    ####################################################################
+    # Since we are not in a function and cannot declare local
+    # variables, prefix each uses variable with a unique prefix
+    ####################################################################
+#     local kb_bytesuffix
+#     local kb_bibytesuffix
+#     local kb_let1
+#     local kb_let2
+#     local kb_sorted
+#     local kb_i
+#     local kb_allcat
+#     local kb_matcher
 
     export __kbibytessuffix=("BYT" "KIB" "MIB" "GIB" "TIB" "PIB" \
       "EIB" "ZIB")
     export __kbytessuffix="BKMGTPEZ"
-    for i in $(seq 0 $((${#__kbytessuffix}-1)) )
+    for kb_i in $(seq 0 $((${#__kbytessuffix}-1)) )
     do
-      bytesuffix=${__kbytessuffix:${i}:1}
-      bibytesuffix=${__kbibytessuffix[${i}]}
-      __kbytesvalue[${bytesuffix}]=$(echo "1000 ^ ${i}" | bc)
-      __kbibytesvalue[${bibytesuffix}]=$(echo "1024 ^ ${i}" | bc)
-#       echo "Byte Suffix $i = \"${bytesuffix}\", " \
-#         "value=\"${__kbytesvalue[${bytesuffix}]}\""
-#       echo "BiByte Suffix $i = \"${bibytesuffix}\", " \
-#         "value=\"${__kbibytesvalue[${bibytesuffix}]}\""
+      kb_bytesuffix=${__kbytessuffix:${kb_i}:1}
+      kb_bibytesuffix=${__kbibytessuffix[${kb_i}]}
+      __kbytesvalue[${kb_bytesuffix}]=$(echo "1000 ^ ${kb_i}" | bc)
+      __kbibytesvalue[${kb_bibytesuffix}]=$(echo "1024 ^ ${kb_i}" | bc)
+#       echo "Byte Suffix $kb_i = \"${kb_bytesuffix}\", " \
+#         "value=\"${__kbytesvalue[${kb_bytesuffix}]}\""
+#       echo "BiByte Suffix $kb_i = \"${kb_bibytesuffix}\", " \
+#         "value=\"${__kbibytesvalue[${kb_bibytesuffix}]}\""
     done
 #    echo "__kbytesvalue = ${__kbytesvalue[@]}"
 #    echo "__kbibytesvalue = ${__kbibytesvalue[@]}"
     export __kbytesvalue
     export __kbibytesvalue
-	  ####################################################################
-	  # Create a regular expression for nicenumbers
-	  ####################################################################
-    let1=/tmp/letters1$$
-    let2=/tmp/letters2$$
-    sorted=/tmp/sorted$$
-    rm -f ${let1} ${let2} ${sorted}
+  ####################################################################
+  # Create a regular expression for nicenumbers
+  ####################################################################
+    kb_let1=/tmp/letters1$$
+    kb_let2=/tmp/letters2$$
+    kb_sorted=/tmp/kb_sorted$$
+    rm -f ${kb_let1} ${kb_let2} ${kb_sorted}
   
-	  ####################################################################
-	  # First we sort through all of the letters in the kbibytessuffix
-	  # and kbytessuffix to put them in a single string.
-	  ####################################################################
-	  allcat="${__kbibytessuffix[*]} ${__kbytessuffix}"
+  ####################################################################
+  # First we sort through all of the letters in the kbibytessuffix
+  # and kbytessuffix to put them in a single string.
+  ####################################################################
+  kb_allcat="${__kbibytessuffix[*]} ${__kbytessuffix}"
+#   echo "__kbibytessuffix = ${__kbibytessuffix[@]}"
+#   echo "__kbibytessuffix = ${__kbibytessuffix[*]}"
    
-	  for i in $(seq 0 ${#allcat})
-	  do
-	    echo -e "${allcat:${i}:1}\n" >> ${let1}
-	  done
+  for kb_i in $(seq 0 ${#kb_allcat})
+  do
+    echo -e "${kb_allcat:${kb_i}:1}\n" >> ${kb_let1}
+  done
 
-	  ####################################################################
+  ####################################################################
     # Make a second lower case only copy of the strings
-	  ####################################################################
-    tr "A-Z" "a-z" < ${let1} > ${let2}
+  ####################################################################
+    tr "A-Z" "a-z" < ${kb_let1} > ${kb_let2}
 
-	  ####################################################################
+  ####################################################################
     # Make a sorted, unique set of the strings and delete empty lines
-	  ####################################################################
-	  cat ${let1} ${let2} | sort -u | \
-      tr -d " " | sed -e '/^$/d' > ${sorted}
+  ####################################################################
+  cat ${kb_let1} ${kb_let2} | sort -u | \
+      tr -d " " | sed -e '/^$/d' > ${kb_sorted}
 
-	  ####################################################################
+  ####################################################################
     # Make a single string of all of the letters in the nicenumber
     # names so we will only recognize a suffix containing those letters
     # (this is not perfect and could be improved upon)
-	  ####################################################################
-	  while read inletter
-	  do
-	    matcher="${matcher}${inletter}"
-	  done < ${sorted}
+  ####################################################################
+  while read inletter
+  do
+    kb_matcher="${kb_matcher}${inletter}"
+  done < ${kb_sorted}
 
-	  ####################################################################
+  ####################################################################
     # Create the regular expression that will recognize strings like:
     # 1M, 1MiB, 10T, 10TiB, etc.
-	  ####################################################################
-	  re_nicenumber="^[0-9][0-9]*[${matcher}][${matcher}]*$"
+  ####################################################################
+  re_nicenumber="^[0-9][0-9]*[${kb_matcher}][${kb_matcher}]*$"
 
-	  ####################################################################
+  ####################################################################
     # Delete the temporary files.
-	  ####################################################################
-    rm -f ${let1} ${let2} ${sorted}
-    export re_nicenumber
+  ####################################################################
+  rm -f ${kb_let1} ${kb_let2} ${kb_sorted}
+  export re_nicenumber
+  export __kbytesvalue
+  export __kbibytesvalue
+  # func_kbytes
+#   echo "__kbibytessuffix = ${__kbibytessuffix[@]}"
+#   echo "__kbibytessuffix = ${__kbibytessuffix[*]}"
 
 fi # if [[ -z "${__kbytessuffix}" ]]
