@@ -22,7 +22,7 @@ if [[ -z "${__funchex2dec}" ]]
 then
   export __funchex2dec=1
 
-  source func.insufficieant
+  source func.insufficient
 
   function func_hex2dec() {
     local hexnum
