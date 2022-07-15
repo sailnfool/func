@@ -64,8 +64,8 @@ do
   func_hex2binfile ${byteswap} ${line} ${testoutput}
 done < ${testinput}
 cmp ${testverify} ${testoutput} 2>&1 > /dev/null
-fail=$?
-if [[ ! "${fail}" == 0 ]]
+failcmp=$?
+if [[ ! "${failcmp}" == 0 ]]
 then
   od -cx ${testoutput} | less
 fi
