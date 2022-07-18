@@ -44,6 +44,7 @@ INSTALL =		countfiles \
 		getgitroot \
 		histogram \
 		mypr \
+		mysourcedate \
 		nowinUCT \
 		pinger \
 		pinger2 \
