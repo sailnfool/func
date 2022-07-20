@@ -3,47 +3,36 @@
 # Copyright (c) 2021 Sea2Cloud
 # 3901 Moorea Dr.
 # Modesto, CA 95356
-# 408-910-9134
+########################################################################
+#
+# func.debug - Set up global definitions of debugging levels and 
+#              define the DEBUG_USAGE string that defines the verbose
+#              help string on using func.debug definitions
 #
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
-#
+# License CC by Sea2Cloud Storage, Inc.
+# see https://creativecommons.org/licenses/by/4.0/legalcode
+# for a complete copy of the Creative Commons Attribution license
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
+# 1.2 |REN|07/19/2022| Cleaned up DEBUG_USAGE and removed redundant
+#                    | comments
 # 1.1 |REN|03/01/2021| Added DEBUGOFF
 # 1.0 |REN|07/22/2010| Initial Release
 #_____________________________________________________________________
 #
-
 ########################################################################
-# Author: Robert E. Novak
-# email: sailnfool@gmail.com
-#
-# Set up global definitions of debugging levels
-########################################################################
-####################
-# set the debug level to zero
-# Define the debug levels:
-#
-# DEBUGOFF	0
-# DEBUGWAVE 2 - print indented entry/exit to functions
-# DEBUGWAVAR 3 - print variable data from functions if enabled
-# DEBUGSTRACE	5 - prefix the executable with strace (if implemented)
-# DEBUGNOEXECUTE	or
-# DEBUGNOEX	6 - generate and display the command lines but don't
-#                  execute the benchmark
-# DEBUGSETX	9 - turn on set -x to debug
-#
 # Scripts that include this should also have the following three
 # command line options: -h -v -d, where -h is the normal help file
 # and -v when used before -h, e.g., -vh will cause the script to
 # not only print out USAGE string but also the DEBUG_USAGE string.
-# Finally -d will accepte a numeric parameter as defined in
-# DEBUG_USAGE
-####################
-if [ -z "${__funcdebug}" ]
+# Finally -d will accepte an integer parameter as defined in
+# DEBUG_USAGE.  This parameter should be verfied using $re_digit
+# found in func.regex
+########################################################################
+if [[ -z "${__funcdebug}" ]]
 then
   export __funcdebug=1
   export DEBUGOFF=0
@@ -53,14 +42,16 @@ then
   export DEBUGNOEXECUTE=6
   export DEBUGNOEX=6
   export DEBUGSETX=9
-  export DEBUG_USAGE="\t\t\tDEBUGOFF 0\n
-\tDEBUGWAVE 2 - print indented entry/exit to functions\n
-\tDEBUGWAVAR 3 - print variable data from functions if enabled\n
-\tDEBUGSTRACE 5 = prefix the executable with strace\n
-\t                (if implemented)\n
-\tDEBUGNOEXECUTE or\n
-\tDEBUGNOEX 6 - generate and display the command lines but don't\n
-\t              execute the script\n
-\tDEBUGSETX 9 - turn on set -x to debug\n
+  export DEBUG_USAGE="\tThe '-d'\t<#>\twhere <#> evaluates to a\n
+\t\t\tdecimal integer\n
+\tDEBUGOFF 0 -\tTurn off debugging\n
+\tDEBUGWAVE 2 -\tprint indented entry/exit to functions\n
+\tDEBUGWAVAR 3 -\tprint variable data from functions if enabled\n
+\tDEBUGSTRACE 5 -\tprefix the executable with strace\n
+\t\t\t(if implemented)\n
+\tDEBUGNOEXECUTE\tor\n
+\tDEBUGNOEX 6 -\tgenerate and display the command lines but don't\n
+\t\t\texecute the script\n
+\tDEBUGSETX 9 -\tturn on set -x to debug\n
 "
-fi # if [ -z "${__funcdebug}" ]
+fi # if [[ -z "${__funcdebug}" ]]
