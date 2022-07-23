@@ -83,7 +83,7 @@ do
   # for key in "$(eval \${!${associative}[\@]})"
   echo "No exclaim keys for Cnum2bin '${Cnum2bin[@]}'"
   echo "Exclaim keys    for Cnum2bin '${!Cnum2bin[@]}'"
-  for key in "${Cnum2bin[@]}"
+  for key in "$!{Cnum2bin[@]}"
   do
     echo "key='${key}'"
     echo -e "${key}\t$(eval \${${associative}[\${key}]})" > ${tmpunsortedtarget}
