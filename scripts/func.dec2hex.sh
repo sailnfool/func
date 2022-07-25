@@ -22,6 +22,10 @@
 if [[ -z "${__funcdec2hex}" ]]
 then
   export __funcdec2hex=1
+
+  source func.insufficient
+  source func.errecho
+
   function func_dec2hex() {
     local number
     local digits
