@@ -81,7 +81,7 @@ then
       shift 1
       echo $@
     else
-      echo "${SF}->${CM}::${FN}:${LN}:$@"
+      echo "${SF}->${CM}::${FN}:${LN}:$@" >&2
     fi
 	}
 	export -f stderrecho
