@@ -1,10 +1,9 @@
 #!/bin/bash
 scriptname=${0##/*}
 ########################################################################
-# Author: Robert E. Novak
-# email: sailnfool@gmail.com
-# Copyright (C) 2022 Sea2Cloud Storage, Inc. All Rights Reserved
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
 # Modesto, CA 95356
+########################################################################
 #
 # tester.hash.loadcanonical - Load the canonical lists that were
 #                    stored in the canonical files and test that
@@ -17,6 +16,11 @@ scriptname=${0##/*}
 #
 #                    Load these lists into Bash Associative
 #                    arrays for use in a bash script.
+# Author: Robert E. Novak
+# email: sailnfool@gmail.com
+# License CC by Sea2Cloud Storage, Inc.
+# see https://creativecommons.org/licenses/by/4.0/legalcode
+# for a complete copy of the Creative Commons Attribution license
 #
 ########################################################################
 #_____________________________________________________________________
@@ -30,34 +34,50 @@ scriptname=${0##/*}
 source hash.globalcanonical
 source hash.loadcanonical
 source func.errecho
+source func.debug
+source func.regex
 
 TESTNAME="Test of hash function (hash.loadcanonical.sh) from \nhttps://github.com/sailnfool/func"
 failcode=0
-USAGE="\n${0##*/} [-[hv]]\n
+USAGE="\n${0##*/} [-[hv]] [-d <#>]\n
+\t-d\t<#>\tset the debug level to <#>, use -hv to see levels\n
 \t-h\t\tPrint this message\r\n
 \t-v\t\tVerbose mode to show values\r\n
 \t\tVerifies that the function will load Associative arrays with the\n
 \t\tcorrect cryptographic values\n
-\t\tseconds only\n
 \t\tNormally emits only PASS|FAIL message\r\n
 "
 
-optionargs="hv"
+optionargs="d:hv"
 verbosemode="FALSE"
+verboseflag=""
 fail=0
+FUNC_DEBUG=${DEBUGOFF}
 
 while getopts ${optionargs} name
 do
 	case ${name} in
 	h)
 		echo -e ${USAGE}
+    if [[ "${verbosemode}" == "TRUE" ]]
+    then
+      echo -e ${DEBUG_USAGE}
+    fi
 		exit 0
 		;;
+  d)
+    if [[ ! "${OPTARG}" =~ $re_digit ]]
+    then
+      errecho "-d requires a decimal digit"
+    fi
+    FUNC_DEBUG="${OPTARG}"
+    ;;
 	v)
 		verbosemode="TRUE"
+    verboseflag="-v"
 		;;
 	\?)
-		errecho "-e" "invalid option: -$OPTARG"
+		errecho "-e" "invalid option: -${OPTARG}"
 		errecho "-e" ${USAGE}
 		exit 1
 		;;
@@ -66,7 +86,7 @@ done
 
 shift $(( ${OPTIND} - 1 ))
 
-hash_loadcanonical -v
+hash_loadcanonical ${verboseflag}
 
 echo "No exclaim keys for Cnum2bin '${Cnum2bin[@]}'"
 echo "Exclaim keys    for Cnum2bin '${!Cnum2bin[@]}'"
