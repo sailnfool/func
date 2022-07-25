@@ -13,9 +13,12 @@
 source hash.globalcanonical
 source hash.askcreatecanonical
 source hash.loadcanonical
+source func.debug
 
 TESTNAME="Test of hash script hashcreatecanonical (hashcreatecanonical.sh) from\n\thttps://github.com/sailnfool/func"
-USAGE="\n${0##*/} [-[hv]]\n
+USAGE="\n${0##*/} [-[hv]] [-d <#>]\n
+\t-d\t<#>\tSet the diagnostic levels.\n
+\t\t\tUse -vh to see debug modes/levels\n
 \t-h\t\tPrint this message\r\n
 \t-v\t\tVerbose mode to show values\r\n
 \t\tVerifies that the function will convert oddly format times into 
@@ -23,17 +26,38 @@ USAGE="\n${0##*/} [-[hv]]\n
 \t\tNormally emits only PASS|FAIL message\r\n
 "
 
-optionargs="hv"
+optionargs="d:hv"
 verbosemode="FALSE"
+verboseflag=""
+FUNC_DEBUG=${DEBUGOFF}
 fail=0
 
 while getopts ${optionargs} name
 do
 	case ${name} in
-	h)
-		echo -e ${USAGE}
-		exit 0
+	d)
+    if [[ ! "${OPTARG}" =~ $re_digit ]]
+    then
+      errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+      errecho -e "${USAGE}"
+      errecho -e "${DEBUG_USAGE}"
+      exit 1
+    fi
+		FUNC_DEBUG="${OPTARG}"
+		export FUNC_DEBUG
+		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]]
+		then
+			set -x
+		fi
 		;;
+  h)
+    errecho -e ${USAGE}
+    if [[ "${verbosemode}" == "TRUE" ]]
+    then
+      errecho -e ${DEBUG_USAGE}
+    fi
+    exit 0
+    ;;
 	v)
 		verbosemode="TRUE"
 		;;
