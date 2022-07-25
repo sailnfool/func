@@ -32,8 +32,8 @@ FUNC_DEBUG=${DEBUGOFF}
 
 USAGE="\n${0##*/} [-hv] [-d <#>] <dir>\n
 \t\tSummarize the count of the number of files in this tree\n
-\t-d\t<#>\tSet the diagnostic levels\n
-\t\t\tUse -vh to see debug modes\n
+\t-d\t<#>\tSet the diagnostic levels.\n
+\t\t\tUse -vh to see debug modes/levels\n
 \t-h\t\tPrint this message\n
 \t-v\t\tTurn on verbose mode\n
 "
@@ -58,6 +58,10 @@ do
 		;;
   h)
     errecho -e ${USAGE}
+    if [[ "${verbosemode}" == "TRUE" ]]
+    then
+      errecho -e ${DEBUG_USAGE}
+    fi
     exit 0
     ;;
   v)
