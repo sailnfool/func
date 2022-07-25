@@ -24,7 +24,7 @@ source func.cwave
 source func.insufficient
 source func.arithmetic
 
-TESTNAME="Test of function (func.cwav) from\n\thttps://github.com/sailnfool/func"
+TESTNAME="Test of function (func.cwave) from\n\thttps://github.com/sailnfool/func"
 USAGE="\n${0##*/} [-[hv]]\n
 \t-d\t<#>\tset the debug level to <#>, use -hv to see levels\n
 \t-h\t\tPrint this message\n
@@ -34,7 +34,7 @@ USAGE="\n${0##*/} [-[hv]]\n
 \t\tNormally emits only PASS|FAIL message\n
 "
 
-optionargs="hv"
+optionargs="d:hv"
 verbosemode="FALSE"
 verboseflag=""
 FUNC_DEBUG=0
@@ -78,7 +78,7 @@ declare -a tv
 declare -a tr
 
 tv[0]=4
-tr[0]=20
+tr[0]=24
 
 tv[1]=5
 tr[1]=120
@@ -88,7 +88,7 @@ tr[2]=720
 
 fail=0
 
-for ti in $(seq 0 ${#tv[@]})
+for ti in $(seq 0 $((${#tv[@]}-1)) )
 do
   if [[ "${verbosemode}" == "TRUE" ]]
   then
