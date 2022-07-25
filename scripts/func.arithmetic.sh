@@ -99,7 +99,7 @@ then
       insufficient 1 $@
       exit 1
     fi
-    if [[ "${1}" =~ $re_integer ]]
+    if [[ ! "${1}" =~ $re_integer ]]
     then
       errecho "argument is not an integer"
       exit 1
@@ -109,7 +109,7 @@ then
       wavfuncexit
       echo 1
     else
-      sub=$(factorial $(( $1 - 1 )) )
+      sub=$(func_factorial $(( $1 - 1 )) )
       wavfuncexit
       echo "$1 * $sub" | bc
     fi
