@@ -39,6 +39,8 @@ then
     then
       verbosemode="TRUE"
     fi
+    if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVAR}" ]]
+    then
     ######################################################################
     # Now read the canonical files to load up the canonical hash info
     # Note that this is subtle the way we generate the list of
@@ -68,9 +70,11 @@ then
       filename=${YesFSdiretc}/$(eval echo \$F${filesuffix})
       while read key value
       do
+        echo "key='${key}', value='${value}'"
         case ${filesuffix} in
           num2hash)
             Cnum2hash+=(["${key}"]="${value}")
+            echo "${FUNCNAME} ${LINENO} ${Cnum2hash["${key}"]}"
             ;;
           num2bin)
             Cnum2bin+=(["${key}"]="${value}")
@@ -80,15 +84,19 @@ then
               stderrecho "Binary for '${Cnum2hash["${key}"]}' not found"
               stderrecho "at path '${value}'"
             fi
+            echo "${FUNCNAME} ${LINENO} ${Cnum2bin["${key}"]}"
             ;;
           num2bits)
             Cnum2bits+=(["${key}"]="${value}")
+            echo "${FUNCNAME} ${LINENO} ${Cnum2bits["${key}"]}"
             ;;
           num2hexdigits)
             Cnum2hexdigits+=(["${key}"]="${value}")
+            echo "${FUNCNAME} ${LINENO} ${Cnum2hexdigits["${key}"]}"
             ;;
           hash2num)
             Chash2num+=(["${key}"]="${value}")
+            echo "${FUNCNAME} ${LINENO} ${Chash2num["${key}"]}"
             ;;
           \?)
             errecho "${0##*/}:${FUNCNAME}:${LINENO}: " \
@@ -103,22 +111,27 @@ then
     then
       for key in "$!{Cnum2hash[@]}"
       do
+        echo -n "${FUNCNAME} ${LINENO} " 
         echo "Cnum2hash["${key}"]='${Cnum2hash["${key}"]}'"
       done
-      for key in "$!{Cnum2bin[@]}"
+      for key in "${Cnum2bin[@]}"
       do
+        echo -n "${FUNCNAME} ${LINENO} " 
         echo "Cnum2bin["${key}"]='${Cnum2bin["${key}"]}'"
       done
-      for key in "$!{Cnum2bits[@]}"
+      for key in "${Cnum2bits[@]}"
       do
+        echo -n "${FUNCNAME} ${LINENO} " 
         echo "Cnum2bits["${key}"]='${Cnum2bits["${key}"]}'"
       done
-      for key in "$!{Cnum2hexdigits[@]}"
+      for key in "${Cnum2hexdigits[@]}"
       do
+        echo -n "${FUNCNAME} ${LINENO} " 
         echo "Cnum2hexdigits["${key}"]='${Cnum2hexdigits["${key}"]}'"
       done
-      for key in "$!{hash2num[@]}"
+      for key in "${Chash2num[@]}"
       do
+        echo -n "${FUNCNAME} ${LINENO} " 
         echo "hash2num["${key}"]='${hash2num["${key}"]}'"
       done
     fi

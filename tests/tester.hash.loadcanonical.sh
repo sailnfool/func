@@ -6,17 +6,16 @@ scriptname=${0##/*}
 # Copyright (C) 2022 Sea2Cloud Storage, Inc. All Rights Reserved
 # Modesto, CA 95356
 #
-# Create_canonical - Create the canonical hash lists
-#                    Given an initial list of canonical numbers
-#                    and short hash names, generate the following
-#                    lists:
+# tester.hash.loadcanonical - Load the canonical lists that were
+#                    stored in the canonical files and test that
+#                    we have recovered these key/vallue data files.
+#
 #                          number to short hash name
 #                          short hash name to number
 #                          number to executable (local)
 #                          number to number of bits generated
 #
-#                    Given these lists, generate a function that
-#                    will load these lists into Bash Associative
+#                    Load these lists into Bash Associative
 #                    arrays for use in a bash script.
 #
 ########################################################################
@@ -72,10 +71,14 @@ hash_loadcanonical -v
 echo "No exclaim keys for Cnum2bin '${Cnum2bin[@]}'"
 echo "Exclaim keys    for Cnum2bin '${!Cnum2bin[@]}'"
 
-for filetype in num2bin num2bits num2hexdigits num2hash hash2num
-do
+########################################################################
+# Temporarily ignore the loop, just process the num2bin file
+########################################################################
+#for filetype in num2bin num2bits num2hexdigits num2hash hash2num
+#do
   set -x
-  filename=$(eval echo \$F${filetype})
+#  filename=$(eval echo \$F${filetype})
+  filename=$(eval echo \$F${num2bin})
   tmpunsortedtarget=/tmp/$$_unsort_${filename}
   tmptarget=/tmp/$$_${filename}
   associative=$(eval echo C${filetype})
@@ -96,5 +99,5 @@ do
     stderrecho "*** WARNING *** " "File ${filename} is different"
     ((failcode += diffresult))
   fi
-done
+# done
 exit ${failcode}
