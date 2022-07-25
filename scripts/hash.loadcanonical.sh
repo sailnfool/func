@@ -25,6 +25,7 @@ then
   export __hashloadcanonical=1
 
   source hash.globalcanonical
+  source func.cwave
 
   function hash_loadcanonical () {
     # hash_loadcanonical [-v]
@@ -34,11 +35,13 @@ then
     local key
     local value
     local verbosemode="FALSE"
+    local verboseflag=""
 
     if [[ "$#" -eq 1 ]] && [[ "$1" == "-v" ]]
     then
       verbosemode="TRUE"
     fi
+    wavfuncentry
     if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVAR}" ]]
     then
     ######################################################################
@@ -54,87 +57,92 @@ then
     unset Cnum2bits
     unset Cnum2hexdigits
     unset Chash2num
-	  declare -A Cnum2hash
-	  declare -A Cnum2bin
-	  declare -A Cnum2bits
-	  declare -A Cnum2hexdigits
-	  declare -A Chash2num
-	  export Cnum2hash
-	  export Cnum2bin
-	  export Cnum2bits
-	  export Cnum2hexdigits
-	  export Chash2num
+# 	  declare -A Cnum2hash
+# 	  declare -A Cnum2bin
+# 	  declare -A Cnum2bits
+# 	  declare -A Cnum2hexdigits
+# 	  declare -A Chash2num
+# 	  export Cnum2hash
+# 	  export Cnum2bin
+# 	  export Cnum2bits
+# 	  export Cnum2hexdigits
+# 	  export Chash2num
 
     for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
     do
       filename=${YesFSdiretc}/$(eval echo \$F${filesuffix})
+      waverrindentvar "filename=${filename}"
       while read key value
       do
-        echo "key='${key}', value='${value}'"
-        case ${filesuffix} in
-          num2hash)
-            Cnum2hash+=(["${key}"]="${value}")
-            echo "${FUNCNAME} ${LINENO} ${Cnum2hash["${key}"]}"
-            ;;
-          num2bin)
-            Cnum2bin+=(["${key}"]="${value}")
-            if [[ ! "$(which ${Cnum2hash["${key}"]})" == "${value}" ]]
-            then
-              stderrecho "${FUNCNAME} ${LINENO} ***WARNING ***"
-              stderrecho "Binary for '${Cnum2hash["${key}"]}' not found"
-              stderrecho "at path '${value}'"
-            fi
-            echo "${FUNCNAME} ${LINENO} ${Cnum2bin["${key}"]}"
-            ;;
-          num2bits)
-            Cnum2bits+=(["${key}"]="${value}")
-            echo "${FUNCNAME} ${LINENO} ${Cnum2bits["${key}"]}"
-            ;;
-          num2hexdigits)
-            Cnum2hexdigits+=(["${key}"]="${value}")
-            echo "${FUNCNAME} ${LINENO} ${Cnum2hexdigits["${key}"]}"
-            ;;
-          hash2num)
-            Chash2num+=(["${key}"]="${value}")
-            echo "${FUNCNAME} ${LINENO} ${Chash2num["${key}"]}"
-            ;;
-          \?)
-            errecho "${0##*/}:${FUNCNAME}:${LINENO}: " \
-              "this should never happen"
-            exit 1
-            ;;
-        esac
+        waverrindentvar "key='${key}', value='${value}'"
+        eval \$C${filesuffix}+=("[${key}"]="${value}")
+        waverrindentvar $(eval "\$C${filesuffix}["${key}"]")
+#         case ${filesuffix} in
+#           num2hash)
+#             Cnum2hash+=(["${key}"]="${value}")
+#             waverrindentvar "${Cnum2hash["${key}"]}"
+#             ;;
+#           num2bin)
+#             Cnum2bin+=(["${key}"]="${value}")
+#             if [[ ! "$(which ${Cnum2hash["${key}"]})" == "${value}" ]]
+#             then
+#               stderrecho "Binary for '${Cnum2hash["${key}"]}' " \
+#                 "not found at path '${value}'"
+#             fi
+#             waverrindentvar "${Cnum2bin["${key}"]}"
+#             ;;
+#           num2bits)
+#             Cnum2bits+=(["${key}"]="${value}")
+#             waverrindentvar "${Cnum2bits["${key}"]}"
+#             ;;
+#           num2hexdigits)
+#             Cnum2hexdigits+=(["${key}"]="${value}")
+#             waverrindentvar "${Cnum2hexdigits["${key}"]}"
+#             ;;
+#           hash2num)
+#             Chash2num+=(["${key}"]="${value}")
+#             waverrindentvar "${Chash2num["${key}"]}"
+#             ;;
+#           \?)
+#             stderrecho "${0##*/}:${FUNCNAME}:${LINENO}: " \
+#               "this should never happen"
+#             exit 1
+#             ;;
+#         esac
       done < ${filename}
 
+      for key in "$(eval \$!{C${filesuffix}[@]})"
+      do
+        waverrindentvar "C${filesuffix}["${key}"]='$(eval \${C${filesuffix}["${key}"]})'"
+      done
+
     done # for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
-    if [[ "${verbosemode}" == "TRUE" ]]
-    then
-      for key in "$!{Cnum2hash[@]}"
-      do
-        echo -n "${FUNCNAME} ${LINENO} " 
-        echo "Cnum2hash["${key}"]='${Cnum2hash["${key}"]}'"
-      done
-      for key in "${Cnum2bin[@]}"
-      do
-        echo -n "${FUNCNAME} ${LINENO} " 
-        echo "Cnum2bin["${key}"]='${Cnum2bin["${key}"]}'"
-      done
-      for key in "${Cnum2bits[@]}"
-      do
-        echo -n "${FUNCNAME} ${LINENO} " 
-        echo "Cnum2bits["${key}"]='${Cnum2bits["${key}"]}'"
-      done
-      for key in "${Cnum2hexdigits[@]}"
-      do
-        echo -n "${FUNCNAME} ${LINENO} " 
-        echo "Cnum2hexdigits["${key}"]='${Cnum2hexdigits["${key}"]}'"
-      done
-      for key in "${Chash2num[@]}"
-      do
-        echo -n "${FUNCNAME} ${LINENO} " 
-        echo "hash2num["${key}"]='${hash2num["${key}"]}'"
-      done
-    fi
+
+    ####################################################################
+    # Verify that the associative arrays are initialized if
+    # FUNC_DEBUG >= ${DEBUGWAVAR}
+    ####################################################################
+#     for key in "$!{Cnum2hash[@]}"
+#     do
+#       waverrindentvar "Cnum2hash["${key}"]='${Cnum2hash["${key}"]}'"
+#     done
+#     for key in "${Cnum2bin[@]}"
+#     do
+#       waverrindentvar "Cnum2bin["${key}"]='${Cnum2bin["${key}"]}'"
+#     done
+#     for key in "${Cnum2bits[@]}"
+#     do
+#       waverrindentvar "Cnum2bits["${key}"]='${Cnum2bits["${key}"]}'"
+#     done
+#     for key in "${Cnum2hexdigits[@]}"
+#     do
+#       waverrindentvar "Cnum2hexdigits["${key}"]='${Cnum2hexdigits["${key}"]}'"
+#     done
+#     for key in "${Chash2num[@]}"
+#     do
+#       waverrindentvar "hash2num["${key}"]='${hash2num["${key}"]}'"
+#     done
+    wavfuncexit
   }
   export hash_hashloadcanonical
 fi # if [[ -z "${__loadcanonical}" ]]
