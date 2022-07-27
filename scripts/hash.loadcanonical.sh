@@ -51,12 +51,6 @@ then
     # but my # brain is aching from the number of levels of
     # indirection.
     ####################################################################
-#     unset Cnum2hash
-#     unset Cnum2bin
-#     unset Cnum2bits
-#     unset Cnum2hexdigits
-#     unset Chash2num
-
     for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
     do
       local -n newarr=C${filesuffix}
@@ -66,19 +60,18 @@ then
       waverrindentvar ${verboseflag} "filename=${filename}"
       while read key value
       do
-#         waverrindentvar ${verboseflag} "key='${key}', value='${value}'"
-#         waverrindentvar ${verboseflag} "${arrname} ["${key}"] '${value}':: "
-#         $(eval C${filesuffix}+=\([\"${key}\"]\="${value}"\))
          newarr+=(["${key}"]="${value}")
-         waverrindentvar ${verboseflag} "${arrname}["${key}"]=${newarr["${key}"]}"
+         waverrindentvar ${verboseflag} "${arrname}["${key}"]=" \
+           "${newarr["${key}"]}"
       done < ${filename}
 
       for nkey in "${!newarr[@]}"
       do
-        waverrindentvar ${verboseflag} "${arrname}["${nkey}"]=${newarr["${nkey}"]}"
+        waverrindentvar ${verboseflag} "${arrname}["${nkey}"]=" \
+          "${newarr["${nkey}"]}"
       done
 
-    done # for filesuffix in num2hash num2bin num2bits num2hexdigits hash2num
+    done # for filesuffix in num2hash num2bin num2bits ...
 
     wavfuncexit ${verboseflag}
   }
