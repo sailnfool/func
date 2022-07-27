@@ -54,7 +54,6 @@ verbosemode="FALSE"
 verboseflag=""
 fail=0
 FUNC_DEBUG=${DEBUGOFF}
-echo "YesFSetcdir=${YesFSetcdir}"
 
 while getopts ${optionargs} name
 do
@@ -103,15 +102,17 @@ do
   
   arrname=$(echo C${filesuffix})
   filename=$(eval echo \$F${filesuffix})
-  fullfile=${YesFSetcdir}/${filename}
+  fullfile=${YesFSdiretc}/${filename}
+  waverrindentvar "fullfile=${fullfile}"
   tmpunsortedtarget=/tmp/$$_unsort_${filename}
   tmptarget=/tmp/$$_${filename}
+  rm -f ${tmptarget} ${tmpunsortedtarget}
   [[ "${verbosemode}" == "TRUE" ]] && \
     echo "Checking ${filename} vs. ${arrname}"
   for key in "${!newarr[@]})"
   do
-    waverrindentvar "key="${key}""
-    echo -e "${key}\t${newarr["${key}"]})" > ${tmpunsortedtarget}
+    waverrindentvar "key="${key}", value=${newarr["${key}"]}"
+    echo -e "${key}\t${newarr["${key}"]}" >> ${tmpunsortedtarget}
   done
   sort ${tmpunsortedtarget} > ${tmptarget}
   [[ "${verbosemode}" == "TRUE" ]] && \
@@ -121,6 +122,8 @@ do
   if [[ "${diffresult}" -ne 0 ]]
   then
     stderrecho "*** WARNING *** " "File ${fullfile} is different"
+    diff ${fullfile} ${tmptarget}
+
     ((failcode += diffresult))
   else
     ((successfiles++))
