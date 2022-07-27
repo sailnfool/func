@@ -3,7 +3,7 @@
 # Copyright (C) 2022 Sea2cloud Storage, Inc.  All Rights Reserved
 # Modesto, CA 95356
 #
-# askcreatehashcanonical - If the canonical files don't exist, ask
+# hashaskcreatecanonical - If the canonical files don't exist, ask
 #                          the user if they want them created.
 # Author - Robert E. Novak aka REN
 # sailnfool@gmail.com
@@ -27,22 +27,67 @@ if [[ -z "${__hashaskcreatecanonical}" ]]
 then
   export __hashaskcreatecanonical=1
 
-  function hashaskcreatecanonical() {
-    local filecanonical
-    local answeryes
-    local verbosemode
-    local installanswer
+  function hash_askcreatecanonical() {
+    # [-v] <file> "answeryes"
 
-    # <file> "answeryes" "verbosemode"
-    if [[ "$#" -ne 3 ]]
-      then
-        insufficient 3 $@
-        exit 1
-      else
-        filecanonical="$1"
-        answeryes="$2"
-        verbosemode="$3"
-    fi # if [[ "$#" -ne 3 ]]
+    local filecanonical
+    local answeryes="FALSE"
+    local verbosemode="FALSE"
+    local verboseflag=""
+    local installanswer
+    declare -l installanswer #Always lower case
+    local name
+    local NUMARGS=1
+    local USAGE="${FUNCNAME} [-[vy]] <file>\n
+\t\t<file> is the canonical cryptographic hash file\n
+\t-v\t\tverbose mode for diagnostics\n
+\t\y\t\tanswer yes to questions\n
+"
+
+    local optionargs="hvy"
+    local OPTIND
+    local OPTARG
+
+    wavfuncentry
+    echo "${FUNCNAME} ${LINENO} args = $#"
+    
+    while getopts ${optionargs} name
+    do
+      case ${name} in
+        h)
+          errecho "-e" ${USAGE}
+          wavfuncexit
+          exit 0
+          ;;
+        v)
+          verbosemode="TRUE"
+          verboseflag="-v"
+          ;;
+        y)
+          answeryes="TRUE"
+          ;;
+        \?)
+          errecho "-e" "Invalid option -${OPTARG} $@"
+          errecho "-e" ${USAGE}
+          wavfuncexit
+          exit 1
+          ;;
+      esac
+    done
+
+    waverrindentvar "args = $#"
+    shift $(( ${OPTIND} - 1 ))
+    waverrindentvar "args = $#"
+
+    if [[ "$#" -lt "${NUMARGS}" ]]
+    then
+      insufficient "${NUMARGS} $@"
+      wavfuncexit
+      exit 1
+    else
+      filecanonical="$1"
+      shift 1
+    fi # if [[ "$#" -ne "${NUMARGS}" ]]
 
     if [[ -r "${filecanonical}" ]]
     then
@@ -62,26 +107,27 @@ then
         if [[ -z "${installanswer}" ]]
         then
           installanswer="Y"
-        else
-          installanswer=$(echo ${installanswer} | tr a-z A-Z)
         fi
         case ${installanswer} in
-          Y|YES)
-            createhashcanonical
+          y|yes)
+            createhashcanonical ${verboseflag}
             ;;
-          N|NO)
-            errecho "Missing ${YesFSdiretc}/${Fhashcanonical}, exiting"
+          n|no)
+            errecho "Missing ${YesFSdiretc}/${Fcanonicalhash}, exiting"
+            wavfuncexit
             exit 1
            ;;
           \?)
            errecho "Invalid answer"
+           wavfuncexit
            exit 1
            ;;
         esac
       else
-        createhashcanonical
+        createhashcanonical ${verboseflag}
       fi # if [[ "${answeryes}" == "FALSE" ]]
     fi # if [[ -r "${filecanonical}" ]]
+    wavfuncexit
   }
-  export hashaskcreatecanonical
+  export hash_askcreatecanonical
 fi #if [[ -z "${__hashaskcreatecanonical}" ]]
