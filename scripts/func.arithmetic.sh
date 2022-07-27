@@ -92,7 +92,7 @@ then
   ######################################################################
   function func_factorial {
 
-    wavfuncentry
+    wavfuncentry -v
     local sub
     if [[ $# -ne 1 ]]
     then
@@ -106,11 +106,11 @@ then
     fi
     if [[ "${1}" -le 1 ]]
     then
-      wavfuncexit
+      wavfuncexit -v
       echo 1
     else
       sub=$(func_factorial $(( $1 - 1 )) )
-      wavfuncexit
+      wavfuncexit -v
       echo "$1 * $sub" | bc
     fi
   }
