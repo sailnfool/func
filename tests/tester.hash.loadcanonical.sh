@@ -39,6 +39,7 @@ source func.regex
 
 TESTNAME="Test of hash function (hash.loadcanonical.sh) from \nhttps://github.com/sailnfool/func"
 failcode=0
+successfiles=0
 USAGE="\n${0##*/} [-[hv]] [-d <#>]\n
 \t-d\t<#>\tset the debug level to <#>, use -hv to see levels\n
 \t-h\t\tPrint this message\r\n
@@ -53,6 +54,7 @@ verbosemode="FALSE"
 verboseflag=""
 fail=0
 FUNC_DEBUG=${DEBUGOFF}
+echo "YesFSetcdir=${YesFSetcdir}"
 
 while getopts ${optionargs} name
 do
@@ -88,36 +90,41 @@ shift $(( ${OPTIND} - 1 ))
 
 hash_loadcanonical ${verboseflag}
 
-echo "No exclaim keys for Cnum2bin '${Cnum2bin[@]}'"
-echo "Exclaim keys    for Cnum2bin '${!Cnum2bin[@]}'"
+waverrindentvar "Exclaim keys    for Cnum2bin ${!Cnum2bin[@]}"
 
 ########################################################################
-# Temporarily ignore the loop, just process the num2bin file
+# Loop through all of the suffix values
+# dump the associative arrays to files and sort them and then 
+# compare them against the stored files.
 ########################################################################
-#for filetype in num2bin num2bits num2hexdigits num2hash hash2num
-#do
-  set -x
-#  filename=$(eval echo \$F${filetype})
-  filename=$(eval echo \$F${num2bin})
+for filesuffix in num2bin num2bits num2hexdigits num2hash hash2num
+do
+  declare -n newarr=C${filesuffix}
+  
+  arrname=$(echo C${filesuffix})
+  filename=$(eval echo \$F${filesuffix})
+  fullfile=${YesFSetcdir}/${filename}
   tmpunsortedtarget=/tmp/$$_unsort_${filename}
   tmptarget=/tmp/$$_${filename}
-  associative=$(eval echo C${filetype})
-  echo "Checking ${filename} vs. ${associative}"
-  # for key in "$(eval \${!${associative}[\@]})"
-  echo "No exclaim keys for Cnum2bin '${Cnum2bin[@]}'"
-  echo "Exclaim keys    for Cnum2bin '${!Cnum2bin[@]}'"
-  for key in "$!{Cnum2bin[@]}"
+  [[ "${verbosemode}" == "TRUE" ]] && \
+    echo "Checking ${filename} vs. ${arrname}"
+  for key in "${!newarr[@]})"
   do
-    echo "key='${key}'"
-    echo -e "${key}\t$(eval \${${associative}[\${key}]})" > ${tmpunsortedtarget}
+    waverrindentvar "key="${key}""
+    echo -e "${key}\t${newarr["${key}"]})" > ${tmpunsortedtarget}
   done
   sort ${tmpunsortedtarget} > ${tmptarget}
-  diff ${YesFSetcdir}/${filename} ${tmptarget} 2>&1 > /dev/null
+  [[ "${verbosemode}" == "TRUE" ]] && \
+    echo "diff ${fullfile} ${tmptarget} 2>&1 > /dev/null"
+  diff ${fullfile} ${tmptarget} 2>&1 > /dev/null
   diffresult=$?
   if [[ "${diffresult}" -ne 0 ]]
   then
-    stderrecho "*** WARNING *** " "File ${filename} is different"
+    stderrecho "*** WARNING *** " "File ${fullfile} is different"
     ((failcode += diffresult))
+  else
+    ((successfiles++))
   fi
-# done
+done
+waverrindentvar "${successfiles} compared"
 exit ${failcode}
