@@ -132,7 +132,7 @@ then
         shift
       fi
       level=${#FUNCNAME[@]}
-      xx=$(printf "%${level}c%s" " " "${1}")
+      xx=$(printf "%${level}c%s" " " "$@")
       if [[ "${verbosemode}" == "TRUE" ]]
       then
 #         echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
@@ -168,7 +168,7 @@ then
     fi
 
     level=${#FUNCNAME[@]}
-		xx=$(printf "%${level}c%s" " " "${1}")
+		xx=$(printf "%${level}c%s" " " "$@")
 		echo $xx
     if [[ "${verbosemode}" == "TRUE" ]]
     then
