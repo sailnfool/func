@@ -15,6 +15,7 @@
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
+# 2.2 |REN|07/26/2022| added "-v" option to functions.
 # 2.1 |REN|07/24/2022| Normalized header file and end the funcenter
 #                    | and funcexit functions
 # 2.0 |REN|11/13/2019| added vim directive and header file
@@ -30,9 +31,9 @@
 # waverrindentdir
 # wavindentdir
 ########################################################################
-if [[ -z "${__funccwave}" ]]
+if [[ -z "${__wavfuncs}" ]]
 then
-	export __funccwave=1
+	export __wavfuncs=1
 
   source func.errecho
   source func.debug
@@ -57,7 +58,7 @@ then
     if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVE}" ]]
     then
       local FN=${FUNCNAME[1]}
-      local LN=${BASH_LINENO[1]}
+      local LN=${BASH_LINENO[0]}
       local SF=${BASH_SOURCE[1]}
       local CM=${0##*/}
       ##################################################################
@@ -70,7 +71,12 @@ then
       # skip over this function (which is FUNCNAME[0])
       ##################################################################
       for ((i=2;i<level;i++));do xx="${xx}>";done
-      echo "${xx}${FN}:${LN}:::${SF}-->${CM}" >&2
+      if [[ $# -eq 1 ]] && [[ $1 == "-v" ]]
+      then
+        echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
+      else
+        echo "${xx} ${FN}:${LN}" >&2
+      fi
     fi
   }
   export -f wavfuncentry
@@ -80,7 +86,7 @@ then
     if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVE}" ]]
     then
       local FN=${FUNCNAME[1]}
-      local LN=${BASH_LINENO[1]}
+      local LN=${BASH_LINENO[0]}
       local SF=${BASH_SOURCE[1]}
       local CM=${0##*/}
       local level
@@ -94,7 +100,12 @@ then
       # skip over this function (which is FUNCNAME[0])
       ##################################################################
       for ((i=2;i<level;i++));do xx="${xx}<";done
-      echo "${xx}${FN}:${LN}:::${SF}-->${CM}" >&2
+      if [[ $# -eq 1 ]] && [[ $1 == "-v" ]]
+      then
+        echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
+      else
+        echo "${xx} ${FN}:${LN}" >&2
+      fi
     fi
   }
   export -f wavfuncexit
@@ -108,14 +119,33 @@ then
     if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVAR}" ]]
     then
       local FN=${FUNCNAME[1]}
-      local LN=${BASH_LINENO[1]}
-      local SF=${BASH_SOURCE[1]}
+      local LN=${BASH_LINENO[0]}
+      local SF=${BASH_SOURCE[0]}
       local CM=${0##*/}
       local level
       local xx
+      local verbosemode="FALSE"
 
+      if [[ $# -gt 1 ]] && [[ "${1}" == -v ]]
+      then
+        verbosemode="TRUE"
+        shift
+      fi
+      level=${#FUNCNAME[@]}
       xx=$(printf "%${level}c%s" " " "${1}")
-      echo "${xx} ${FN}:${LN}:::${SF}-->${DM}"
+      if [[ "${verbosemode}" == "TRUE" ]]
+      then
+#         echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
+        echo -n "${xx} ${FN}:${LN}" >&2
+#        echo -n "${xx} " >&2
+        for ((i=1;i<level;i++))
+        do
+          echo -n "${BASH_SOURCE[${i}]}:${BASH_LINENO[$((i-1))]}-> " >&2
+        done
+        echo "" >&2
+      else
+        echo "${xx} ${FN}:${LN}" >&2
+      fi
     fi
 	}
   export -f waverrindentvar
@@ -125,16 +155,34 @@ then
 	##########
 	function wavindentvar () {
 
+    local FN=${FUNCNAME[1]}
+    local LN=${BASH_LINENO[0]}
     local level
     local xx
+    local verbosemode="FALSE"
+
+    if [[ $# -gt 1 ]] && [[ "${1}" == -v ]]
+    then
+      verbosemode="TRUE"
+      shift
+    fi
 
     level=${#FUNCNAME[@]}
 		xx=$(printf "%${level}c%s" " " "${1}")
 		echo $xx
+    if [[ "${verbosemode}" == "TRUE" ]]
+    then
+      local SF=${BASH_SOURCE[1]}
+      local CM=${0##*/}
+      echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
+    else
+      echo "${xx} ${FN}:${LN}" >&2
+    fi
+    
 	}
 	##########
 	# End of cwave functions
 	##########
 	export -f wavindentvar
-fi # if [[ -z "${__funccwave}" ]]
+fi # if [[ -z "${__wavfuncs}" ]]
 # vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
