@@ -26,6 +26,10 @@ scriptname=${0##/*}
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
+# 2.0 |REN|07/27/2022| used nameref (declare -n) to reference a list
+#                    | of associative arrays so that we can use the
+#                    | same code in a loop instead of a big case
+#                    | statement.
 # 1.1 |REN|06/05/2022| Rewritten to use key/value arrays
 # 1.0 |REN|05/26/2022| original version
 #_____________________________________________________________________
@@ -92,7 +96,7 @@ hash_loadcanonical ${verboseflag}
 waverrindentvar "Exclaim keys    for Cnum2bin ${!Cnum2bin[@]}"
 
 ########################################################################
-# Loop through all of the suffix values
+# Loop through all of the suffix values (see hash.globalcanonical)
 # dump the associative arrays to files and sort them and then 
 # compare them against the stored files.
 ########################################################################
@@ -100,23 +104,63 @@ for filesuffix in num2bin num2bits num2hexdigits num2hash hash2num
 do
   declare -n newarr=C${filesuffix}
   
+  ######################################################################
+  # Initialize the name of the associative array the will be loaded
+  # into newarr (declared above).  Then create the names of the file
+  # place in /tmp and the YesFS directory where the master copies are
+  # used by the hash_loadcanonical script and we will compare against
+  # them to insure nothing was lost in storing and loading the arrays
+  ######################################################################
   arrname=$(echo C${filesuffix})
   filename=$(eval echo \$F${filesuffix})
   fullfile=${YesFSdiretc}/${filename}
   waverrindentvar "fullfile=${fullfile}"
+
+  ######################################################################
+  # Create the names of the tmp files.  Delete any accidentally
+  # lingering copies of the files.
+  ######################################################################
   tmpunsortedtarget=/tmp/$$_unsort_${filename}.txt
   tmptarget=/tmp/$$_${filename}
   rm -f ${tmptarget} ${tmpunsortedtarget}
+
+  ######################################################################
+  # If verbose mode is on, tell what we are doing.
+  ######################################################################
   [[ "${verbosemode}" == "TRUE" ]] && \
     echo "Checking ${filename} vs. ${arrname}"
+
+  ######################################################################
+  # Go through all of the keys loaded into the associative arrays
+  # dump the keys/values into tmp files and then compare to the
+  # original source files to make sure that the hash_loadcanonical
+  # worked correctly.  Show any differences if it did not.
+  ######################################################################
   for key in "${!newarr[@]}"
   do
     waverrindentvar "key="${key}", value=${newarr["${key}"]}"
     echo -e "${key}\t${newarr["${key}"]}" >> ${tmpunsortedtarget}
   done
+
+  ######################################################################
+  # Sort the created array because associative keys are not created
+  # in order.  Note that the canonical files are always sorted before
+  # they are stored.
+  ######################################################################
   sort ${tmpunsortedtarget} > ${tmptarget}
+
+  ######################################################################
+  # if we are in verbose mode, show the diff we are doing.
+  ######################################################################
   [[ "${verbosemode}" == "TRUE" ]] && \
     echo "diff ${fullfile} ${tmptarget} 2>&1 > /dev/null"
+
+  ######################################################################
+  # Perform the diff and save the result code.  Issue a warning 
+  # message if we have a difference and then do the diff all over
+  # to show the user what happened.  If there are differences, count
+  # the number of failures for the exit from this script.
+  ######################################################################
   diff ${fullfile} ${tmptarget} 2>&1 > /dev/null
   diffresult=$?
   if [[ "${diffresult}" -ne 0 ]]
@@ -128,6 +172,15 @@ do
   else
     ((successfiles++))
   fi
+
+  ######################################################################
+  # clean up any temporary files.
+  ######################################################################
+  rm -f ${tmptarget} ${tmpunsortedtarget}
 done
+
+########################################################################
+# If diagnostics are enabled, tell the number of successes, then exit.
+########################################################################
 waverrindentvar "${successfiles} compared"
 exit ${failcode}
