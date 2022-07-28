@@ -5,6 +5,11 @@
 #
 # hash.loadcanonical - Load the canonical hash files into Associative
 #                      arrays
+#                      A known flaw in this script is that it does not
+#                      load the machine local version of num2bin so
+#                      that it may attempt to invoke executables that
+#                      may exist on other machines but do not exist on
+#                      this machine.
 # Author - Robert E. Novak aka REN
 # sailnfool@gmail.com
 # skype:sailnfool.ren
@@ -55,9 +60,23 @@ then
     do
       local -n newarr=C${filesuffix}
       local arrname
+
+      ##################################################################
+      # set arrname to the name of the Associative array we will be
+      # loading from a file by using a nameref (declare -n above) to 
+      # affiliate with an array.
+      ##################################################################
       arrname=$(echo C${filesuffix})
+
+      ##################################################################
+      # The filename is formed from the filesuffix used to drive this.
+      ##################################################################
       filename=${YesFSdiretc}/$(eval echo \$F${filesuffix})
       waverrindentvar ${verboseflag} "filename=${filename}"
+
+      ##################################################################
+      # read in the key/values from the file 
+      ##################################################################
       while read key value
       do
          newarr+=(["${key}"]="${value}")
@@ -65,13 +84,19 @@ then
            "${newarr["${key}"]}"
       done < ${filename}
 
-      for nkey in "${!newarr[@]}"
-      do
-        waverrindentvar ${verboseflag} "${arrname}["${nkey}"]=" \
-          "${newarr["${nkey}"]}"
-
-      done # for nkey in "${!newarr[@]}"
-
+      ##################################################################
+      # Only perform a diagnostic dump in verbose & debug modes
+      ##################################################################
+      if [[ "${verboseflag}" == "TRUE" ]] && \
+        [[ "${FUNC_DEBUG}" -gt "${DEBUGWAVARR}" ]]
+      then
+        for nkey in "${!newarr[@]}"
+        do
+          waverrindentvar ${verboseflag} "${arrname}["${nkey}"]=" \
+            "${newarr["${nkey}"]}"
+  
+        done # for nkey in "${!newarr[@]}"
+      fi
     done # for filesuffix in num2hash num2bin num2bits ...
 
     wavfuncexit ${verboseflag}
