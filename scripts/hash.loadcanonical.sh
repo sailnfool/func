@@ -69,7 +69,8 @@ then
       do
         waverrindentvar ${verboseflag} "${arrname}["${nkey}"]=" \
           "${newarr["${nkey}"]}"
-      done
+
+      done # for nkey in "${!newarr[@]}"
 
     done # for filesuffix in num2hash num2bin num2bits ...
 
