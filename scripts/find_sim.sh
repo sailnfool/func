@@ -3,16 +3,16 @@ scriptname=${0##*/}
 ########################################################################
 # Copyright (c) 2019 Sea2Cloud Storage, Inc.  All Rights Reserved
 # Modesto, CA 95356
+########################################################################
 #
 # find_sim - find files which are similar to a given file within
 #            the specified directory tier
+#
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
 # License CC by Sea2Cloud Storage, Inc.
 # see https://creativecommons.org/licenses/by/4.0/legalcode
 # for a complete copy of the Creative Commons Attribution license
-########################################################################
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
