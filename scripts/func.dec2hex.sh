@@ -5,9 +5,11 @@
 #
 # func_dec2hex Convert the argument from decimal to N digits of zero
 #              prefixe hexadecimal digits
+#              Although this error checks for integer arguments it
+#              does no range checking.
+#
 # Author - Robert E. Novak aka REN
 # sailnfool@gmail.com
-# skype:sailnfool.ren
 # License CC by Sea2Cloud Storage, Inc.
 # see https://creativecommons.org/licenses/by/4.0/legalcode
 # for a complete copy of the Creative Commons Attribution license
