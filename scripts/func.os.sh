@@ -1,24 +1,24 @@
 #!/bin/bash
-####################
-# Copyright (c) 2022 Sea2Cloud
+########################################################################
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
 # Modesto, CA 95356
-# 408-910-9134
+########################################################################
+#
+# func_os - Debian dependent, report OS release info
+#
+# func_idlike - Debian dependent, report a  debia like OS
+#
+# func_os_version_id - Debian dependent report a version ID
+# 
+# func_arch - Debian dependent report the underlying CPU architecture
 #
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
-#
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 1.0 |REN|01/24/2022| Initial Release
 #_____________________________________________________________________
-#
-
-########################################################################
-# Author: Robert E. Novak
-# email: sailnfool@gmail.com
-########################################################################
 
 ########################################################################
 # func_os
