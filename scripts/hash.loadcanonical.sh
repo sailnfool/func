@@ -2,6 +2,7 @@
 ########################################################################
 # Copyright (C) 2022 Sea2cloud Storage, Inc.  All Rights Reserved
 # Modesto, CA 95356
+########################################################################
 #
 # hash.loadcanonical - Load the canonical hash files into Associative
 #                      arrays
@@ -10,20 +11,18 @@
 #                      that it may attempt to invoke executables that
 #                      may exist on other machines but do not exist on
 #                      this machine.
+#
 # Author - Robert E. Novak aka REN
 # sailnfool@gmail.com
 # skype:sailnfool.ren
 # License CC by Sea2Cloud Storage, Inc.
 # see https://creativecommons.org/licenses/by/4.0/legalcode
 # for a complete copy of the Creative Commons Attribution license
-########################################################################
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 1.0 |REN|07/07/2022| Initial Release
 #_____________________________________________________________________
-#
-########################################################################
 
 if [[ -z "${__hashloadcanonical}" ]]
 then
