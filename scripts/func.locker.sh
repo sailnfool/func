@@ -1,21 +1,29 @@
 #!bin/bash
 ########################################################################
-# Author: Robert E. Novak
-# email: sailnfool@gmail.com
-# Copyright (C) 2021 Sea2Cloud Storage, Inc. All Rights Reserved
+# Copyright (C) 2021 Robert E. Novak  All Rights Reserved
 # Modesto, CA 95356
+########################################################################
 #
+# locker - Creates directories for storing test results.  Each
+#          test is give a unique test number.  Implements the
+#          following functions:
+#        func_getlock - acquire a lock
+#        func_release - release a lock
+#        getcounter - get the current count
+#        putcounter - modify the counter
+#        getnextcounter - bump the counter before the next use.
 # Set up Global variables for testing scripts
 # Define func_getlock and func_release to avoid conflicts
 #
-########################################################################
+# Author: Robert E. Novak
+# email: sailnfool@gmail.com
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 1.1 |REN|03/25/2021| added getcounter putcounter getnextcounter
 # 1.0 |REN|03/15/2021| original version
 #_____________________________________________________________________
-#
+
 if [[ -z "${__func_locker}" ]]
 then
 	export __func_locker=1
