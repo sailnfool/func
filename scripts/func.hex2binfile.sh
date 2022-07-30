@@ -9,9 +9,9 @@
 # NOTE TO SELF-- This took a long time to debug because I neglected to
 #                declare local variables and they overwrote the caller
 #                variables... messing things up big time.
+#
 # Author - Robert E. Novak aka REN
 # sailnfool@gmail.com
-# skype:sailnfool.ren
 # License CC by Sea2Cloud Storage, Inc.
 # see https://creativecommons.org/licenses/by/4.0/legalcode
 # for a complete copy of the Creative Commons Attribution license
@@ -22,8 +22,7 @@
 # 1.1 |REN|07/09/2022| Insured function local variables are local!!!!
 # 1.0 |REN|07/08/2022| Initial Release
 #_____________________________________________________________________
-#
-########################################################################
+
 if [[ -z "${__funchex2binfile}" ]]
 then
   export __funchex2binfile=1
