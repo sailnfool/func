@@ -1,31 +1,35 @@
 #!/bin/sh
-####################
+########################################################################
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
+# Modesto, CA 95356
+########################################################################
+#
+# num2nice - This function is the reverse of nice2num.  However note
+#            that it will generate fixed length strings.  For Kbytes,
+#            the format is always four characters [0-9][0-9]*X where
+#            the digits are only three in number and X represents
+#            a Kbyte suffix defined in __kbytessuffix
+#
+#            For bibyte numbers (e.g. mebibyte = 1024*1024) the number
+#            is always only 3 digits but that includes counting the
+#            decimal point as one of the positions.
+#
+#            The format of the numbers as KB vs, KiB is defined at:
+#            https://physics.nist.gov/cuu/Units/binary.html
+#
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 1.0 |REN|03/26/2022| original version
 #_____________________________________________________________________
-#
-# This function is the reverse of nice2num.  However note that
-# it will generate fixed length strings.  For Kbytes, the format is
-# always four characters [0-9][0-9]*X where the digits are only three
-# in number and X represents a Kbyte suffix defined in __kbytessuffix
-#
-# For bibyte numbers (e.g. mebibyte = 1024*1024) the number is always
-# only 3 digits but that includes counting the decimal point as one of
-# the positions.
-#
-# The format of the numbers as KB vs, KiB is defined at:
-# https://physics.nist.gov/cuu/Units/binary.html
-########################################################################
-source func.errecho
-source func.kbytes
 if [[ -z "${__funcnum2nice}" ]]
 then
 	export __funcnum2nice=1
+
+  source func.errecho
+  source func.kbytes
 
 	num2nice () {
 
