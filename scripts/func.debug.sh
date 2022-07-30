@@ -22,14 +22,13 @@
 # 1.1 |REN|03/01/2021| Added DEBUGOFF
 # 1.0 |REN|07/22/2010| Initial Release
 #_____________________________________________________________________
-#
 ########################################################################
 # Scripts that include this should also have the following three
 # command line options: -h -v -d, where -h is the normal help file
 # and -v when used before -h, e.g., -vh will cause the script to
 # not only print out USAGE string but also the DEBUG_USAGE string.
-# Finally -d will accepte an integer parameter as defined in
-# DEBUG_USAGE.  This parameter should be verfied using $re_digit
+# Finally -d will accept an integer parameter as defined in
+# DEBUG_USAGE.  This parameter should be verified using $re_digit
 # found in func.regex
 # See https://github.com/sailnfool/cmd/blob/main/scripts/countfiles.sh
 # for an example implementation.
