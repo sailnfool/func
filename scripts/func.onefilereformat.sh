@@ -1,26 +1,33 @@
 #!/bin/bash
-####################
-# onefilereformat
+########################################################################
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
+# Modesto, CA 95356
+########################################################################
 #
-# This function reformats a single file to wrap lines and make
-# sure that sentences start after a newline character
+# onefilereformat - This function reformats a single file to wrap
+#                   lines and make sure that sentences start after
+#                   a newline character.  This function was develeped
+#                   to make source files using asciidoc easier to
+#                   manipulat
 #
 # onfilereformat <file> <sourcedir> <targetdir>
 #
-# A rewrite of this would use the syntax of:
+#                   A rewrite of this would use the syntax of:
 #	onefilereformat <sourcedir>/<file> <targetdir>
-####################
+#
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
+# License CC by Sea2Cloud Storage, Inc.
+# see https://creativecommons.org/licenses/by/4.0/legalcode
+# for a complete copy of the Creative Commons Attribution license
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
+# 2.1 |REN|07/29/2022| removed vim directive
 # 2.0 |REN|11/14/2019| added vim directive and header file
 # 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
-#
-####################
+
 if [ -z "${__funconefilereformat}" ]
 then
 	export __funconefilereformat=1
@@ -100,4 +107,3 @@ then
 	}
 	export -f onefilereformat
 fi # if [ -z "${__funconefilereformat}" ]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
