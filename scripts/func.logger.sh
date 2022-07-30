@@ -1,9 +1,8 @@
 #!/bin/bash
-#######################################################################
-# Author: Robert E. Novak
-# email: sailnfool@gmail.com
-# Copyright (C)2021 Sea2Cloud Storage, Inc.  All Rights Reserved
+########################################################################
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
 # Modesto, CA 95356
+########################################################################
 #
 # Log entries in a common log file for tracking down problems
 # with scripts going astray.
@@ -24,13 +23,17 @@
 #     processes	execute to insure that we are able to
 #     schedule/allocate adequate time	for future runs of
 #     the application
-#######################################################################
+#
+# Author: Robert E. Novak
+# email: sailnfool@gmail.com
+# License CC by Sea2Cloud Storage, Inc.
+# see https://creativecommons.org/licenses/by/4.0/legalcode
+# for a complete copy of the Creative Commons Attribution license
+#_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 1.0 |REN|02/22/2021| Initial Release
 #_____________________________________________________________________
-#######################################################################
-
 
 if [[ -z "${__funclogger}" ]]
 then
