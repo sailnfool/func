@@ -5,6 +5,20 @@
 ########################################################################
 #
 # arithmetic - define some useful arithmetic functions
+#        since the arguments to the int functions are passed as
+#        strings, error checking for integers fitting into two's
+#        complement 64 bit numbers should be added and abort the
+#        functions if invalid arguments are presented since they
+#        would produce invalid results.
+#
+#        intmin - The minimum of two integers
+#        intmax - The Maximum of two integers
+#        introundup - Round an integer to the specified power of value
+#                     Note that this can produce results larger than
+#                     the maximum signed integer.  A warning is
+#                     issued to stderr
+#        func_factorial - compute an arbitrary precision factorial
+#                         of a given argument
 #
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
@@ -14,6 +28,8 @@
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
+# 1.1 |REN|07/29/2022| Added func_factorial, added additional error
+#                    | checks for exceeding the maximum signed integer
 # 1.0 |REN|07/24/2022| Initial Release
 #_____________________________________________________________________
 #
@@ -29,11 +45,32 @@ then
   ######################################################################
 	function func_intmin()
 	{
+    local maxsignedint=$(echo "2^63-1" | bc)
+    local checksign
+
     if [[ ! "${1}" =~ $re_integer ]] || \
       [[ ! "${2}" =~ $re_integer ]]
     then
       errecho "Both arguments must be integers $@"
       exit 1
+    fi
+    checksign=$(echo "${1} - ${maxsignedint}" | bc)
+    if [[ "${checksign:0:1}" == "-" ]]
+    then
+      errecho "Argument ${1} is larger than the " \
+        "maximum signed integer on a 64-bit machine"
+      errecho "Max signed integer = ${maxsignedint}"
+      errecho "calculation aborted, result would be invalid, use bc"
+      exit 2
+    fi
+    checksign=$(echo "${2} - ${maxsignedint}" | bc)
+    if [[ "${checksign:0:1}" == "-" ]]
+    then
+      errecho "Argument ${2} is larger than the " \
+        "maximum signed integer on a 64-bit machine"
+      errecho "Max signed integer = ${maxsignedint}"
+      errecho "calculation aborted, result would be invalid, use bc"
+      exit 2
     fi
 	  echo $(( $1 < $2 ? $1 : $2 ))
 	}
@@ -44,11 +81,32 @@ then
   ######################################################################
 	function func_intmax()
 	{
+    local maxsignedint=$(echo "2^63-1" | bc)
+    local checksign
+
     if [[ ! "${1}" =~ $re_integer ]] || \
       [[ ! "${2}" =~ $re_integer ]]
     then
       errecho "Both arguments must be integers $@"
       exit 1
+    fi
+    checksign=$(echo "${1} - ${maxsignedint}" | bc)
+    if [[ "${checksign:0:1}" == "-" ]]
+    then
+      errecho "Argument ${1} is larger than the " \
+        "maximum signed integer on a 64-bit machine"
+      errecho "Max signed integer = ${maxsignedint}"
+      errecho "calculation aborted, result would be invalid, use bc"
+      exit 2
+    fi
+    checksign=$(echo "${2} - ${maxsignedint}" | bc)
+    if [[ "${checksign:0:1}" == "-" ]]
+    then
+      errecho "Argument ${2} is larger than the " \
+        "maximum signed integer on a 64-bit machine"
+      errecho "Max signed integer = ${maxsignedint}"
+      errecho "calculation aborted, result would be invalid, use bc"
+      exit 2
     fi
 	  echo $(( $1 > $2 ? $1 : $2 ))
 	}
@@ -62,8 +120,12 @@ then
   ######################################################################
 	function func_introundup()
 	{
+    local maxsignedint=$(echo "2^63-1" | bc)
+    local checksign
+
     local number
     local nearest
+    local result
 
     if [[ ! "${1}" =~ $re_integer ]] || \
       [[ ! "${2}" =~ $re_integer ]]
@@ -71,16 +133,43 @@ then
       errecho "Both arguments must be integers $@"
       exit 1
     fi
+
 		number=$1
 		nearest=$2
+
 		if [[ $nearest -eq 0 ]]
 		then
       errecho "second argument must be integer > 0 $@"
 			exit 1
 		fi
-		(( number+=nearest ))
-		(( number-= ((number%nearest))))
-		echo $number
+    checksign=$(echo "${1} - ${maxsignedint}" | bc)
+    if [[ "${checksign:0:1}" == "-" ]]
+    then
+      errecho "Argument ${1} is larger than the " \
+        "maximum signed integer on a 64-bit machine"
+      errecho "Max signed integer = ${maxsignedint}"
+      errecho "calculation aborted, result would be invalid, use bc"
+      exit 2
+    fi
+    checksign=$(echo "${2} - ${maxsignedint}" | bc)
+    if [[ "${checksign:0:1}" == "-" ]]
+    then
+      errecho "Argument ${2} is larger than the " \
+        "maximum signed integer on a 64-bit machine"
+      errecho "Max signed integer = ${maxsignedint}"
+      errecho "calculation aborted, result would be invalid, use bc"
+      exit 2
+    fi
+    result=$(echo "( ${number} + ${nearest} ) - ( ${number} % ${nearest} )" | bc )
+    checksign=$(echo "${result} - ${maxsignedint}" | bc)
+    if [[ "${checksign:0:1}" == "-" ]]
+    then
+      errecho "*** WARNING *** Result is larger than max signed integer"
+      errecho "Max signed integer = ${maxsignedint}"
+    fi
+#		(( number+=nearest ))
+#		(( number-= ((number%nearest))))
+		echo $result
 	}
 	export -f func_introundup
 
@@ -116,4 +205,3 @@ then
   }
   export -f func_factorial
 fi # if [ -z "$__funcarithmetic" ]
-# vim: filetype=sh
