@@ -3,5 +3,5 @@
 all: scripts
 scripts:
 	cd scripts
-	make uninstall linstall install
+	make uninstall linstall
 	cd ..

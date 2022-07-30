@@ -7,10 +7,7 @@ LINSTALL =       func.arithmetic \
 		func.cwave \
 		func.dec2hex \
 		func.debug \
-		func.doshells \
-		func.env \
 		func.errecho \
-		func.getprojdir \
 		func.hex2binfile \
 		func.hex2dec \
 		func.hmsout \
@@ -20,7 +17,6 @@ LINSTALL =       func.arithmetic \
 		func.logger \
 		func.nice2num \
 		func.num2nice \
-		func.onefilehash \
 		func.onefilereformat \
 		func.os \
 		func.pathmunge \
