@@ -1,11 +1,8 @@
 #! /bin/bash
-####################################################################
-# Copyright (C) 2019 Sea2Cloud Storage, Inc.  All Rights Reserved
+########################################################################
+# Copyright (C) 2019 Robert E. Novak  All Rights Reserved
 # Modesto, CA 95356
-# Author: Robert E. Novak aka REN
-# sailnfool@gmail.com
-# skype: sailnfool.ren
-####################################################################
+########################################################################
 #
 # verifychange - verifies that a system text/parameter file has
 #                been modified.  The script performs a diff of 
@@ -13,22 +10,28 @@
 #                "name" of the file being changed.  The second
 #                parameter is the older version of the file.  The
 #                third parameter ist the newer version of the file.
-#                The fourth paramter is a sequence number which is 
+#                The fourth parameter is a sequence number which is 
 #                used to identify the diagnostic file placed in
 #                /tmp which holds the output from this verification
-####################################################################
+#
+# Author: Robert E. Novak aka REN
+# sailnfool@gmail.com
+# skype: sailnfool.ren
 #___________________________________________________________________
 # Rev.|Aut| Date       | Notes
 #___________________________________________________________________
 # 1.0 |REN| 06/08/2019 | Initial Version
 #___________________________________________________________________
-source func.errecho
+
 if [[ -z "${__verifychange}" ]]
 then
 	export __verifychange=1
-	##########
+
+  source func.errecho
+
+  ######################################################################
 	# This function provides a verification of the requested change
-	##########
+  ######################################################################
 	function verifychange {
 
     local numparms
@@ -76,8 +79,7 @@ then
 			fi
 		fi
 	}
-	##########
+  ######################################################################
 	# end of function verifychange
-	##########
+  ######################################################################
 fi # if [[ -z "${__verifychange}" ]]
-# vim: set syntax=bash, lines=55, columns=78,colorcolumn=72
