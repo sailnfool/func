@@ -1,19 +1,21 @@
 #!/bin/bash
-####################
-# This generates a pseudo random uuid for the server
-# This is based on the discussion in:
+########################################################################
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
+# Modesto, CA 95356
+########################################################################
+#
+# uuid - This generates a pseudo random uuid for the server.  This
+#        is based on the discussion in:
 # https://serverfault.com/questions/103359/how-to-create-a-uuid-in-bash
-####################
+#
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 1.0 |REN|07/22/2020| original version
 #_____________________________________________________________________
-#
-####################
+
 if [[ -z "${__funcuuid}" ]]
 then
 	export __funcuuid=1
