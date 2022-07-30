@@ -1,8 +1,17 @@
 #!/bin/bash
 ########################################################################
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
+# Modesto, CA 95356
+########################################################################
+#
+# kbytes - Create arrays of values and suffixes for "nice"
+#          representations of numbers
+#
 # Author Robert E. Novak
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
+# License CC by Sea2Cloud Storage, Inc.
+# see https://creativecommons.org/licenses/by/4.0/legalcode
+# for a complete copy of the Creative Commons Attribution license
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
