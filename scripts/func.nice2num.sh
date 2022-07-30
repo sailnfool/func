@@ -1,8 +1,19 @@
 #!/bin/sh
-####################
+########################################################################
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
+# Modesto, CA 95356
+########################################################################
+#
+# nice2num - converts a "nice" number like 10K to a decimal numeric
+#            string which is likely to overflow 64 bit signed integers
+#            The format of the numbers as KB vs, KiB is defined at:
+#            https://physics.nist.gov/cuu/Units/binary.html
+#
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
+# License CC by Sea2Cloud Storage, Inc.
+# see https://creativecommons.org/licenses/by/4.0/legalcode
+# for a complete copy of the Creative Commons Attribution license
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
@@ -12,15 +23,13 @@
 #                      | triggered reconstruction of func.kbytes
 # 1.0 |REN|05/26/2020| original version
 #_____________________________________________________________________
-#
-# The format of the numbers as KB vs, KiB is defined at:
-# https://physics.nist.gov/cuu/Units/binary.html
-########################################################################
-source func.errecho
-source func.kbytes
+
 if [[ -z "${__funcnice2num}" ]]
 then
 	export __funcnice2num=1
+
+  source func.errecho
+  source func.kbytes
 
 	nice2num () {
     local resultnumber
