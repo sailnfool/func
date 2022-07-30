@@ -2,6 +2,7 @@
 ########################################################################
 # Copyright (C) 2022 Sea2cloud Storage, Inc.  All Rights Reserved
 # Modesto, CA 95356
+########################################################################
 #
 # This defines 3 functions:
 # errecho
@@ -21,25 +22,23 @@
 #  command line arguments but that will wait for a later day.
 # stderrnecho drops the output of a trailing newline character like
 #  the "-n" optional parameter to echo (see man echo)
-########################################################################
+#
 # Author - Robert E. Novak aka REN
 #	sailnfool@gmail.com
-#	skype:sailnfool.ren
 # License CC by Sea2Cloud Storage, Inc.
 # see https://creativecommons.org/licenses/by/4.0/legalcode
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 2.1 |REN|05/20/2020| removed vim directive.  Added additional
-#                      | bash builtins to report the name of the
-#                      | source file, the command that is executing
-#                      | the name of the function that is throwing
-#                      | the error number and the line number
+#                    | bash builtins to report the name of the
+#                    | source file, the command that is executing
+#                    | the name of the function that is throwing
+#                    | the error number and the line number
 # 2.0 |REN|11/14/2019| added vim directive and header file
 # 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
-#
-########################################################################
+
 if [ -z "${__funcerrecho}" ]
 then
 	export __funcerrecho=1
@@ -103,4 +102,3 @@ then
 	}
 	export -f stderrnecho
 fi # if [ -z "${__funcerrecho}" ]
-# vim: set syntax=bash, lines=55, columns=120,colorcolumn=78
