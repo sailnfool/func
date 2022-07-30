@@ -32,7 +32,6 @@
 #                    | checks for exceeding the maximum signed integer
 # 1.0 |REN|07/24/2022| Initial Release
 #_____________________________________________________________________
-#
 
 if [ -z "$__funcarithmetic" ]
 then
@@ -54,7 +53,7 @@ then
       errecho "Both arguments must be integers $@"
       exit 1
     fi
-    checksign=$(echo "${1} - ${maxsignedint}" | bc)
+    checksign=$(echo "${maxsignedint} - ${1}" | bc)
     if [[ "${checksign:0:1}" == "-" ]]
     then
       errecho "Argument ${1} is larger than the " \
@@ -63,7 +62,7 @@ then
       errecho "calculation aborted, result would be invalid, use bc"
       exit 2
     fi
-    checksign=$(echo "${2} - ${maxsignedint}" | bc)
+    checksign=$(echo "${maxsignedint} - ${2}" | bc)
     if [[ "${checksign:0:1}" == "-" ]]
     then
       errecho "Argument ${2} is larger than the " \
@@ -90,7 +89,7 @@ then
       errecho "Both arguments must be integers $@"
       exit 1
     fi
-    checksign=$(echo "${1} - ${maxsignedint}" | bc)
+    checksign=$(echo "${maxsignedint} - ${1}" | bc)
     if [[ "${checksign:0:1}" == "-" ]]
     then
       errecho "Argument ${1} is larger than the " \
@@ -99,7 +98,7 @@ then
       errecho "calculation aborted, result would be invalid, use bc"
       exit 2
     fi
-    checksign=$(echo "${2} - ${maxsignedint}" | bc)
+    checksign=$(echo "${maxsignedint} - ${2}" | bc)
     if [[ "${checksign:0:1}" == "-" ]]
     then
       errecho "Argument ${2} is larger than the " \
@@ -142,7 +141,7 @@ then
       errecho "second argument must be integer > 0 $@"
 			exit 1
 		fi
-    checksign=$(echo "${1} - ${maxsignedint}" | bc)
+    checksign=$(echo "${maxsignedint} - ${1}" | bc)
     if [[ "${checksign:0:1}" == "-" ]]
     then
       errecho "Argument ${1} is larger than the " \
@@ -151,7 +150,7 @@ then
       errecho "calculation aborted, result would be invalid, use bc"
       exit 2
     fi
-    checksign=$(echo "${2} - ${maxsignedint}" | bc)
+    checksign=$(echo "${maxsignedint} - ${2}" | bc)
     if [[ "${checksign:0:1}" == "-" ]]
     then
       errecho "Argument ${2} is larger than the " \
@@ -161,7 +160,7 @@ then
       exit 2
     fi
     result=$(echo "( ${number} + ${nearest} ) - ( ${number} % ${nearest} )" | bc )
-    checksign=$(echo "${result} - ${maxsignedint}" | bc)
+    checksign=$(echo "${maxsigned} - ${result}" | bc)
     if [[ "${checksign:0:1}" == "-" ]]
     then
       errecho "*** WARNING *** Result is larger than max signed integer"
