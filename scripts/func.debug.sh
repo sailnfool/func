@@ -1,7 +1,6 @@
 #!/bin/bash
-####################
-# Copyright (c) 2021 Sea2Cloud
-# 3901 Moorea Dr.
+########################################################################
+# Copyright (C) 2022 Robert E. Novak  All Rights Reserved
 # Modesto, CA 95356
 ########################################################################
 #
@@ -17,6 +16,7 @@
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
+# 1.3 |REN|07/29/2022| Set default for FUNC_DEBUG to DEBUGOFF
 # 1.2 |REN|07/19/2022| Cleaned up DEBUG_USAGE and removed redundant
 #                    | comments
 # 1.1 |REN|03/01/2021| Added DEBUGOFF
@@ -31,6 +31,8 @@
 # Finally -d will accepte an integer parameter as defined in
 # DEBUG_USAGE.  This parameter should be verfied using $re_digit
 # found in func.regex
+# See https://github.com/sailnfool/cmd/blob/main/scripts/countfiles.sh
+# for an example implementation.
 ########################################################################
 if [[ -z "${__funcdebug}" ]]
 then
@@ -42,6 +44,9 @@ then
   export DEBUGNOEXECUTE=6
   export DEBUGNOEX=6
   export DEBUGSETX=9
+
+  export FUNC_DEBUG=${FUNC_DEBUG:-${DEBUGOFF}}
+
   export DEBUG_USAGE="\tThe '-d'\t<#>\twhere <#> evaluates to a\n
 \t\t\tdecimal integer\n
 \tDEBUGOFF 0 -\tTurn off debugging\n
