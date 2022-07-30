@@ -5,27 +5,25 @@
 #
 # hashaskcreatecanonical - If the canonical files don't exist, ask
 #                          the user if they want them created.
+#
 # Author - Robert E. Novak aka REN
 # sailnfool@gmail.com
-# skype:sailnfool.ren
 # License CC by Sea2Cloud Storage, Inc.
 # see https://creativecommons.org/licenses/by/4.0/legalcode
 # for a complete copy of the Creative Commons Attribution license
-########################################################################
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
 # 1.0 |REN|07/06/2022| Initial Release
 #_____________________________________________________________________
-#
-########################################################################
-source hash.globalcanonical
-source func.insufficient
-source func.errecho
-source func.debug
 if [[ -z "${__hashaskcreatecanonical}" ]]
 then
   export __hashaskcreatecanonical=1
+
+  source hash.globalcanonical
+  source func.insufficient
+  source func.errecho
+  source func.debug
 
   function hash_askcreatecanonical() {
     # [-v] <file> "answeryes"
