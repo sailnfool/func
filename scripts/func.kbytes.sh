@@ -49,7 +49,7 @@ then
   export __kbibytessuffix=("BYT" "KIB" "MIB" "GIB" "TIB" "PIB" \
     "EIB" "ZIB")
   export __kbytessuffix="BKMGTPEZ"
-  for kb_i in { 0 $((${#__kbytessuffix}-1)) }
+  for ((kb_i=0;kb_i<${#__kbytessuffix};kb_i++))
   do
     kb_bytesuffix=${__kbytessuffix:${kb_i}:1}
     kb_bibytesuffix=${__kbibytessuffix[${kb_i}]}
@@ -72,7 +72,8 @@ then
   ####################################################################
   kb_allcat="${__kbibytessuffix[*]} ${__kbytessuffix}"
    
-  for kb_i in { 0 ${#kb_allcat} }
+  #for kb_i in { 0..${#kb_allcat} }
+  for ((kb_i=0;kb_i<${#kb_allcat};kb_i++))
   do
     echo -e "${kb_allcat:${kb_i}:1}\n" >> ${kb_let1}
   done

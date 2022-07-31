@@ -77,9 +77,9 @@ tt[9]=${re_nicenumber}
 hash1result=$(b2sum < /dev/null)
 tv[10]="01c:${hash1result:0:128}"
 tt[10]=${re_cryptohash}
-maxtests=10
 
-for ti in { 0 "${maxtests}" }
+#for ti in { 0 "${maxtests}" }
+for ((ti=0;ti<${#tv};ti++))
 do
   if [[ ! "${tv[${ti}]}" =~ ${tt[${ti}]} ]]
   then
@@ -91,15 +91,14 @@ done
 hash1result=$(b2sum < /dev/null)
 fv[0]="01:${hash1result:0:128}"
 ft[0]=${re_cryptohash}
-maxfails=0
 
 ########################################################################
 # In this case if the pattern match succeeds then it
 # is broken
 ########################################################################
-for ti in { 0 "${maxfails}" }
+for ((ti=0;ti<${#fv};ti++))
 do
-  if [[ "${fv[0]}" =~ ${ft[${ti}]} ]]
+  if [[ "${fv[${ti}]}" =~ ${ft[${ti}]} ]]
   then
     ((fail++))
   fi

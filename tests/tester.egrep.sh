@@ -75,9 +75,9 @@ tr[1]="1"
 tr[1]+=" 12"
 tr[1]+=" 123"
 tr[1]+=" 1234"
-maxtest=1
 
-for i in { 0 ${maxtest} }
+#for i in { 0 ${maxtest} }
+for ((i=0;i<${#tv};i++))
 do
   rm -f /tmp/good_$i.txt /tmp/test_$i.txt
   for j in ${tr[${i}]}

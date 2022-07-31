@@ -61,14 +61,14 @@ tr[1]=15
 
 tv[2]="0ff"
 tr[2]=255
-maxtests=2
 
 fail=0
 
 ########################################################################
 # ti short for testindex
 ########################################################################
-for ti in { 0 ${maxtests} }
+#for ti in { 0 ${maxtests} }
+for ((ti=0;ti<${#tv};ti++))
 do
   if [[ "${verbose_mode}" == "TRUE" ]]
   then

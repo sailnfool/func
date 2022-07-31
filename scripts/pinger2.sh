@@ -221,7 +221,8 @@ pingsleep=1
 # provision BMCs
 ####################
 rm -f "${pinglog}"
-for i in { "${Low_PING_Port}"     "${High_PING_Port}" }
+#for i in { "${Low_PING_Port}"     "${High_PING_Port}" }
+for ((i="${Low_PING_Port}";i<="${High_PING_Port}";i++))
 do
 	ipaddr="${subnet}.${i}"
 	####################
@@ -290,7 +291,8 @@ do
 	ip_ping[${i}]=1
 done
 responders=0
-for i in { "${Low_PING_Port}" "${High_PING_Port}" }
+#for i in { "${Low_PING_Port}" "${High_PING_Port}" }
+for ((i="${Low_PING_Port}";i<="${High_PING_Port}";i++))
 do
 	thisline=""
 	ipaddr="${subnet}.${i}"

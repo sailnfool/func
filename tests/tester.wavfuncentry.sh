@@ -88,7 +88,8 @@ tr[2]=720
 
 fail=0
 
-for ti in { 0 $((${#tv[@]}-1)) }
+#for ti in { 0 $((${#tv[@]}-1)) }
+for ((ti=0;ti<${#tv[@]};i++))
 do
   if [[ "${verbosemode}" == "TRUE" ]]
   then

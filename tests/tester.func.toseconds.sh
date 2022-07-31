@@ -76,7 +76,8 @@ fail=0
 ########################################################################
 # ti is short for testincrement
 ########################################################################
-for ti in { 0 ${maxtests} }
+#for ti in { 0 ${maxtests} }
+for ((ti=0;ti<${#maxtests};ti++))
 do
   if [[ ! "$(toseconds ${tv[${ti}]})" == "${tr[${ti}]}" ]]
   then
