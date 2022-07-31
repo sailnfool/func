@@ -79,7 +79,7 @@ tv[10]="01c:${hash1result:0:128}"
 tt[10]=${re_cryptohash}
 maxtests=10
 
-for ti in $(seq 0 "${maxtests}")
+for ti in { 0 "${maxtests}" }
 do
   if [[ ! "${tv[${ti}]}" =~ ${tt[${ti}]} ]]
   then
@@ -97,7 +97,7 @@ maxfails=0
 # In this case if the pattern match succeeds then it
 # is broken
 ########################################################################
-for ti in $(seq 0 "${maxfails}")
+for ti in { 0 "${maxfails}" }
 do
   if [[ "${fv[0]}" =~ ${ft[${ti}]} ]]
   then

@@ -35,8 +35,7 @@ then
     secondresult[0]=$(echo "$1" | awk -F: '{ if (NF == 1) {print $NF} }' | bc)
     secondresult[1]=$(echo "$1" | awk -F: '{ if (NF == 2) {print $1 "* 60 + " $2} }' | bc)
     secondresult[2]=$(echo "$1" | awk -F: '{ if (NF == 3) {print $1 " * 3600 + " $2 " * 60 + " $3} }' | bc)
-    
-    for i in $(seq 0 2)
+    for i in { 0 2 }
     do
       tresult="${secondresult[${i}]}"
       if [[ ! -z "${tresult}" ]]

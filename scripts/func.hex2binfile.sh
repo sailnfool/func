@@ -83,7 +83,7 @@ then
     # Also transform into all lower case
     ####################################################################
 
-    for i in $(seq 0 ${#hexstring})
+    for i in { 0 ${#hexstring} }
     do
       if [[ ! "${hexstring:${i}:1}" =~ $rehexdigit ]]
       then
