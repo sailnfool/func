@@ -33,8 +33,7 @@
 # 1.0 |REN|07/24/2022| Initial Release
 #_____________________________________________________________________
 
-if [ -z "$__funcarithmetic" ]
-then
+if [[ -z "$__funcarithmetic" ]] ; then
   export __funcarithmetic=1
 
   source func.regex
@@ -48,14 +47,12 @@ then
     local checksign
 
     if [[ ! "${1}" =~ $re_integer ]] || \
-      [[ ! "${2}" =~ $re_integer ]]
-    then
+      [[ ! "${2}" =~ $re_integer ]] ; then
       errecho "Both arguments must be integers $@"
       exit 1
     fi
     checksign=$(echo "${maxsignedint} - ${1}" | bc)
-    if [[ "${checksign:0:1}" == "-" ]]
-    then
+    if [[ "${checksign:0:1}" == "-" ]] ; then
       errecho "Argument ${1} is larger than the " \
         "maximum signed integer on a 64-bit machine"
       errecho "Max signed integer = ${maxsignedint}"
@@ -63,8 +60,7 @@ then
       exit 2
     fi
     checksign=$(echo "${maxsignedint} - ${2}" | bc)
-    if [[ "${checksign:0:1}" == "-" ]]
-    then
+    if [[ "${checksign:0:1}" == "-" ]] ; then
       errecho "Argument ${2} is larger than the " \
         "maximum signed integer on a 64-bit machine"
       errecho "Max signed integer = ${maxsignedint}"
@@ -84,14 +80,12 @@ then
     local checksign
 
     if [[ ! "${1}" =~ $re_integer ]] || \
-      [[ ! "${2}" =~ $re_integer ]]
-    then
+      [[ ! "${2}" =~ $re_integer ]] ; then
       errecho "Both arguments must be integers $@"
       exit 1
     fi
     checksign=$(echo "${maxsignedint} - ${1}" | bc)
-    if [[ "${checksign:0:1}" == "-" ]]
-    then
+    if [[ "${checksign:0:1}" == "-" ]] ; then
       errecho "Argument ${1} is larger than the " \
         "maximum signed integer on a 64-bit machine"
       errecho "Max signed integer = ${maxsignedint}"
@@ -99,8 +93,7 @@ then
       exit 2
     fi
     checksign=$(echo "${maxsignedint} - ${2}" | bc)
-    if [[ "${checksign:0:1}" == "-" ]]
-    then
+    if [[ "${checksign:0:1}" == "-" ]] ; then
       errecho "Argument ${2} is larger than the " \
         "maximum signed integer on a 64-bit machine"
       errecho "Max signed integer = ${maxsignedint}"
@@ -127,8 +120,7 @@ then
     local result
 
     if [[ ! "${1}" =~ $re_integer ]] || \
-      [[ ! "${2}" =~ $re_integer ]]
-    then
+      [[ ! "${2}" =~ $re_integer ]] ; then
       errecho "Both arguments must be integers $@"
       exit 1
     fi
@@ -136,14 +128,12 @@ then
 		number=$1
 		nearest=$2
 
-		if [[ $nearest -eq 0 ]]
-		then
+		if [[ $nearest -eq 0 ]] ; then
       errecho "second argument must be integer > 0 $@"
 			exit 1
 		fi
     checksign=$(echo "${maxsignedint} - ${1}" | bc)
-    if [[ "${checksign:0:1}" == "-" ]]
-    then
+    if [[ "${checksign:0:1}" == "-" ]] ; then
       errecho "Argument ${1} is larger than the " \
         "maximum signed integer on a 64-bit machine"
       errecho "Max signed integer = ${maxsignedint}"
@@ -151,8 +141,7 @@ then
       exit 2
     fi
     checksign=$(echo "${maxsignedint} - ${2}" | bc)
-    if [[ "${checksign:0:1}" == "-" ]]
-    then
+    if [[ "${checksign:0:1}" == "-" ]] ; then
       errecho "Argument ${2} is larger than the " \
         "maximum signed integer on a 64-bit machine"
       errecho "Max signed integer = ${maxsignedint}"
@@ -161,8 +150,7 @@ then
     fi
     result=$(echo "( ${number} + ${nearest} ) - ( ${number} % ${nearest} )" | bc )
     checksign=$(echo "${maxsigned} - ${result}" | bc)
-    if [[ "${checksign:0:1}" == "-" ]]
-    then
+    if [[ "${checksign:0:1}" == "-" ]] ; then
       errecho "*** WARNING *** Result is larger than max signed integer"
       errecho "Max signed integer = ${maxsignedint}"
     fi
@@ -182,18 +170,15 @@ then
 
     wavfuncentry -v
     local sub
-    if [[ $# -ne 1 ]]
-    then
+    if [[ $# -ne 1 ]] ; then
       insufficient 1 $@
       exit 1
     fi
-    if [[ ! "${1}" =~ $re_integer ]]
-    then
+    if [[ ! "${1}" =~ $re_integer ]] ; then
       errecho "argument is not an integer"
       exit 1
     fi
-    if [[ "${1}" -le 1 ]]
-    then
+    if [[ "${1}" -le 1 ]] ; then
       wavfuncexit -v
       echo 1
     else

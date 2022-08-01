@@ -21,8 +21,7 @@
 #_____________________________________________________________________
 #
 ########################################################################
-if [[ -z "${__funcdec2hex}" ]]
-then
+if [[ -z "${__funcdec2hex}" ]] ; then
   export __funcdec2hex=1
 
   source func.insufficient
@@ -48,13 +47,11 @@ then
         exit 1
         ;;
     esac
-    if [[ ! "${number}" =~ ${re_integer} ]]
-    then
+    if [[ ! "${number}" =~ ${re_integer} ]] ; then
       errecho "First arg to dec2hex is not an integer ${number}"
       exit 1
     fi
-    if [[ ! "${digits}" =~ ${re_integer} ]]
-    then
+    if [[ ! "${digits}" =~ ${re_integer} ]] ; then
       errecho "Second arg to dec2hex is not an integer ${digits}"
       exit 1
     fi

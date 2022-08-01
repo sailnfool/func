@@ -31,8 +31,7 @@
 # waverrindentdir
 # wavindentdir
 ########################################################################
-if [[ -z "${__wavfuncs}" ]]
-then
+if [[ -z "${__wavfuncs}" ]] ; then
 	export __wavfuncs=1
 
   source func.errecho
@@ -55,8 +54,7 @@ then
     local level
     local xx
 
-    if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVE}" ]]
-    then
+    if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVE}" ]] ; then
       local FN=${FUNCNAME[1]}
       local LN=${BASH_LINENO[0]}
       local SF=${BASH_SOURCE[1]}
@@ -71,8 +69,7 @@ then
       # skip over this function (which is FUNCNAME[0])
       ##################################################################
       for ((i=2;i<level;i++));do xx="${xx}>";done
-      if [[ $# -eq 1 ]] && [[ $1 == "-v" ]]
-      then
+      if [[ $# -eq 1 ]] && [[ $1 == "-v" ]] ; then
         echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
       else
         echo "${xx} ${FN}:${LN}" >&2
@@ -83,8 +80,7 @@ then
 
   function wavfuncexit () {>&2
 
-    if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVE}" ]]
-    then
+    if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVE}" ]] ; then
       local FN=${FUNCNAME[1]}
       local LN=${BASH_LINENO[0]}
       local SF=${BASH_SOURCE[1]}
@@ -100,8 +96,7 @@ then
       # skip over this function (which is FUNCNAME[0])
       ##################################################################
       for ((i=2;i<level;i++));do xx="${xx}<";done
-      if [[ $# -eq 1 ]] && [[ $1 == "-v" ]]
-      then
+      if [[ $# -eq 1 ]] && [[ $1 == "-v" ]] ; then
         echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
       else
         echo "${xx} ${FN}:${LN}" >&2
@@ -116,8 +111,7 @@ then
   ######################################################################
 	function waverrindentvar () {>&2
 
-    if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVAR}" ]]
-    then
+    if [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVAR}" ]] ; then
       local FN=${FUNCNAME[1]}
       local LN=${BASH_LINENO[0]}
       local SF=${BASH_SOURCE[0]}
@@ -126,15 +120,13 @@ then
       local xx
       local verbosemode="FALSE"
 
-      if [[ $# -gt 1 ]] && [[ "${1}" == -v ]]
-      then
+      if [[ $# -gt 1 ]] && [[ "${1}" == -v ]] ; then
         verbosemode="TRUE"
         shift
       fi
       level=${#FUNCNAME[@]}
       xx=$(printf "%${level}c%s" " " $@)
-      if [[ "${verbosemode}" == "TRUE" ]]
-      then
+      if [[ "${verbosemode}" == "TRUE" ]] ; then
 #         echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
         echo -n "${xx} ${FN}:${LN}" >&2
 #        echo -n "${xx} " >&2
@@ -161,8 +153,7 @@ then
     local xx
     local verbosemode="FALSE"
 
-    if [[ $# -gt 1 ]] && [[ "${1}" == -v ]]
-    then
+    if [[ $# -gt 1 ]] && [[ "${1}" == -v ]] ; then
       verbosemode="TRUE"
       shift
     fi
@@ -170,8 +161,7 @@ then
     level=${#FUNCNAME[@]}
 		xx=$(printf "%${level}c%s" " " $@)
 		echo $xx
-    if [[ "${verbosemode}" == "TRUE" ]]
-    then
+    if [[ "${verbosemode}" == "TRUE" ]] ; then
       local SF=${BASH_SOURCE[1]}
       local CM=${0##*/}
       echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2

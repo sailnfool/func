@@ -33,8 +33,7 @@
 # See https://github.com/sailnfool/cmd/blob/main/scripts/countfiles.sh
 # for an example implementation.
 ########################################################################
-if [[ -z "${__funcdebug}" ]]
-then
+if [[ -z "${__funcdebug}" ]] ; then
   export __funcdebug=1
   export DEBUGOFF=0
   export DEBUGWAVE=2

@@ -24,8 +24,7 @@
 #_____________________________________________________________________
 # 1.0 |REN|03/26/2022| original version
 #_____________________________________________________________________
-if [[ -z "${__funcnum2nice}" ]]
-then
+if [[ -z "${__funcnum2nice}" ]] ; then
 	export __funcnum2nice=1
 
   source func.errecho
@@ -57,16 +56,13 @@ then
     # Optionally, there is a "-b" parameter to convert to bibyte vs.
     # kbyte
     ####################################################################
-	  if [[ $# -lt 1 ]]
-	  then
+	  if [[ $# -lt 1 ]] ; then
       insufficient 1 $@
       exit 1
 	  else
-      if [[ "$1" = "-b" ]]
-      then
+      if [[ "$1" = "-b" ]] ; then
         convert="bibyte"
-        if [[ $# -lt 2 ]]
-        then
+        if [[ $# -lt 2 ]] ; then
           errecho "${FUNCNAME[0]} Found \"-b\" but number parameter missing"
           insufficient 2 $@
           exit 1
@@ -80,8 +76,8 @@ then
     fi #	  if [[ $# -lt 1 ]]
     toobig=$(echo "${bignumber} - $(nice2num 1000Z)" | bc)
     toobibig=$(echo "${bignumber} - $(nice2num 1024ZIB)" | bc)
-    if [[ ! ( ( "${toobig:0:1}" = "-" ) && ( "${toobibig:0:1}" = "-" ) ) ]]
-    then
+    if [[ ! ( ( "${toobig:0:1}" = "-" ) ]] \
+      && [[ ( "${toobibig:0:1}" = "-" ) ) ]] ; then
       errecho "Number is too big, maxnumber is $(nice2num 999Z)\n" \
         "Requested ${bignumber}, too large by ${toobig}"
       exit 1
@@ -124,30 +120,24 @@ then
       # This test seems strange, but it is because the numbers are
       # too big to work in the following numeric comparison
       ##################################################################
-      if [[ "${#kquotient}" -gt 6 ]]
-      then
+      if [[ "${#kquotient}" -gt 6 ]] ; then
         continue
       fi
-      if [[ "${kquotient}" -lt "1000" ]]
-      then
+      if [[ "${kquotient}" -lt "1000" ]] ; then
         kprefix=${kquotient}
-        if [[ "${#kprefix}" -eq 1 ]]
-        then
+        if [[ "${#kprefix}" -eq 1 ]] ; then
           kprefix="${kquotient}.${kquo100:1:1}"
         fi
         foundk="TRUE"
-        if [[ "${convert}" = "kbyte" ]]
-        then
+        if [[ "${convert}" = "kbyte" ]] ; then
           kindex=$i
           break
         fi
       fi
-      if [[ "${kbibquotient}" -lt "1024" ]]
-      then
+      if [[ "${kbibquotient}" -lt "1024" ]] ; then
         kbibprefix=${kbibquotient}
         foundkbib="TRUE"
-        if [[ "${convert}" = "kbibyte" ]]
-        then
+        if [[ "${convert}" = "kbibyte" ]] ; then
           kindex=$i
           break
         fi
@@ -158,8 +148,7 @@ then
     # Check to seee if we fell out of the loop with no found
     # result
     ####################################################################
-    if [[ "${kindex}" -eq "-1" ]]
-    then
+    if [[ "${kindex}" -eq "-1" ]] ; then
       errecho "${FUNCNAME[0]} Fell out of the loop with ${kindex}"
       errecho "${FUNCNAME[0]}" "Invalid result, kindex=${kindex}, "\
         "result=${result}, kprefix=${kprefix}"
@@ -167,11 +156,10 @@ then
         "kdivisor=${kdivisor}"
       exit 1
     fi
-    if [[ ( "${convert}" = "kbyte" ) && ( "${foundk}" = "TRUE" ) ]]
-    then
+    if [[ ( "${convert}" = "kbyte" ) ]] && \
+      [[ ( "${foundk}" = "TRUE" ) ]] ; then
       result=$(echo "${kprefix}${__kbytessuffix:${kindex}:1}")
-      if [[ "${#result}" -le 4 ]]
-      then
+      if [[ "${#result}" -le 4 ]] ; then
         echo ${result}
         exit 0
       else
@@ -182,8 +170,8 @@ then
         exit 1
       fi
     fi
-    if [[ ( "${convert}" = "kbibyte" ) && ( "${foundkbib} = ""TRUE" ) ]]
-    then
+    if [[ ( "${convert}" = "kbibyte" ) ]] && \
+      [[ ( "${foundkbib} = ""TRUE" ) ]] ; then
       echo "${kbibprefix}${__kbibytessuffix[${kindex}]}"
       exit 0
     fi

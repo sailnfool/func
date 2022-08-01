@@ -16,8 +16,7 @@
 #_____________________________________________________________________
 # 1.0 |REN|07/06/2022| Initial Release
 #_____________________________________________________________________
-if [[ -z "${__hashaskcreatecanonical}" ]]
-then
+if [[ -z "${__hashaskcreatecanonical}" ]] ; then
   export __hashaskcreatecanonical=1
 
   source hash.globalcanonical
@@ -77,8 +76,7 @@ then
     shift $(( ${OPTIND} - 1 ))
     waverrindentvar "args = $#"
 
-    if [[ "$#" -lt "${NUMARGS}" ]]
-    then
+    if [[ "$#" -lt "${NUMARGS}" ]] ; then
       insufficient "${NUMARGS} $@"
       wavfuncexit
       exit 1
@@ -87,23 +85,19 @@ then
       shift 1
     fi # if [[ "$#" -ne "${NUMARGS}" ]]
 
-    if [[ -r "${filecanonical}" ]]
-    then
+    if [[ -r "${filecanonical}" ]] ; then
       if [[ "${verbosemode}" == "TRUE" ]] && \
-        [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVAR}" ]]
-      then
+        [[ "${FUNC_DEBUG}" -ge "${DEBUGWAVAR}" ]] ; then
         cat "${filecanonical}"
       fi # if [[ "${verbosemode}" == "TRUE" ]]
     else
-      if [[ "${answeryes}" == "FALSE" ]]
-      then
+      if [[ "${answeryes}" == "FALSE" ]] ; then
         errecho "Missing ${filecanonical}, " \
           "run 'createhashcanonical'"
         errecho "to generate."
         echo -n "Run Now (Y/n): "
         read installanswer
-        if [[ -z "${installanswer}" ]]
-        then
+        if [[ -z "${installanswer}" ]] ; then
           installanswer="Y"
         fi
         case ${installanswer} in

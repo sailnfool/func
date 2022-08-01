@@ -39,8 +39,7 @@
 # 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
 
-if [ -z "${__funcerrecho}" ]
-then
+if [[ -z "${__funcerrecho}" ]] ; then
 	export __funcerrecho=1
 	function errecho() {>&2
 
@@ -49,13 +48,11 @@ then
 
 		PL=1
 		pbs="-e"
-		if [[ "$1" = "-i" ]]
-		then
+		if [[ "$1" = "-i" ]] ; then
 			PL=2
       shift
 		fi
-    if [[ "$1" = "-e" ]]
-    then
+    if [[ "$1" = "-e" ]] ; then
 		  pbs="-e"
       shift
     fi
@@ -75,8 +72,7 @@ then
 		local LN=${BASH_LINENO[1]}
 		local SF=${BASH_SOURCE[1]}
 		local CM=${0##*/}
-    if [[ "${1}" == "-q" ]]
-    then
+    if [[ "${1}" == "-q" ]] ; then
       shift 1
       echo $@
     else
@@ -92,8 +88,7 @@ then
 		local LN=${BASH_LINENO[1]}
 		local SF=${BASH_SOURCE[1]}
 		local CM=${0##*/}
-    if [[ "$1" == "-q" ]]
-    then
+    if [[ "$1" == "-q" ]] ; then
       shift 1
       echo -n $@
     else

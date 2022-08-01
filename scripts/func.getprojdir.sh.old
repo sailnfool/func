@@ -1,5 +1,4 @@
-if [ -z "${__stcfuncgetprojdir}" ]
-then
+if [[ -z "${__stcfuncgetprojdir}" ]] ; then
 	export __stcfuncgetprojdir=1
 	##########
 	# getprojdir
@@ -11,22 +10,18 @@ then
 		numparms=2
 		project="$1"
 		projectbase="$2"
-		if [ $# -lt ${numparms} ]
-		then
+		if [[ $# -lt ${numparms} ]] ; then
 			insufficient ${LINENO} ${FUNCNAME} ${numparms} $@
 			exit -1
 		fi
-		if [ -z ${project} ]
-		then
+		if [[ -z ${project} ]] ; then
 			nullparm ${LINENO} ${FUNCNAME} "1"
 		fi
-		if [ -z ${projectbase} ]
-		then
+		if [[ -z ${projectbase} ]] ; then
 			nullparm ${LINENO} ${FUNCNAME} "2"
 			exit -1
 		fi
-		if [ ! -d ${projectbase} ]
-		then
+		if [[ ! -d ${projectbase} ]] ; then
 			nullparm ${LINENO} ${FUNCNAME} "3"
 			exit -1
 		fi

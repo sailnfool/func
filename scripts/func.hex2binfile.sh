@@ -23,8 +23,7 @@
 # 1.0 |REN|07/08/2022| Initial Release
 #_____________________________________________________________________
 
-if [[ -z "${__funchex2binfile}" ]]
-then
+if [[ -z "${__funchex2binfile}" ]] ; then
   export __funchex2binfile=1
 
   source func.insufficient
@@ -57,10 +56,8 @@ then
     ####################################################################
     declare -l hexstring
 
-    if [[ "$#" -eq "${OPTARGS}" ]]
-    then
-      if [[ "${1}" == "-b" ]]
-      then
+    if [[ "$#" -eq "${OPTARGS}" ]] ; then
+      if [[ "${1}" == "-b" ]] ; then
         byteswap="TRUE"
         shift 1
       fi
@@ -69,8 +66,7 @@ then
     # At this point the optional -b has been shifted out, make sure we
     # still have 2 parameters
     ####################################################################
-    if [[ "$#" -lt "${NUMARGS}" ]]
-    then
+    if [[ "$#" -lt "${NUMARGS}" ]] ; then
       insufficient ${FUNCNAME} ${NUMARGS} $@
       exit 1
     else
@@ -86,8 +82,7 @@ then
 #    for i in { 0 ${#hexstring} }
     for ((i=0;i<${#hexstring};i++))
     do
-      if [[ ! "${hexstring:${i}:1}" =~ $rehexdigit ]]
-      then
+      if [[ ! "${hexstring:${i}:1}" =~ $rehexdigit ]] ; then
         stderrecho ${FUNCNAME} ${LINENO} "Digit ${i} is not "\
           "hex ${hexstring}"
         exit 1
@@ -109,11 +104,9 @@ then
       # We have to handle the special case that there are an odd number
       # of hex digits.
       ##################################################################
-      if [[ "$((${#hexstring} - index ))" -ge 2 ]]
-      then
+      if [[ "$((${#hexstring} - index ))" -ge 2 ]] ; then
         if [[ "${byteswap}" == "TRUE" ]] && \
-          [[ "${#saved}" == 0 ]]
-        then
+          [[ "${#saved}" == 0 ]] ; then
           saved="${hexstring:${index}:2}"
         else
           printf "\x${hexstring:${index}:2}${saved}" >> ${filename}
@@ -125,8 +118,7 @@ then
         # At this point we have a trailing single digit.
         # Zero pad a single digit and handle byteswapping correctly
         ################################################################
-        if [[ "${byteswap}" == "TRUE" ]]
-        then
+        if [[ "${byteswap}" == "TRUE" ]] ; then
 
           ##############################################################
           # The following code sometimes fails when the contents of

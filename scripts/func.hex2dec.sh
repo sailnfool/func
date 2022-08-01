@@ -18,8 +18,7 @@
 # 1.0 |REN|05/27/2022| Initial Release
 #_____________________________________________________________________
 
-if [[ -z "${__funchex2dec}" ]]
-then
+if [[ -z "${__funchex2dec}" ]] ; then
   export __funchex2dec=1
 
   source func.insufficient
@@ -27,8 +26,7 @@ then
   function func_hex2dec() {
     local hexnum
 
-    if [[ "$#" -ne 1 ]]
-    then
+    if [[ "$#" -ne 1 ]] ; then
       insufficient 1 $@
     else
       hexnum=$1

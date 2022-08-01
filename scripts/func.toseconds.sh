@@ -15,8 +15,7 @@
 # 1.0 |REN|02/01/2022| Initial Release
 #_____________________________________________________________________
 
-if [[ -z "${__functoseconds}" ]]
-then
+if [[ -z "${__functoseconds}" ]] ; then
 	export __functoseconds=1
 
 	source func.insufficient
@@ -27,8 +26,7 @@ then
     local tresult
     local result
 
-    if [[ $# -lt 1 ]]
-    then
+    if [[ $# -lt 1 ]] ; then
       insufficient 1 "at least one argument in time format required"
       exit -1
     fi
@@ -39,18 +37,15 @@ then
     for ((i=0;i<${#secondresult};i++))
     do
       tresult="${secondresult[${i}]}"
-      if [[ ! -z "${tresult}" ]]
-      then
-        if [[ "${tresult:0:1}" == "." ]]
-        then
+      if [[ ! -z "${tresult}" ]] ; then
+        if [[ "${tresult:0:1}" == "." ]] ; then
           result="0${tresult}"
         else
           result="${tresult}"
         fi
       fi
     done
-    if [[ "${result}" == "0" ]]
-    then
+    if [[ "${result}" == "0" ]] ; then
       result="0.0"
     fi
     echo ${result}

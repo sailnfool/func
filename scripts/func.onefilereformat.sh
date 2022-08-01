@@ -28,8 +28,7 @@
 # 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
 
-if [ -z "${__funconefilereformat}" ]
-then
+if [ -z "${__funconefilereformat}" ] ; then
 	export __funconefilereformat=1
 
 	function onefilereformat() {
@@ -43,34 +42,27 @@ then
 		sourcefile="$1"
 		sourcedir="$2"
 		destdir="$3"
-		if [ $# -lt ${numparms} ]
-		then
+		if [ $# -lt ${numparms} ] ; then
 			insufficient ${numparms} $@
 		fi
-		if [ -z "${sourcefile}" ]
-		then
+		if [ -z "${sourcefile}" ] ; then
 			nullparm "1"
 		fi
-		if [ -z "${sourcedir}" ]
-		then
+		if [ -z "${sourcedir}" ] ; then
 			nullparm "2"
 		fi
-		if [ -z "${destdir}" ]
-		then
+		if [ -z "${destdir}" ] ; then
 			nullparm "3"
 		fi
 
-		if [ ! -d ${destdir} ]
-		then
+		if [ ! -d ${destdir} ] ; then
 			mkdir -p ${destdir}
 		fi
-		if [ ! -d ${sourcedir} ]
-		then
+		if [ ! -d ${sourcedir} ] ; then
 			errecho "Source ${sourcedir} directory not present"
 			exit -1
 		fi
-		if [  ! -f ${sourcedir}/${sourcefile} ]
-		then
+		if [  ! -f ${sourcedir}/${sourcefile} ] ; then
 			errecho "Source file ${sourcedir}/${sourcefile} file not present"
 			exit -1
 		fi

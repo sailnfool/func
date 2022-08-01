@@ -24,21 +24,20 @@
 # 1.0 |REN|05/26/2020| original version
 #_____________________________________________________________________
 
-if [[ -z "${__funcnice2num}" ]]
-then
+if [[ -z "${__funcnice2num}" ]] ; then
 	export __funcnice2num=1
 
   source func.errecho
   source func.kbytes
 
 	nice2num () {
+    local numargs=1
     local resultnumber
     local nicenum
     local number
     local multiplier
 
-	  if [[ $# -ne 1 ]]
-	  then
+	  if [[ $# -ne ${numargs} ]] ; then
 		  errecho "${FUNCNAME[0]} Missing Parameter"
 		  echo ""
 	  else
@@ -59,12 +58,10 @@ then
 #		  multiplier=$(echo $nicenum | \
 #			  sed "s/^.*[0-9]*\([${__kbibytessuffix}]\)/\1/")
 
-		  if [[ -z "${multiplier}" ]]
-		  then
+		  if [[ -z "${multiplier}" ]] ; then
 			  echo ${number}
 		  else
-        if [[ "${#multiplier}" -eq 1 ]]
-        then
+        if [[ "${#multiplier}" -eq 1 ]] ; then
 
           ##############################################################
           # To understand the following existence test, see:
@@ -72,8 +69,7 @@ then
           # Also see:
           # https://wiki.bash-hackers.org/syntax/pe#use_an_alternate_value
           ##############################################################
-          if [[ ! ${__kbytesvalue[${multiplier}]+_} ]]
-          then
+          if [[ ! ${__kbytesvalue[${multiplier}]+_} ]] ; then
             errecho -i "multiplier \"${multiplier}\" not found"
             errecho -i "Please use a nice number suffix in the"
             errecho -i "following set for decimal powers"
@@ -87,10 +83,8 @@ then
           # KiB.  This if statement handles conversion to a three
           # letter suffix.
           ##############################################################
-          if [[ "${#multiplier}" -eq 2 ]]
-          then
-            if [[ "${multiplier}" -eq "BY" ]]
-            then
+          if [[ "${#multiplier}" -eq 2 ]] ; then
+            if [[ "${multiplier}" -eq "BY" ]] ; then
               multiplier="BYT"
             else
               multiplier="${multiplier}B"
@@ -103,8 +97,7 @@ then
           # Also see:
           # https://wiki.bash-hackers.org/syntax/pe#use_an_alternate_value
           ##################################################
-          if [[ ! ${__kbibytesvalue[${multiplier}]+_} ]]
-          then
+          if [[ ! ${__kbibytesvalue[${multiplier}]+_} ]] ; then
             errecho -i "multiplier \"${multiplier}\" not found"
             errecho -i "Please use a nice number suffix in the"
             errecho -i "following set for decimal powers"

@@ -24,8 +24,8 @@
 # func_os
 # Find the name of the installled operating system
 ########################################################################
-if [ -z "${__funcos}" ]
-then
+if [[ -z "${__funcos}" ]] ; then
+
   export __funcos=1
 
   function func_os() {
@@ -41,8 +41,8 @@ fi # if [ -z "${__funcos}" ]
 # func_idlike
 # Find the release famile
 ########################################################################
-if [ -z "${__funcidlike}" ]
-then
+if [[ -z "${__funcidlike}" ]] ; then
+
   export __funcidlike=1
 
   function func_idlike() {
@@ -52,14 +52,15 @@ then
   # end of function func_idlike
   #################### 
   export -f func_idlike
+
 fi # if [ -z "${__funcidlike}" ]
 
 ########################################################################
 # func_os_version_id
 # Find the name of the installled operating system
 ########################################################################
-if [ -z "${__funcos_version_id}" ]
-then
+if [[ -z "${__funcos_version_id}" ]] ; then
+
   export __funcos_version_id=1
 
   function func_os_version_id() {
@@ -69,14 +70,15 @@ then
   # end of function func_os
   #################### 
   export -f func_os_version_id
+
 fi # if [ -z "${__funcos_version_id}" ]
 
 ########################################################################
 # func_arch
 # Find the name of the installled operating system
 ########################################################################
-if [ -z "${__funcarch}" ]
-then
+if [[ -z "${__funcarch}" ]] ; then
+
   export __funcarch=1
 
   function func_arch() {

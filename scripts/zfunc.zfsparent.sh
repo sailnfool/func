@@ -13,8 +13,7 @@
 # 1.0 |REN|06/17/2020| Set the parent directory of zfs in-tree
 
 ####################
-if [ -z "${__zfunczfsparent}" ]
-then
+if [[ -z "${__zfunczfsparent}" ]] ; then
 	export __zfunczfsparent=1
 	function zfsparent()
 	{

@@ -35,8 +35,7 @@
 # 1.0 |REN|02/22/2021| Initial Release
 #_____________________________________________________________________
 
-if [[ -z "${__funclogger}" ]]
-then
+if [[ -z "${__funclogger}" ]] ; then
 	export __funclogger=1
 
 	source func.errecho
@@ -44,8 +43,7 @@ then
 
   function logger()
   {
-    if [[ $# -gt 0 ]]
-    then
+    if [[ $# -gt 0 ]] ; then
       echo -n "$1" >> ${TESTLOG}
     fi
     shift
@@ -72,15 +70,13 @@ then
 		# for the records in the log file
 		####################
 		# errecho ${FUNCNAME} ${LINENO} "#5=$5"
-		if [[ ! $5 =~ -*[0-9]+ ]]
-		then
+		if [[ ! $5 =~ -*[0-9]+ ]] ; then
 			mod_test_number="999999"
 		else
 			mod_test_number=$(expr $5 % 20)
 		fi
 		# errecho ${FUNCNAME} ${LINENO} "#mod_test_number=$mod_test_number"
-		if [ ${mod_test_number} -eq 0 ]]
-		then
+		if [[ ${mod_test_number} -eq 0 ]] ; then
 			####################
 			# Initialize the titles
 			####################
@@ -130,8 +126,7 @@ then
 		# Check the initial arguments
 		####################
 		NUMARGS=5
-		if [[ $# -lt ${NUMARGS} ]]
-		then
+		if [[ $# -lt ${NUMARGS} ]] ; then
 			insufficient ${FUNCNAME} ${LINENO} ${NUMARGS} $@
 		fi
 		logevent="$1"
@@ -143,10 +138,8 @@ then
 
 		logexecbase=${logexec##*/}
 		upper_exec=$(echo ${logexecbase}|tr [:lower:] [:upper:])
-		if [[ -z "${TESTLOG}" ]]
-		then
-			if [[ -z "${TESTDIR}" ]]
-			then
+		if [[ -z "${TESTLOG}" ]] ; then
+			if [[ -z "${TESTDIR}" ]] ; then
 				errecho ${FUNCNAME} ${LINENO} \
 					"Environment variable TESTDIR not set"
 				errecho ${FUNCNAME} ${LINENO} \
@@ -164,14 +157,12 @@ then
 				####################
 				# Write the titles to the log files
 				####################
-				if [[ ${mod_test_number} -eq 0 ]]
-				then
+				if [[ ${mod_test_number} -eq 0 ]] ; then
 					echo "${starttitles}" >> ${TESTLOG}
 				fi
 
 				NUMSTARTARGS=9
-				if [[ $# -lt ${NUMSTARTARGS} ]]
-				then
+				if [[ $# -lt ${NUMSTARTARGS} ]] ; then
 					errecho ${FUNCNAME} ${LINENO} \
 						"error in ${logevent} parameter count"
 					insufficient ${FUNCNAME} ${LINENO} ${NUMSTARTARGS} $@
@@ -180,8 +171,7 @@ then
 #				logdestdir="$7"
 # 				logdate_began="$8"
 # 				lognumprocs="$9"
-				if [[ -z "${TESTLOG}" ]]
-				then
+				if [[ -z "${TESTLOG}" ]] ; then
 					errecho ${FUNCNAME} ${LINENO} \
 					    "TESTLOG not initialized"
 					exit 1
@@ -190,19 +180,16 @@ then
 					"${1}|${2}|${3}|${4}|${5}|${6}|${7}|${8}|${9}" >> ${TESTLOG}
 				;;
       NOTE)
-        if [[ ${mod_test_number} -eq 0 ]]
-        then
+        if [[ ${mod_test_number} -eq 0 ]] ; then
           echo "${starttitles}" >> ${TESTLOG}
         fi
         NUMNOTEARGS=7
-        if [[ $# -lt ${NUMNOTEARGS} ]]
-        then
+        if [[ $# -lt ${NUMNOTEARGS} ]] ; then
           errecho ${FUNCNAME} ${LINENO} \
             "error in ${logevent} parameter count"
           insufficient ${FUNCNAME} ${LINENO} ${NUMNOTEARGS} $@
         fi
-				if [[ -z "${TESTLOG}" ]]
-				then
+				if [[ -z "${TESTLOG}" ]] ; then
 					errecho ${FUNCNAME} ${LINENO} \
 					    "TESTLOG not initialized"
 					exit 1
@@ -211,8 +198,7 @@ then
 					"${1}|${2}|${3}|${4}|${5}|${6}|${7}" >> ${TESTLOG}
 				;;
 			FINISH)	# Handle the FINISH Log entry
-				if [[ ${mod_test_number} -eq 0 ]]
-				then
+				if [[ ${mod_test_number} -eq 0 ]] ; then
 
 				####################
 				# Write the titles to the log files
@@ -220,8 +206,7 @@ then
 					echo "${finishtitles}" >> ${TESTLOG}
 				fi
 				NUMFINISHARGS=9
-				if [[ $# -lt ${NUMFINISHARGS} ]]
-				then
+				if [[ $# -lt ${NUMFINISHARGS} ]] ; then
 					errecho ${FUNCNAME} ${LINENO} \
 						"error in ${logevent} parameter count"
 					insufficient ${FUNCNAME} ${LINENO} ${NUMFINISHARGS} $@
@@ -235,8 +220,7 @@ then
 					>> ${TESTLOG}
 				;;
 			DELTA)	# Handle the DELTA Log entry
-				if [[ ${mod_test_number} -eq 0 ]]
-				then
+				if [[ ${mod_test_number} -eq 0 ]] ; then
 	
 					####################
 					# Write the titles to the log files
@@ -244,8 +228,7 @@ then
 					echo "${deltatitles}" >> ${TESTLOG}
 				fi
 				NUMDELTAARGS=11
-				if [[ $# -lt ${NUMDELTAARGS} ]]
-				then
+				if [[ $# -lt ${NUMDELTAARGS} ]] ; then
 					errecho ${FUNCNAME} ${LINENO} \
 						"error in ${logevent} parameter count"
 					insufficient ${FUNCNAME} ${LINENO} ${NUMDELTAARGS} $@

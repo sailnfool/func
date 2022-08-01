@@ -20,8 +20,7 @@
 
 source func.errecho
 
-if [ -z "${__func_hmsout}" ]
-then
+if [[ -z "${__func_hmsout}" ]] ; then
 	export __func_hmsout=1
 	function hmsout() {
 
@@ -54,8 +53,7 @@ then
         exit 1
          ;;
     esac
-    if [[ "${hour}" -ge "24" ]]
-    then
+    if [[ "${hour}" -ge "24" ]] ; then
       printf "$d days" $((days / 24))
       ((hour=hour%24))
     fi

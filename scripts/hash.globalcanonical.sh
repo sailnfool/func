@@ -30,8 +30,7 @@
 # 1.0 |REN|07/29/2022| Initial Release
 #_____________________________________________________________________
 
-if [[ -z "${__hashglobalcanonical}" ]]
-then
+if [[ -z "${__hashglobalcanonical}" ]] ; then
   export __hashglobalcanonical=1
 
   ####################################################################
@@ -53,8 +52,7 @@ then
   
   export YesFSdir=${HOME}/Dropbox/YesFS
   export YesFSdiretc=${HOME}/Dropbox/YesFS/etc
-  if [[ ! -d "${YesFSdir}" ]]
-  then
+  if [[ ! -d "${YesFSdir}" ]] ; then
     export YesFSdir=/tmp/YesFS
     export YesFSdiretc=${YesFSdir}/etc
     mkdir -p ${YesFSdiretc}

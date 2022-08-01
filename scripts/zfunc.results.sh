@@ -12,12 +12,10 @@
 #_____________________________________________________________________
 # 1.0 |REN|06/17/2020| Set the directory for storing benchmark results
 ####################
-if [ -z "${__zfuncresults}" ]
-then
+if [ -z "${__zfuncresults}" ] ; then
 	export __zfuncresults=1
 	function benchresults {
-		if [ $# -gt 0 ]
-		then
+		if [ $# -gt 0 ] ; then
 			luser=$1
 		else
 			echo "Missing username"

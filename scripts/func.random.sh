@@ -22,8 +22,7 @@
 ########################################################################
 # func_intrandom - return a random positive integer from /dev/random
 ########################################################################
-if [[ -z "$__funcintrandom" ]]
-then
+if [[ -z "$__funcintrandom" ]] ; then
 	export __funcintrandom=1
 
 	function func_intrandom() {
@@ -49,14 +48,12 @@ then
     local maxsignedint=$(echo "2^63-1" | bc)
     local checksign
 
-    if [[ ! "${1}" =~ $re_decimal ]]
-    then
+    if [[ ! "${1}" =~ $re_decimal ]] ; then
       errecho "Argument is not a decimal number"
       exit 1
     else
       checksign=$(echo "${1} - ${maxsignedint}" | bc)
-      if [[ "${checksign:0:1}" == "-" ]]
-      then
+      if [[ "${checksign:0:1}" == "-" ]] ; then
         errecho "Argument out of range ${1}"
         errecho "Argument greater than maximum signed integer"
         errecho "${maxsignedint}"

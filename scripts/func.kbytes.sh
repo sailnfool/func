@@ -26,9 +26,9 @@
 #_____________________________________________________________________
 #
 ########################################################################
-if [[ -z "${__func_kbytes}" ]]
-then
+if [[ -z "${__func_kbytes}" ]] ; then
   __func_kbytes=1
+
   declare -a __kbibytessuffix
   declare -A __kbytesvalue
   declare -A __kbibytesvalue

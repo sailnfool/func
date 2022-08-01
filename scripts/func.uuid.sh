@@ -16,8 +16,7 @@
 # 1.0 |REN|07/22/2020| original version
 #_____________________________________________________________________
 
-if [[ -z "${__funcuuid}" ]]
-then
+if [[ -z "${__funcuuid}" ]] ; then
 	export __funcuuid=1
 	function uuid()
 	{
@@ -28,8 +27,7 @@ then
 		do
 			B=$(( $RANDOM%255 ))
 	
-			if (( N == 6 ))
-			then
+			if (( N == 6 )) ; then
 				printf '4%x' $(( B%15 ))
 			elif (( N == 8 ))
 			then

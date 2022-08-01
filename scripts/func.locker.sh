@@ -24,8 +24,7 @@
 # 1.0 |REN|03/15/2021| original version
 #_____________________________________________________________________
 
-if [[ -z "${__func_locker}" ]]
-then
+if [[ -z "${__func_locker}" ]] ; then
 	export __func_locker=1
 	
 	source func.errecho
@@ -97,8 +96,7 @@ then
         ;;
       2)
 			  lockfile="$1"
-				if [[ ! "$2" =~ $re_integer ]]
-        then
+				if [[ ! "$2" =~ $re_integer ]] ; then
 					errecho "${FUNCNAME}" "${LINENO}" \
 						"Not a number - $2"
           errecho "${func_getlock_USAGE}"
@@ -138,8 +136,7 @@ then
 			errecho "${FUNCNAME}" "${LINENO}" \
 				$(ls -l "${lockfile}" | cut -d " " -f 3)
 			((++lockcount))
-			if [[ "${lockcount}" -gt "${maxspins}" ]]
-			then
+			if [[ "${lockcount}" -gt "${maxspins}" ]] ; then
 				errecho "${FUNCNAME}" "${LINENO}" \
 					"Exceeded ${maxspins} spins waiting for lock, quitting"
 				exit 1
@@ -160,15 +157,13 @@ then
 
     local lockfile
 
-		if [[ $# -eq 0 ]]
-		then
+		if [[ $# -eq 0 ]] ; then
 			errecho "${FUNCNAME}" "${LINENO}" \
 			    "No lockfile specified"
 			exit 1
 		fi
     lockfile="$1"
-    if [[ -f "${lockfile}" ]]
-    then
+    if [[ -f "${lockfile}" ]] ; then
 		  rm -f "${lockfile}"
     else
       errecho ${FUNCNAME} ${LINENO} \
@@ -185,14 +180,12 @@ then
     mkdir -p ${HOME_RESULTS} ${TESTDIR} ${ETCDIR} 
     touch ${LOCKERRS} ${TESTLOG}
 
-    if [[ ! -r ${BATCHNUMBERFILE} ]]
-    then
+    if [[ ! -r ${BATCHNUMBERFILE} ]] ; then
       func_getlock ${LOCKFILE_BATCHNUMBERFILE}
       echo 0 > ${BATCHNUMBERFILE}
       func_releaselock ${LOCKFILE_BATCHNUMBERFILE}
     fi
-    if [[ ! -r ${TESTNUMBERFILE} ]]
-    then
+    if [[ ! -r ${TESTNUMBERFILE} ]] ; then
       func_getlock ${LOCKFILE_TESTNUMBERFILE}
       echo 0 > ${TESTNUMBERFILE}
       func_releaselock ${LOCKFILE_TESTNUMBERFILE}
@@ -232,13 +225,11 @@ then
   {
     local value
 
-    if [[ $# -ne 2 ]]
-    then
+    if [[ $# -ne 2 ]] ; then
       insufficient 2
     fi
     func_getlock "$1"
-    if [[ ! -r "$2" ]]
-    then
+    if [[ ! -r "$2" ]] ; then
       echo 0 > "$2"
     fi
     value=$(cat "$2")
@@ -252,8 +243,7 @@ then
   ############################################################
   func_putcounter()
   {
-    if [[ $# -ne 3 ]]
-    then
+    if [[ $# -ne 3 ]] ; then
       insufficient 3
     fi
     func_getlock "$1"
@@ -270,8 +260,7 @@ then
 
     local value
 
-    if [[ $# -ne 2 ]]
-    then
+    if [[ $# -ne 2 ]] ; then
       insufficient 2
     fi
     value=$(func_getcounter "$1" "$2")

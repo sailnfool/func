@@ -33,8 +33,7 @@
 # 1.0 |REN|09/06/2018| original version
 #_____________________________________________________________________
 
-if [[ -z "${__funcpathmunge}" ]]
-then
+if [[ -z "${__funcpathmunge}" ]] ; then
 	export __funcpathmunge=1
 
   source func.errecho
@@ -46,8 +45,7 @@ then
 
 		USAGE="${FUNCNAME} <dir> [ after ]"
 		BASHRC_ADDPATH=$HOME/.bashrc.addpath
-		if [[ -d "$1" ]]
-		then
+		if [[ -d "$1" ]] ; then
 		  realpath / 2>&1 >/dev/null && path=$(realpath "$1") || \
         path="$1"
 		  # GNU bash, version 2.02.0(1)-release (sparc-sun-solaris2.6) 

@@ -24,8 +24,7 @@
 # 1.0 |REN|07/07/2022| Initial Release
 #_____________________________________________________________________
 
-if [[ -z "${__hashloadcanonical}" ]]
-then
+if [[ -z "${__hashloadcanonical}" ]] ; then
   export __hashloadcanonical=1
 
   source hash.globalcanonical
@@ -41,8 +40,7 @@ then
     local verbosemode="FALSE"
     local verboseflag=""
 
-    if [[ "$#" -eq 1 ]] && [[ "$1" == "-v" ]]
-    then
+    if [[ "$#" -eq 1 ]] && [[ "$1" == "-v" ]] ; then
       verbosemode="TRUE"
       verboseflag=""
     fi
@@ -87,8 +85,7 @@ then
       # Only perform a diagnostic dump in verbose & debug modes
       ##################################################################
       if [[ "${verboseflag}" == "TRUE" ]] && \
-        [[ "${FUNC_DEBUG}" -gt "${DEBUGWAVARR}" ]]
-      then
+        [[ "${FUNC_DEBUG}" -gt "${DEBUGWAVARR}" ]] ; then
         for nkey in "${!newarr[@]}"
         do
           waverrindentvar ${verboseflag} "${arrname}["${nkey}"]=" \
