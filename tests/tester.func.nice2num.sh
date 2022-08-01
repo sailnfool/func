@@ -71,23 +71,19 @@ ZIB	1180591620717411303424
 EOF2
 while read -r suffix value
 do
-  if [[ "${verbose_mode}" == "TRUE" ]]
-  then
+  if [[ "${verbose_mode}" == "TRUE" ]] ; then
     echo -e "${suffix}\t$(nice2num 1${suffix})"
   fi
-  if [[ "$(nice2num 1${suffix})" != "${value}" ]]
-  then
+  if [[ "$(nice2num 1${suffix})" != "${value}" ]] ; then
     ((fail++))
   fi
 done < ${kbtable}
 while read -r suffix value
 do
-  if [[ "${verbose_mode}" == "TRUE" ]]
-  then
+  if [[ "${verbose_mode}" == "TRUE" ]] ; then
     echo -e "${suffix}\t$(nice2num 1${suffix})"
   fi
-  if [[ "$(nice2num 1${suffix})" != "${value}" ]]
-  then
+  if [[ "$(nice2num 1${suffix})" != "${value}" ]] ; then
     ((fail++))
   fi
 done < ${kbibtable}

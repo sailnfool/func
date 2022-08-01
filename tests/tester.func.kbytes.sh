@@ -45,23 +45,19 @@ do
 	esac
 done
 
-if [[ -z "${__kbytessuffix}" ]]
-then
+if [[ -z "${__kbytessuffix}" ]] ; then
   errecho -i "__kbytessuffix not initialized"
   exit 1
 fi
-if [[ -z "${__kbibytessuffix}" ]]
-then
+if [[ -z "${__kbibytessuffix}" ]] ; then
   errecho -i "__kbibytessuffix not initialized"
   exit 1
 fi
-if [[ -z "${__kbytesvalue[@]}" ]]
-then
+if [[ -z "${__kbytesvalue[@]}" ]] ; then
   errecho -i "__kbytesvalue not initialized"
   exit 1
 fi
-if [[ -z "${__kbibytesvalue[@]}" ]]
-then
+if [[ -z "${__kbibytesvalue[@]}" ]] ; then
   errecho -i "__kbibytesvalue not initialized"
   exit 1
 fi
@@ -77,10 +73,8 @@ do
   # exceed the capacity of native integers on a machine
   ############################################################ 
   if [[ "${__kbytesvalue[${k_bytesuffix}]}" != \
-    $(echo "1000 ^ ${i}" | bc) ]]
-  then
-    if [[ "${verbose_mode}" == "TRUE" ]]
-    then
+    $(echo "1000 ^ ${i}" | bc) ]] ; then
+    if [[ "${verbose_mode}" == "TRUE" ]] ; then
       echo "Byte Suffix $i = \"${k_bytesuffix}\", " \
         "value=\"${__kbytesvalue[${k_bytesuffix}]}\""
       echo -n "Computed value= "
@@ -90,10 +84,8 @@ do
     ((fail++))
   fi
   if [[ "${__kbibytesvalue[${k_bibytesuffix}]}" != \
-    $(echo "1024 ^ ${i}" | bc) ]]
-  then
-    if [[ "${verbose_mode}" == "TRUE" ]]
-    then
+    $(echo "1024 ^ ${i}" | bc) ]] ; then
+    if [[ "${verbose_mode}" == "TRUE" ]] ; then
       echo "BiByte Suffix $i = \"${k_bibytesuffix}\", " \
         "value=\"${__kbibytesvalue[${k_bibytesuffix}]}\""
       echo -n "Computed value= "

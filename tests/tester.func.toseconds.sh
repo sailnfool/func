@@ -79,8 +79,7 @@ fail=0
 #for ti in { 0 ${maxtests} }
 for ((ti=0;ti<${#maxtests};ti++))
 do
-  if [[ ! "$(toseconds ${tv[${ti}]})" == "${tr[${ti}]}" ]]
-  then
+  if [[ ! "$(toseconds ${tv[${ti}]})" == "${tr[${ti}]}" ]] ; then
     ((fail++))
   fi
 done

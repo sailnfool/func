@@ -49,29 +49,24 @@ done
 shift $(( ${OPTIND} - 1 ))
 
 fail=0
-if [[ -z "${__funcos}" ]]
-then
+if [[ -z "${__funcos}" ]] ; then
   errecho -i "funcos not found"
   ((fail++))
 fi
-if [[ ! -f /etc/os-release ]]
-then
+if [[ ! -f /etc/os-release ]] ; then
   errecho -i "/etc/os-release not found are you on a Debian OS?"
   ((fail++))
 fi
 check_os=$(sed -ne '/^ID=/s/^ID=\(.*\)$/\1/p' < /etc/os-release)
-if [[ "${verbose_mode}" == "TRUE" ]]
-then
+if [[ "${verbose_mode}" == "TRUE" ]] ; then
   echo -e "Operating system check \"${check_os}\" vs. \"$(func_os)\""
   echo -e "Architecture check \"$(uname -m)\" vs. \"$(func_arch)\""
 fi
-if [[ "${check_os}" != "$(func_os)" ]] 
-then
+if [[ "${check_os}" != "$(func_os)" ]]  ; then
   errecho -i "Operating system mismatch \"${check_os}\" vs. \"$(func_os)\""
   ((fail++))
 fi
-if [[ "$(uname -m)" != "$(func_arch)" ]]
-then
+if [[ "$(uname -m)" != "$(func_arch)" ]] ; then
   errecho -i "Architecture mismatch \"$(uname -m)\" vs. \"$(func_arch)\""
   ((fail++))
 fi

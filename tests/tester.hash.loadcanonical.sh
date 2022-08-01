@@ -64,15 +64,13 @@ do
 	case ${name} in
 	h)
 		echo -e ${USAGE}
-    if [[ "${verbosemode}" == "TRUE" ]]
-    then
+    if [[ "${verbosemode}" == "TRUE" ]] ; then
       echo -e ${DEBUG_USAGE}
     fi
 		exit 0
 		;;
   d)
-    if [[ ! "${OPTARG}" =~ $re_digit ]]
-    then
+    if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
       errecho "-d requires a decimal digit"
     fi
     FUNC_DEBUG="${OPTARG}"
@@ -163,8 +161,7 @@ do
   ######################################################################
   diff ${fullfile} ${tmptarget} 2>&1 > /dev/null
   diffresult=$?
-  if [[ "${diffresult}" -ne 0 ]]
-  then
+  if [[ "${diffresult}" -ne 0 ]] ; then
     stderrecho "*** WARNING *** " "File ${fullfile} is different"
     diff ${fullfile} ${tmptarget}
 

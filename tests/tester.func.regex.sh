@@ -81,8 +81,7 @@ tt[10]=${re_cryptohash}
 #for ti in { 0 "${maxtests}" }
 for ((ti=0;ti<${#tv};ti++))
 do
-  if [[ ! "${tv[${ti}]}" =~ ${tt[${ti}]} ]]
-  then
+  if [[ ! "${tv[${ti}]}" =~ ${tt[${ti}]} ]] ; then
     ((fail++))
   fi
 done
@@ -98,8 +97,7 @@ ft[0]=${re_cryptohash}
 ########################################################################
 for ((ti=0;ti<${#fv};ti++))
 do
-  if [[ "${fv[${ti}]}" =~ ${ft[${ti}]} ]]
-  then
+  if [[ "${fv[${ti}]}" =~ ${ft[${ti}]} ]] ; then
     ((fail++))
   fi
 done

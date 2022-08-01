@@ -65,8 +65,7 @@ do
 done < ${testinput}
 cmp ${testverify} ${testoutput} 2>&1 > /dev/null
 failcmp=$?
-if [[ ! "${failcmp}" == 0 ]]
-then
+if [[ ! "${failcmp}" == 0 ]] ; then
   od -cx ${testoutput} | less
 fi
 exit ${fail}

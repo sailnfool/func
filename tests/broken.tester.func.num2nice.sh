@@ -52,8 +52,7 @@ for ((i=1298;i<1324;i++))
 do
   for ((j=0;j<${#__kbytessuffix};j++))
   do
-    if [[ "${verbose_mode}" == "TRUE" ]]
-    then
+    if [[ "${verbose_mode}" == "TRUE" ]] ; then
       echo "Requesting $i${__kbytessuffix:$j:1}"
       echo $(num2nice $(nice2num "$i${__kbytessuffix:$j:1}") )
     fi

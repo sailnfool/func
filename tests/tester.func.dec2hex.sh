@@ -82,13 +82,12 @@ fail=0
 #for ti in { 0 $(( ${#tv[@]} - 1 )) }
 for ((ti=0;ti<${#tv[@]};i++))
 do
-  if [[ "${verbosemode}" == "TRUE" ]]
-  then
+  if [[ "${verbosemode}" == "TRUE" ]] ; then
     echo "$(func_dec2hex ${tv[${ti}]} ${td[${ti}]}) should ${tr[${ti}]}"
   fi
 
-  if [[ ! "$(func_dec2hex ${tv[${ti}]} ${td[${ti}]})" == "${tr[${ti}]}" ]]
-  then
+  if [[ ! "$(func_dec2hex ${tv[${ti}]} ${td[${ti}]})" == \
+    "${tr[${ti}]}" ]] ; then
     ((fail++))
   fi
 done

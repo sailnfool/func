@@ -70,13 +70,11 @@ fail=0
 #for ti in { 0 ${maxtests} }
 for ((ti=0;ti<${#tv};ti++))
 do
-  if [[ "${verbose_mode}" == "TRUE" ]]
-  then
+  if [[ "${verbose_mode}" == "TRUE" ]] ; then
     echo "$(func_hex2dec ${tv[${ti}]} ) should ${tr[${ti}]}"
   fi
 
-  if [[ ! "$(func_hex2dec ${tv[${ti}]} )" == "${tr[${ti}]}" ]]
-  then
+  if [[ ! "$(func_hex2dec ${tv[${ti}]} )" == "${tr[${ti}]}" ]] ; then
     ((fail++))
   fi
 done

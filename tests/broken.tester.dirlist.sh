@@ -44,17 +44,14 @@ done
 fail=0
 topdir=/home/rnovak
 filecount=$(countfiles ${topdir})
-if [[ "${filecount}" -ge 2000 ]]
-then
+if [[ "${filecount}" -ge 2000 ]] ; then
   echo "Large directory ${topdir} has ${filecount} files"
   cd ${topdir}
   dirlist="$(find . -maxdepth 1 -type d -print 2>/dev/null | sed 's/^\.$//')"
   for dir in ${dirlist}
   do
-    if [[ -d ${dir} ]]
-    then
-      if [[ ! -r ${dir} ]]
-      then
+    if [[ -d ${dir} ]] ; then
+      if [[ ! -r ${dir} ]] ; then
         echo cannot read "./${dir}"
         ((fail++))
       fi

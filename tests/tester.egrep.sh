@@ -90,8 +90,7 @@ do
   do
     echo "$j" >> /tmp/test_$i.txt
   done
-  if [[ "${verbose_mode}" == "TRUE" ]]
-  then
+  if [[ "${verbose_mode}" == "TRUE" ]] ; then
     more /tmp/good_${i}.txt /tmp/test_${i}.txt
     diff /tmp/good_${i}.txt /tmp/test_${i}.txt
     echo "verbose diff result $?"
@@ -100,10 +99,8 @@ do
   fi
   diff /tmp/good_${i}.txt /tmp/test_${i}.txt
   diffresult=$?
-  if [[ "${diffresult}" -ne 0 ]]
-  then
-    if [[ "${verbose_mode}" == "TRUE" ]]
-    then
+  if [[ "${diffresult}" -ne 0 ]] ; then
+    if [[ "${verbose_mode}" == "TRUE" ]] ; then
       diff /tmp/good_${i}.txt /tmp/test_${i}.txt
       echo "diff result $?"
       cmp /tmp/good_${i}.txt /tmp/test_${i}.txt
@@ -112,12 +109,10 @@ do
     ((fail++))
   fi
 done
-if [[ "${verbose_mode}" == "FALSE" ]]
-then
+if [[ "${verbose_mode}" == "FALSE" ]] ; then
   rm -f ${TESTINPUT} /tmp/good_*.txt /tmp/test_*.txt
 fi
-if [[ "${fail}" -gt 0 ]]
-then
+if [[ "${fail}" -gt 0 ]] ; then
   echo "About to fail with ${fail}"
 fi
 exit ${fail}

@@ -45,14 +45,12 @@ do
 	h)
 		echo -e ${USAGE}
 		exit 0
-    if [[ "${verbosemode}" == "TRUE" ]]
-    then
+    if [[ "${verbosemode}" == "TRUE" ]] ; then
       echo -e ${DEBUG_USAGE}
     fi
 		;;
   d)
-    if [[ ! "${OPTARG}" =~ $re_digit ]]
-    then
+    if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
       errecho "-d requires a decimal digit"
     fi
     FUNC_DEBUG="${OPTARG}"
@@ -91,12 +89,11 @@ fail=0
 #for ti in { 0 $((${#tv[@]}-1)) }
 for ((ti=0;ti<${#tv[@]};i++))
 do
-  if [[ "${verbosemode}" == "TRUE" ]]
-  then
+  if [[ "${verbosemode}" == "TRUE" ]] ; then
     echo "$(func_factorial ${tv[${ti}]} ) should be ${tr[${ti}]}"
   fi
-  if [[ ! "$(func_factorial ${tv[${ti}]} )" -eq "${tr[${ti}]}" ]]
-  then
+  if [[ ! "$(func_factorial ${tv[${ti}]} )" -eq \
+    "${tr[${ti}]}" ]] ; then
     ((fail++))
   fi
 done

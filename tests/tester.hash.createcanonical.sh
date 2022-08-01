@@ -36,8 +36,7 @@ while getopts ${optionargs} name
 do
 	case ${name} in
 	d)
-    if [[ ! "${OPTARG}" =~ $re_digit ]]
-    then
+    if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
       errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
       errecho -e "${USAGE}"
       errecho -e "${DEBUG_USAGE}"
@@ -45,15 +44,13 @@ do
     fi
 		FUNC_DEBUG="${OPTARG}"
 		export FUNC_DEBUG
-		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]]
-		then
+		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
 			set -x
 		fi
 		;;
   h)
     errecho -e ${USAGE}
-    if [[ "${verbosemode}" == "TRUE" ]]
-    then
+    if [[ "${verbosemode}" == "TRUE" ]] ; then
       errecho -e ${DEBUG_USAGE}
     fi
     exit 0
@@ -80,8 +77,7 @@ hashcreatecanonicalscript=${HOME}/github/ren/scripts/hashcreatecanonic.sh
 hashtester=${HOME}/github/func/tests/tester.hash.createcanonical.sh
 git pull 2>&1 >/dev/null
 touchtimes func 2>&1 > /dev/null
-if [[ ${hashcreatecanonicalscript} -nt ${hashtester} ]]
-then
+if [[ ${hashcreatecanonicalscript} -nt ${hashtester} ]] ; then
   errecho "Testing file is out of date"
   errecho "Rebuild 'HERE' files in ${hashtester}"
   errecho "edit ${hashtester}"
@@ -286,8 +282,7 @@ do
   tmpdir=/tmp
   diff /tmp/${filename} ${YesFSdiretc}/${filename}
   result=$?
-  if [[ ! "${result}" -eq 0 ]]
-  then
+  if [[ ! "${result}" -eq 0 ]] ; then
     stderrecho "${FUNCNAME} *** WARNING *** "\
       "Comparison failed for ${filename}"
   fi

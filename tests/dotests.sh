@@ -86,8 +86,7 @@ do
   # does not exist
   ######################################################################
   testname=$(grep -h "${nametext}" ${testscript})
-  if [[ -z "${testname}" ]]
-  then
+  if [[ -z "${testname}" ]] ; then
     echo "testing script \"${testscript}\" is missing TESTNAME"
     echo "${failstring} ${testscript}"
     ((fail++))
@@ -97,14 +96,12 @@ do
   # Execute each testscript and issue the pass/fail message as
   # appropriate
   ######################################################################
-  if [[ ! -x ./${testscript} ]]
-  then
+  if [[ ! -x ./${testscript} ]] ; then
     chmod +x ./${testscript}
   fi
   ./${testscript} ${verboseflag}
   testresult=$?
-  if [[ ! ${testresult} -eq 0 ]]
-  then
+  if [[ ! ${testresult} -eq 0 ]] ; then
     echo -e "${failstring} ${testscript}\n\t${testname:${#nametext}}"
     ((fail++))
   else
