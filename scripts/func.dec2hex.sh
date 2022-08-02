@@ -26,6 +26,7 @@ if [[ -z "${__funcdec2hex}" ]] ; then
 
   source func.insufficient
   source func.errecho
+  source func.regex
 
   function func_dec2hex() {
     local number
