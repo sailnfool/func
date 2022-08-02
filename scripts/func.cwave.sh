@@ -11,7 +11,7 @@
 #	sailnfool@gmail.com
 # License CC by Sea2Cloud Storage, Inc.
 # see https://creativecommons.org/licenses/by/4.0/legalcode
-# for a complete copy of the Creative Commons Attribution licens
+# for a complete copy of the Creative Commons Attribution license
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 #_____________________________________________________________________
@@ -43,8 +43,8 @@ if [[ -z "${__wavfuncs}" ]] ; then
 	# my C Language programs.
   # wavfuncentry
   # wavfuncexit
-	# waverrindentdir
-	# wavindentdir
+	# waverrindentvar
+	# wavindentvar
   ######################################################################
 
   ######################################################################
