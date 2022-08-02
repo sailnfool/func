@@ -3,13 +3,15 @@
 # Copyright (C) 2022 Robert E. Novak  All Rights Reserved
 # Modesto, CA 95356
 ########################################################################
-#######################################################################
 #
 # toseconds - convert a time to number of seconds.  Has to be
 #             flexible for HH:MM:SS or MM:SS or just SS.xx
 #
 # Author: Robert E. Novak
 # email: sailnfool@gmail.com
+# License CC by Sea2Cloud Storage, Inc.
+# see https://creativecommons.org/licenses/by/4.0/legalcode
+# for a complete copy of the Creative Commons Attribution license
 #_____________________________________________________________________
 # Rev.|Aut| Date     | Notes
 # 1.0 |REN|02/01/2022| Initial Release
@@ -20,7 +22,8 @@ if [[ -z "${__functoseconds}" ]] ; then
 
 	source func.insufficient
 
-  function toseconds() {
+  toseconds() 
+  {
 
     local -a secondresult
     local tresult
@@ -30,11 +33,14 @@ if [[ -z "${__functoseconds}" ]] ; then
       insufficient 1 "at least one argument in time format required"
       exit -1
     fi
-    secondresult[0]=$(echo "$1" | awk -F: '{ if (NF == 1) {print $NF} }' | bc)
-    secondresult[1]=$(echo "$1" | awk -F: '{ if (NF == 2) {print $1 "* 60 + " $2} }' | bc)
-    secondresult[2]=$(echo "$1" | awk -F: '{ if (NF == 3) {print $1 " * 3600 + " $2 " * 60 + " $3} }' | bc)
-#    for i in {0..2}
-    for ((i=0;i<${#secondresult};i++))
+    secondresult[0]=$(echo "$1" | \
+      awk -F: '{ if (NF == 1) {print $NF} }' | bc)
+    secondresult[1]=$(echo "$1" | \
+      awk -F: '{ if (NF == 2) {print $1 "* 60 + " $2} }' | bc)
+    secondresult[2]=$(echo "$1" | \
+      awk -F: '{ if (NF == 3) {print $1 "*3600+" $2 "*60+" $3} }' | bc)
+
+    for ((i=0;i<${#secondresult[@]};i++))
     do
       tresult="${secondresult[${i}]}"
       if [[ ! -z "${tresult}" ]] ; then
