@@ -125,7 +125,8 @@ if [[ -z "${__wavfuncs}" ]] ; then
         shift
       fi
       level=${#FUNCNAME[@]}
-      xx=$(printf "%${level}c%s" " " $@)
+      xx=$(printf "%${level}c" " ")
+      xx="${xx}$@"
       if [[ "${verbosemode}" == "TRUE" ]] ; then
 #         echo "${xx} ${FN}:${LN}:::${SF}-->${CM}" >&2
         echo -n "${xx} ${FN}:${LN}" >&2
@@ -159,8 +160,8 @@ if [[ -z "${__wavfuncs}" ]] ; then
     fi
 
     level=${#FUNCNAME[@]}
-		xx=$(printf "%${level}c%s" " " $@)
-		echo $xx
+		xx=$(printf "%${level}c" " ")
+		echo $xx$@
     if [[ "${verbosemode}" == "TRUE" ]] ; then
       local SF=${BASH_SOURCE[1]}
       local CM=${0##*/}
