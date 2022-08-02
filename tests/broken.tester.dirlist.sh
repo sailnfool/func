@@ -8,8 +8,11 @@
 #_____________________________________________________________________
 # 1.0 |REN|03/20/2022| testing regex
 #_____________________________________________________________________
-#
-########################################################################
+
+source func.cwave
+source func.debug
+source func.errecho
+source func.regex
 
 TESTNAME="Test of function descending large directories"
 USAGE="\r\n${0##*/} [-[hv]]\r\n
@@ -20,19 +23,35 @@ USAGE="\r\n${0##*/} [-[hv]]\r\n
 \t\tNormally emits only PASS|FAIL message\r\n
 "
 
-optionargs="hv"
-verbose_mode="FALSE"
+optionargs="d:hv"
+verbosemode="FALSE"
 fail=0
 
 while getopts ${optionargs} name
 do
 	case ${name} in
+	d)
+    if [[ ! "${OPTARG}" =~ ${re_digit} ]] ; then
+      errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+      errecho -e "${USAGE}"
+      errecho -e "${DEBUG_USAGE}"
+      exit 1
+    fi
+		FUNC_DEBUG="${OPTARG}"
+		export FUNC_DEBUG
+		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
+			set -x
+		fi
+		;;
 	h)
 		echo -e ${USAGE}
+    if [[ "${verbosemode}" == "TRUE" ]] ; then
+      echo -e ${DEBUG_USAGE}
+    fi
 		exit 0
 		;;
 	v)
-		verbose_mode="TRUE"
+		verbosemode="TRUE"
 		;;
 	\?)
 		errecho "-e" "invalid option: -$OPTARG"
