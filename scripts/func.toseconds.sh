@@ -22,7 +22,7 @@ if [[ -z "${__functoseconds}" ]] ; then
 
 	source func.insufficient
 
-  toseconds() 
+  toseconds()
   {
 
     local -a secondresult
