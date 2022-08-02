@@ -42,28 +42,35 @@ FUNC_DEBUG=0
 while getopts ${optionargs} name
 do
 	case ${name} in
-	h)
-		echo -e ${USAGE}
-		exit 0
-    if [[ "${verbosemode}" == "TRUE" ]] ; then
-      echo -e ${DEBUG_USAGE}
-    fi
-		;;
-  d)
-    if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
-      errecho "-d requires a decimal digit"
-    fi
-    FUNC_DEBUG="${OPTARG}"
-    ;;
-	v)
-		verbosemode="TRUE"
-    verboseflag="-v"
-		;;
-	\?)
-		errecho "-e" "invalid option: -${OPTARG}"
-		errecho "-e" ${USAGE}
-		exit 1
-		;;
+  	h)
+  		echo -e ${USAGE}
+  		exit 0
+      if [[ "${verbosemode}" == "TRUE" ]] ; then
+        echo -e ${DEBUG_USAGE}
+      fi
+  		;;
+  	d)
+      if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
+        errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+        errecho -e "${USAGE}"
+        errecho -e "${DEBUG_USAGE}"
+        exit 1
+      fi
+  		FUNC_DEBUG="${OPTARG}"
+  		export FUNC_DEBUG
+  		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
+  			set -x
+  		fi
+  		;;
+  	v)
+  		verbosemode="TRUE"
+      verboseflag="-v"
+  		;;
+  	\?)
+  		errecho "-e" "invalid option: -${OPTARG}"
+  		errecho "-e" ${USAGE}
+  		exit 1
+  		;;
 	esac
 done
 
@@ -87,7 +94,7 @@ tr[2]=720
 fail=0
 
 #for ti in { 0 $((${#tv[@]}-1)) }
-for ((ti=0;ti<${#tv[@]};i++))
+for ((ti=0;ti<${#tv[@]};ti++))
 do
   if [[ "${verbosemode}" == "TRUE" ]] ; then
     echo "$(func_factorial ${tv[${ti}]} ) should be ${tr[${ti}]}"

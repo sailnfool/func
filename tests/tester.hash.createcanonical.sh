@@ -10,10 +10,13 @@
 #_____________________________________________________________________
 #
 ########################################################################
+
 source hash.globalcanonical
 source hash.askcreatecanonical
 source hash.loadcanonical
 source func.debug
+source func.regex
+
 
 TESTNAME="Test of hash script hashcreatecanonical (hashcreatecanonical.sh) from\n\thttps://github.com/sailnfool/func"
 USAGE="\n${0##*/} [-[hv]] [-d <#>]\n
@@ -35,34 +38,34 @@ fail=0
 while getopts ${optionargs} name
 do
 	case ${name} in
-	d)
-    if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
-      errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
-      errecho -e "${USAGE}"
-      errecho -e "${DEBUG_USAGE}"
-      exit 1
-    fi
-		FUNC_DEBUG="${OPTARG}"
-		export FUNC_DEBUG
-		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
-			set -x
-		fi
-		;;
-  h)
-    errecho -e ${USAGE}
-    if [[ "${verbosemode}" == "TRUE" ]] ; then
-      errecho -e ${DEBUG_USAGE}
-    fi
-    exit 0
-    ;;
-	v)
-		verbosemode="TRUE"
-		;;
-	\?)
-		errecho "-e" "invalid option: -$OPTARG"
-		errecho "-e" ${USAGE}
-		exit 1
-		;;
+  	d)
+      if [[ ! "${OPTARG}" =~ ${re_digit} ]] ; then
+        errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+        errecho -e "${USAGE}"
+        errecho -e "${DEBUG_USAGE}"
+        exit 1
+      fi
+  		FUNC_DEBUG="${OPTARG}"
+  		export FUNC_DEBUG
+  		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
+  			set -x
+  		fi
+  		;;
+    h)
+      errecho -e ${USAGE}
+      if [[ "${verbosemode}" == "TRUE" ]] ; then
+        errecho -e ${DEBUG_USAGE}
+      fi
+      exit 0
+      ;;
+  	v)
+  		verbosemode="TRUE"
+  		;;
+  	\?)
+  		errecho "-e" "invalid option: -$OPTARG"
+  		errecho "-e" ${USAGE}
+  		exit 1
+  		;;
 	esac
 done
 

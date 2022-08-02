@@ -31,10 +31,10 @@ scriptname=${0##*/}
 # 1.1 |REN|04/08/2022| Improved documentation
 # 1.0 |REN|02/20/2022| Initial Release
 #_____________________________________________________________________
-#
-########################################################################
 
+source func.debug
 source func.errecho
+source func.regex
 
 ########################################################################
 # Color sequences cribbed from:
@@ -43,13 +43,15 @@ source func.errecho
 failstring="[\033[91mFAIL\033[m]"
 passstring="[\033[92mPASS\033[m]"
 
-USAGE="\n{$0##*/} [-[hv]]\n
+USAGE="\n${0##*/} [-[hv]] [-d <#>]\n
+\t-d\t<#>\tSet the diagnostic levels.\n
+\t\t\tUse -vh to see the diagnostic levels.\n
 \t-h\t\tPrint this message\n
 \t-v\t\tVerbose mode to show testing steps\n
 \t\t\Normally emits only ${passstring}|${failstring} message\n
 "
 
-optionargs="hv"
+optionargs="d:hv"
 verbosemode="FALSE"
 verboseflag=""
 failure="FALSE"
@@ -57,11 +59,27 @@ failure="FALSE"
 
 while getopts ${optionargs} name
 do
-  case ${name} in
-    h)
-      echo -e ${USAGE}
-      exit 0
-      ;;
+	case ${name} in
+  	d)
+      if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
+        errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+        errecho -e "${USAGE}"
+        errecho -e "${DEBUG_USAGE}"
+        exit 1
+      fi
+  		FUNC_DEBUG="${OPTARG}"
+  		export FUNC_DEBUG
+  		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
+  			set -x
+  		fi
+  		;;
+  	h)
+  		echo -e ${USAGE}
+      if [[ "${verbosemode}" == "TRUE" ]] ; then
+        echo -e ${DEBUG_USAGE}
+      fi
+  		exit 0
+  		;;
     v)
       verbosemode="TRUE"
       verboseflag="-v"

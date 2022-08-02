@@ -10,38 +10,58 @@
 # 1.1 |REN|02/08/2022| Restructured to use arrays
 # 1.0 |REN|02/01/2022| testing reconstructed kbytes
 #_____________________________________________________________________
-#
-########################################################################
+
+source func.debug
 source func.errecho
 source func.kbytes
+source func.regex
 
 TESTNAME="Test of function kbytes (func.kbytes) from \n\thttps://github.com/sailnfool/func"
-USAGE="\r\n${0##*/} [-[hv]]\r\n
+USAGE="\n${0##*/} [-[hv]] [-d <#>]\n
 \t\tVerifies that the __kbytesvalue and __kbibytesvalue arrays have\r\n
 \t\tcorrectly initialized.  Normally emits only PASS|FAIL message\r\n
+\t-d\t<#>\tSet the diagnostic levels.\n
+\t\t\tUse -vh to see the diagnostic levels.\n
 \t-h\t\tPrint this message\r\n
 \t-v\t\tVerbose mode to show values\r\n
 "
 
-optionargs="hv"
-verbose_mode="FALSE"
+optionargs="d:hv"
+verbosemode="FALSE"
 fail=0
 
 while getopts ${optionargs} name
 do
 	case ${name} in
-	h)
-		echo -e ${USAGE}
-		exit 0
-		;;
-	v)
-		verbose_mode="TRUE"
-		;;
-	\?)
-		errecho "-e" "invalid option: -$OPTARG"
-		errecho "-e" ${USAGE}
-		exit 1
-		;;
+  	d)
+      if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
+        errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+        errecho -e "${USAGE}"
+        errecho -e "${DEBUG_USAGE}"
+        exit 1
+      fi
+  		FUNC_DEBUG="${OPTARG}"
+  		export FUNC_DEBUG
+  		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
+  			set -x
+  		fi
+  		;;
+  	h)
+  		echo -e ${USAGE}
+      if [[ "${verbosemode}" == "TRUE" ]] ; then
+        echo -e ${DEBUG_USAGE}
+      fi
+  		exit 0
+  		;;
+    v)
+      verbosemode="TRUE"
+      verboseflag="-v"
+      ;;
+  	\?)
+  		errecho "-e" "invalid option: -$OPTARG"
+  		errecho "-e" ${USAGE}
+  		exit 1
+  		;;
 	esac
 done
 
@@ -74,7 +94,7 @@ do
   ############################################################ 
   if [[ "${__kbytesvalue[${k_bytesuffix}]}" != \
     $(echo "1000 ^ ${i}" | bc) ]] ; then
-    if [[ "${verbose_mode}" == "TRUE" ]] ; then
+    if [[ "${verbosemode}" == "TRUE" ]] ; then
       echo "Byte Suffix $i = \"${k_bytesuffix}\", " \
         "value=\"${__kbytesvalue[${k_bytesuffix}]}\""
       echo -n "Computed value= "
@@ -85,7 +105,7 @@ do
   fi
   if [[ "${__kbibytesvalue[${k_bibytesuffix}]}" != \
     $(echo "1024 ^ ${i}" | bc) ]] ; then
-    if [[ "${verbose_mode}" == "TRUE" ]] ; then
+    if [[ "${verbosemode}" == "TRUE" ]] ; then
       echo "BiByte Suffix $i = \"${k_bibytesuffix}\", " \
         "value=\"${__kbibytesvalue[${k_bibytesuffix}]}\""
       echo -n "Computed value= "
@@ -94,12 +114,11 @@ do
     fi
     ((fail++))
   fi
-#   if [[ "${verbose_mode}" == "TRUE" ]]
-#   then
-#     echo "Byte Suffix $i = \"${k_bytesuffix}\", " \
-#       "value=\"${__kbytesvalue[${k_bytesuffix}]}\""
-#     echo "BiByte Suffix $i = \"${k_bibytesuffix}\", " \
-#       "value=\"${__kbibytesvalue[${k_bibytesuffix}]}\""
-#   fi
+   if [[ "${verbosemode}" == "TRUE" ]] ; then
+     waverrindentvar "Byte Suffix $i = \"${k_bytesuffix}\", " \
+       "value=\"${__kbytesvalue[${k_bytesuffix}]}\""
+     waverrindentvar "BiByte Suffix $i = \"${k_bibytesuffix}\", " \
+       "value=\"${__kbibytesvalue[${k_bibytesuffix}]}\""
+   fi
 done
 exit ${fail}

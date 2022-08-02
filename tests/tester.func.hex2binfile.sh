@@ -10,6 +10,8 @@
 #_____________________________________________________________________
 #
 ########################################################################
+
+source func.debug
 source func.errecho
 source func.hex2binfile
 
@@ -35,11 +37,27 @@ do
     b)
       byteswap="-b"
       ;;
+  	d)
+      if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
+        errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+        errecho -e "${USAGE}"
+        errecho -e "${DEBUG_USAGE}"
+        exit 1
+      fi
+  		FUNC_DEBUG="${OPTARG}"
+  		export FUNC_DEBUG
+  		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
+  			set -x
+  		fi
+  		;;
     f)
       testoutput="${OPTARG}"
       ;;
   	h)
   		echo -e ${USAGE}
+      if [[ "${verbosemode}" == "TRUE" ]] ; then
+        echo -e ${DEBUG_USAGE}
+      fi
   		exit 0
   		;;
   	v)

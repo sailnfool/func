@@ -61,29 +61,36 @@ FUNC_DEBUG=${DEBUGOFF}
 
 while getopts ${optionargs} name
 do
-	case ${name} in
-	h)
-		echo -e ${USAGE}
-    if [[ "${verbosemode}" == "TRUE" ]] ; then
-      echo -e ${DEBUG_USAGE}
-    fi
-		exit 0
-		;;
-  d)
-    if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
-      errecho "-d requires a decimal digit"
-    fi
-    FUNC_DEBUG="${OPTARG}"
-    ;;
-	v)
-		verbosemode="TRUE"
-    verboseflag="-v"
-		;;
-	\?)
-		errecho "-e" "invalid option: -${OPTARG}"
-		errecho "-e" ${USAGE}
-		exit 1
-		;;
+  case ${name} in
+  	d)
+      if [[ ! "${OPTARG}" =~ ${re_digit} ]] ; then
+        errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+        errecho -e "${USAGE}"
+        errecho -e "${DEBUG_USAGE}"
+        exit 1
+      fi
+  		FUNC_DEBUG="${OPTARG}"
+  		export FUNC_DEBUG
+  		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
+  			set -x
+  		fi
+  		;;
+  	h)
+  		echo -e ${USAGE}
+      if [[ "${verbosemode}" == "TRUE" ]] ; then
+        echo -e ${DEBUG_USAGE}
+      fi
+  		exit 0
+  		;;
+  	v)
+  		verbosemode="TRUE"
+      verboseflag="-v"
+  		;;
+  	\?)
+  		errecho "-e" "invalid option: -${OPTARG}"
+  		errecho "-e" ${USAGE}
+  		exit 1
+  		;;
 	esac
 done
 

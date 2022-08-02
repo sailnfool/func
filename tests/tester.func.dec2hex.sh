@@ -22,7 +22,9 @@ source func.errecho
 source func.dec2hex
 
 TESTNAME="Test of function global (func.dec2hex) from\n\thttps://github.com/sailnfool/func"
-USAGE="\n${0##*/} [-[hv]]\n
+USAGE="\n${0##*/} [-[hv]] [-d <#>]\n
+\t-d\t<#>\tSet the diagnostic levels.\n
+\t\t\tUse -vh to see the diagnostic levels.\n
 \t-h\t\tPrint this message\n
 \t-v\t\tVerbose mode to show values\n
 \t\tVerifies that the function will convert decimal numbers to zero
@@ -30,26 +32,42 @@ USAGE="\n${0##*/} [-[hv]]\n
 \t\tNormally emits only PASS|FAIL message\n
 "
 
-optionargs="hv"
+optionargs="d:hv"
 verbosemode="FALSE"
 verboseflag=""
 
 while getopts ${optionargs} name
 do
 	case ${name} in
-	h)
-		echo -e ${USAGE}
-		exit 0
-		;;
-	v)
-		verbosemode="TRUE"
-    verboseflag="-v"
-		;;
-	\?)
-		errecho "-e" "invalid option: -${OPTARG}"
-		errecho "-e" ${USAGE}
-		exit 1
-		;;
+  	d)
+      if [[ ! "${OPTARG}" =~ $re_digit ]] ; then
+        errecho "${0##/*}" "${LINENO}" "-d requires a decimal digit"
+        errecho -e "${USAGE}"
+        errecho -e "${DEBUG_USAGE}"
+        exit 1
+      fi
+  		FUNC_DEBUG="${OPTARG}"
+  		export FUNC_DEBUG
+  		if [[ $FUNC_DEBUG -ge ${DEBUGSETX} ]] ; then
+  			set -x
+  		fi
+  		;;
+  	h)
+  		echo -e ${USAGE}
+      if [[ "${verbosemode}" == "TRUE" ]] ; then
+        echo -e ${DEBUG_USAGE}
+      fi
+  		exit 0
+  		;;
+  	v)
+  		verbosemode="TRUE"
+      verboseflag="-v"
+  		;;
+  	\?)
+  		errecho "-e" "invalid option: -${OPTARG}"
+  		errecho "-e" ${USAGE}
+  		exit 1
+  		;;
 	esac
 done
 
@@ -80,7 +98,7 @@ fail=0
 # ti short for testindex
 ########################################################################
 #for ti in { 0 $(( ${#tv[@]} - 1 )) }
-for ((ti=0;ti<${#tv[@]};i++))
+for ((ti=0;ti<${#tv[@]};ti++))
 do
   if [[ "${verbosemode}" == "TRUE" ]] ; then
     echo "$(func_dec2hex ${tv[${ti}]} ${td[${ti}]}) should ${tr[${ti}]}"
