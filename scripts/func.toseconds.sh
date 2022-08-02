@@ -20,6 +20,9 @@
 if [[ -z "${__functoseconds}" ]] ; then
 	export __functoseconds=1
 
+  source func.cwave
+  source func.debug
+  source func.errecho
 	source func.insufficient
 
   toseconds()
@@ -31,7 +34,16 @@ if [[ -z "${__functoseconds}" ]] ; then
 
     if [[ $# -lt 1 ]] ; then
       insufficient 1 "at least one argument in time format required"
-      exit -1
+      exit 1
+    fi
+    if [[ $# -eq 2 ]] ; then
+      if [[ "$1" == "-v" ]] ; then
+        local verbosemode="TRUE"
+        shift
+      else
+        errecho "Invalid optional first argument, must be -v, got $@"
+        exit 2
+      fi
     fi
     secondresult[0]=$(echo "$1" | \
       awk -F: '{ if (NF == 1) {print $NF} }' | bc)
