@@ -36,29 +36,28 @@
 if [[ -z "${__funcpathmunge}" ]] ; then
 	export __funcpathmunge=1
 
-  source func.errecho
 
 	function func_pathmunge() {
 
-    local USAGE
-    local BASHRC_ADDPATH
+	local USAGE
+	local BASHRC_ADDPATH
 
 		USAGE="${FUNCNAME} <dir> [ after ]"
 		BASHRC_ADDPATH=$HOME/.bashrc.addpath
 		if [[ -d "$1" ]] ; then
 		  realpath / 2>&1 >/dev/null && path=$(realpath "$1") || \
-        path="$1"
+	path="$1"
 		  # GNU bash, version 2.02.0(1)-release (sparc-sun-solaris2.6) 
-      #  ==> TOTAL incompatibility with [[ test ]]
+	#  ==> TOTAL incompatibility with [[ test ]]
 		  [[ -z "${PATH}" ]] && export PATH="${path}/bin:/usr/bin"
 		  # SunOS 5.6 ==> (e)grep option "-q" not implemented !
 		  /bin/echo "${PATH}" | \
-        /bin/egrep -s "(^|:)${path}($|:)" >/dev/null || {
+	/bin/grep -e -s "(^|:)${path}($|:)" >/dev/null || {
 		    [[ "$2" == "after" ]] && export PATH="${PATH}:${path}" || \
-        export PATH="${path}:${PATH}"
+	export PATH="${path}:${PATH}"
 		  }
 		else
-			errecho -i "$1 is not a directory" "${USAGE}"
+			echo -e "$1 is not a directory" "${USAGE}" >&2
 		fi
 		echo "export PATH=${PATH}" > ${BASHRC_ADDPATH}
 	}
