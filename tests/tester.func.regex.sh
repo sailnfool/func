@@ -27,6 +27,7 @@ USAGE="\n${0##*/} [-[hv]] [-d <#>]\n
 \t-v\t\tVerbose mode to show values\n
 "
 
+func_NUMARGS=0
 optionargs="d:hv"
 verbosemode="FALSE"
 verboseflag=""
@@ -69,28 +70,43 @@ done
 
 shift $(( ${OPTIND} - 1 ))
 
+if [[ $# -lt ${func_NUMARGS} ]] ; then
+	insufficient ${func_NUMARGS} $@
+	errecho "-e" ${USAGE}
+	exit 2
+fi
+
 ########################################################################
 # tv is short for testvalue
 # tt is short for testtype
 ########################################################################
 tv[0]="12345"
 tt[0]=${re_integer}
+
 tv[1]="+123"
 tt[1]=${re_signedinteger}
+
 tv[2]="-123"
 tt[2]=${re_signedinteger}
+
 tv[3]="-123.45"
 tt[3]=${re_decimal}
+
 tv[4]="face1"
 tt[4]=${re_hexnumber}
+
 tv[5]="DEADBeef9"
 tt[5]=${re_hexnumber}
+
 tv[6]="1M"
 tt[6]=${re_nicenumber}
+
 tv[7]="1MIB"
 tt[7]=${re_nicenumber}
+
 tv[8]="1BYT"
 tt[8]=${re_nicenumber}
+
 tv[9]="99ZIB"
 tt[9]=${re_nicenumber}
 
