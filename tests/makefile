@@ -1,2 +1,2 @@
-test: tester.* dotests.sh
-	bash dotests.sh
+test: tester.* 
+	bash dotests
