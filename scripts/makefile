@@ -3,25 +3,11 @@ LPREFIX=$(HOME)/.local
 .sh:
 	@rm -f $@
 	cp $< $@
-LINSTALL =       func.arithmetic \
-		func.cwave \
-		func.dec2hex \
-		func.debug \
-		func.errecho \
-		func.hex2binfile \
-		func.hex2dec \
-		func.hmsout \
-		func.insufficient \
+LINSTALL =      func.hmsout \
 		func.kbytes \
-		func.locker \
-		func.logger \
-		func.nice2num \
-		func.num2nice \
 		func.onefilereformat \
-		func.os \
 		func.pathmunge \
 		func.random \
-		func.regex \
 		func.toseconds \
 		func.uuid \
 		hash.askcreatecanonical \
@@ -29,6 +15,7 @@ LINSTALL =       func.arithmetic \
 		hash.loadcanonical \
 		zfunc.zfsparent \
 		zfunc.results
+#		func.errecho \
 #		func.kkbytes \
 #		func.kerrecho \
 #		func.knice2num \
